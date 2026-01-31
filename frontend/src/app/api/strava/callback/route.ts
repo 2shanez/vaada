@@ -5,12 +5,16 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const error = searchParams.get('error')
 
+  const host = request.headers.get('host') || 'localhost:3000'
+  const protocol = request.headers.get('x-forwarded-proto') || 'http'
+  const baseUrl = `${protocol}://${host}`
+
   if (error) {
-    return NextResponse.redirect(new URL('/?strava=error', request.url))
+    return NextResponse.redirect(new URL('/?strava=error', baseUrl))
   }
 
   if (!code) {
-    return NextResponse.redirect(new URL('/?strava=missing_code', request.url))
+    return NextResponse.redirect(new URL('/?strava=missing_code', baseUrl))
   }
 
   try {
@@ -42,7 +46,7 @@ export async function GET(request: NextRequest) {
 
     // For MVP, we'll pass the token back to the frontend via URL params
     // In production, you'd want to encrypt this and store it more securely
-    const redirectUrl = new URL('/', request.url)
+    const redirectUrl = new URL('/', baseUrl)
     redirectUrl.searchParams.set('strava', 'success')
     redirectUrl.searchParams.set('athlete_id', tokenData.athlete.id.toString())
     redirectUrl.searchParams.set('athlete_name', `${tokenData.athlete.firstname} ${tokenData.athlete.lastname}`)
@@ -71,6 +75,6 @@ export async function GET(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Strava OAuth error:', error)
-    return NextResponse.redirect(new URL('/?strava=error', request.url))
+    return NextResponse.redirect(new URL('/?strava=error', baseUrl))
   }
 }
