@@ -1,31 +1,162 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
-import { parseUnits } from 'viem'
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useChainId } from 'wagmi'
+import { parseUnits, formatUnits } from 'viem'
 import { getStravaAuthUrl, isStravaConnected, getStravaAthleteId } from '@/lib/strava'
+import { CONTRACTS } from '@/lib/wagmi'
+import { baseSepolia } from 'wagmi/chains'
+
+// ABIs (minimal)
+const USDC_ABI = [
+  {
+    name: 'approve',
+    type: 'function',
+    inputs: [
+      { name: 'spender', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+    ],
+    outputs: [{ type: 'bool' }],
+  },
+  {
+    name: 'allowance',
+    type: 'function',
+    inputs: [
+      { name: 'owner', type: 'address' },
+      { name: 'spender', type: 'address' },
+    ],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+] as const
+
+const GOALSTAKE_ABI = [
+  {
+    name: 'createChallenge',
+    type: 'function',
+    inputs: [
+      { name: 'targetMiles', type: 'uint256' },
+      { name: 'stakeAmount', type: 'uint256' },
+      { name: 'duration', type: 'uint256' },
+    ],
+    outputs: [{ type: 'uint256' }],
+  },
+] as const
 
 export function CreateChallenge() {
   const { address } = useAccount()
+  const chainId = useChainId()
+  const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
+  
   const [targetMiles, setTargetMiles] = useState('20')
   const [stakeAmount, setStakeAmount] = useState('100')
   const [duration, setDuration] = useState('7') // days
   const [stravaConnected, setStravaConnected] = useState(false)
   const [athleteId, setAthleteId] = useState<string | null>(null)
+  const [step, setStep] = useState<'idle' | 'approving' | 'creating' | 'done'>('idle')
 
-  const { writeContract, data: hash, isPending } = useWriteContract()
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
-
+  // Check Strava connection
   useEffect(() => {
     setStravaConnected(isStravaConnected())
     setAthleteId(getStravaAthleteId())
   }, [])
+
+  // Read USDC allowance
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    address: contracts.usdc,
+    abi: USDC_ABI,
+    functionName: 'allowance',
+    args: address ? [address, contracts.goalStake] : undefined,
+  })
+
+  // Read USDC balance
+  const { data: balance } = useReadContract({
+    address: contracts.usdc,
+    abi: USDC_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+  })
+
+  // Approve USDC
+  const { 
+    writeContract: writeApprove, 
+    data: approveHash, 
+    isPending: isApprovePending,
+    reset: resetApprove 
+  } = useWriteContract()
+  
+  const { isLoading: isApproveConfirming, isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({ 
+    hash: approveHash 
+  })
+
+  // Create Challenge
+  const { 
+    writeContract: writeCreate, 
+    data: createHash, 
+    isPending: isCreatePending,
+    reset: resetCreate
+  } = useWriteContract()
+  
+  const { isLoading: isCreateConfirming, isSuccess: isCreateSuccess } = useWaitForTransactionReceipt({ 
+    hash: createHash 
+  })
+
+  // Handle approval success
+  useEffect(() => {
+    if (isApproveSuccess && step === 'approving') {
+      refetchAllowance()
+      setStep('creating')
+      // Auto-proceed to create
+      handleCreate()
+    }
+  }, [isApproveSuccess])
+
+  // Handle create success
+  useEffect(() => {
+    if (isCreateSuccess && step === 'creating') {
+      setStep('done')
+    }
+  }, [isCreateSuccess])
+
+  const stakeAmountWei = parseUnits(stakeAmount, 6) // USDC has 6 decimals
+  const hasAllowance = allowance !== undefined && allowance >= stakeAmountWei
+  const hasBalance = balance !== undefined && balance >= stakeAmountWei
 
   const handleStravaConnect = () => {
     const callbackUrl = typeof window !== 'undefined' 
       ? `${window.location.origin}/api/strava/callback`
       : 'http://localhost:3000/api/strava/callback'
     window.location.href = getStravaAuthUrl(callbackUrl)
+  }
+
+  const handleApprove = () => {
+    setStep('approving')
+    writeApprove({
+      address: contracts.usdc,
+      abi: USDC_ABI,
+      functionName: 'approve',
+      args: [contracts.goalStake, stakeAmountWei],
+    })
+  }
+
+  const handleCreate = () => {
+    writeCreate({
+      address: contracts.goalStake,
+      abi: GOALSTAKE_ABI,
+      functionName: 'createChallenge',
+      args: [
+        parseUnits(targetMiles, 18), // 1e18 = 1 mile
+        stakeAmountWei,
+        BigInt(Number(duration) * 24 * 60 * 60), // days to seconds
+      ],
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,15 +167,29 @@ export function CreateChallenge() {
       return
     }
 
-    // TODO: First approve USDC, then create challenge
-    console.log({
-      targetMiles: parseUnits(targetMiles, 18), // 1e18 = 1 mile
-      stakeAmount: parseUnits(stakeAmount, 6),  // USDC has 6 decimals
-      duration: Number(duration) * 24 * 60 * 60, // days to seconds
-    })
+    if (!hasBalance) {
+      alert(`Insufficient USDC balance. You need ${stakeAmount} USDC.`)
+      return
+    }
 
-    alert('Challenge creation coming soon! Need to implement USDC approval + contract interaction.')
+    if (!hasAllowance) {
+      // Need to approve first
+      handleApprove()
+    } else {
+      // Already approved, go straight to create
+      setStep('creating')
+      handleCreate()
+    }
   }
+
+  const handleReset = () => {
+    setStep('idle')
+    resetApprove()
+    resetCreate()
+    refetchAllowance()
+  }
+
+  const isLoading = isApprovePending || isApproveConfirming || isCreatePending || isCreateConfirming
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-900 rounded-xl p-6 border border-gray-800">
@@ -60,6 +205,7 @@ export function CreateChallenge() {
             max="100"
             value={targetMiles}
             onChange={(e) => setTargetMiles(e.target.value)}
+            disabled={isLoading}
             className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
           />
           <span className="text-2xl font-bold w-20 text-right">{targetMiles} mi</span>
@@ -79,10 +225,16 @@ export function CreateChallenge() {
             step="10"
             value={stakeAmount}
             onChange={(e) => setStakeAmount(e.target.value)}
+            disabled={isLoading}
             className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
           />
           <span className="text-2xl font-bold w-24 text-right">${stakeAmount}</span>
         </div>
+        {balance !== undefined && (
+          <p className="text-sm text-gray-500 mt-1">
+            Balance: {formatUnits(balance, 6)} USDC
+          </p>
+        )}
       </div>
 
       {/* Duration */}
@@ -96,6 +248,7 @@ export function CreateChallenge() {
               key={d}
               type="button"
               onClick={() => setDuration(d)}
+              disabled={isLoading}
               className={`py-2 px-4 rounded-lg text-sm font-medium transition ${
                 duration === d
                   ? 'bg-emerald-500 text-white'
@@ -160,26 +313,72 @@ export function CreateChallenge() {
         </div>
       </div>
 
-      {/* Submit */}
-      <button
-        type="submit"
-        disabled={isPending || isConfirming || !stravaConnected}
-        className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-lg transition"
-      >
-        {!stravaConnected 
-          ? 'Connect Strava First'
-          : isPending 
-            ? 'Confirm in Wallet...' 
-            : isConfirming 
-              ? 'Creating...' 
-              : 'Create Challenge'
-        }
-      </button>
+      {/* Progress Steps (shown when active) */}
+      {step !== 'idle' && step !== 'done' && (
+        <div className="bg-gray-800/50 rounded-lg p-4 mb-6">
+          <div className="flex items-center gap-4">
+            <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
+              step === 'approving' ? 'bg-emerald-500 text-white' : 'bg-gray-600 text-gray-300'
+            }`}>
+              {isApproveSuccess ? '✓' : '1'}
+            </div>
+            <div className="flex-1 h-1 bg-gray-600 rounded">
+              <div className={`h-full bg-emerald-500 rounded transition-all ${
+                isApproveSuccess ? 'w-full' : 'w-0'
+              }`} />
+            </div>
+            <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
+              step === 'creating' ? 'bg-emerald-500 text-white' : 'bg-gray-600 text-gray-300'
+            }`}>
+              {isCreateSuccess ? '✓' : '2'}
+            </div>
+          </div>
+          <div className="flex justify-between mt-2 text-xs text-gray-400">
+            <span>Approve USDC</span>
+            <span>Create Challenge</span>
+          </div>
+        </div>
+      )}
 
-      {isSuccess && (
-        <p className="mt-4 text-center text-emerald-400">
-          Challenge created! 🎉
-        </p>
+      {/* Submit / Status */}
+      {step === 'done' ? (
+        <div className="text-center">
+          <div className="text-4xl mb-4">🎉</div>
+          <p className="text-emerald-400 font-bold text-lg mb-4">Challenge Created!</p>
+          <p className="text-gray-400 text-sm mb-4">
+            Run {targetMiles} miles in {duration} days to win your stake back + bonus.
+          </p>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="text-emerald-400 underline text-sm"
+          >
+            Create another challenge
+          </button>
+        </div>
+      ) : (
+        <button
+          type="submit"
+          disabled={isLoading || !stravaConnected || !hasBalance}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold text-lg transition"
+        >
+          {!stravaConnected 
+            ? 'Connect Strava First'
+            : !hasBalance
+              ? 'Insufficient USDC'
+              : isApprovePending
+                ? 'Approve in Wallet...'
+                : isApproveConfirming
+                  ? 'Approving...'
+                  : isCreatePending
+                    ? 'Confirm in Wallet...'
+                    : isCreateConfirming
+                      ? 'Creating Challenge...'
+                      : !hasAllowance
+                        ? `Approve & Stake $${stakeAmount}`
+                        : `Stake $${stakeAmount}`
+          }
+        </button>
       )}
     </form>
   )
