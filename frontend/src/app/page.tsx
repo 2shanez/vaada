@@ -79,12 +79,8 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-gray-200 py-8">
-        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center text-sm text-gray-500">
-          <span>Built on Base with Chainlink</span>
-          <div className="flex gap-6">
-            <a href="https://github.com/2shanez/goalstake#readme" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors">Docs</a>
-            <a href="https://github.com/2shanez/goalstake" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors">GitHub</a>
-          </div>
+        <div className="max-w-6xl mx-auto px-6 flex justify-center items-center text-sm text-gray-500">
+          <span>Built on <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors underline">Base</a> with <a href="https://chain.link" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors underline">Chainlink</a></span>
         </div>
       </footer>
     </main>
