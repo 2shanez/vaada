@@ -4,6 +4,11 @@ out = "out"
 libs = ["lib"]
 solc = "0.8.20"
 
+remappings = [
+    "forge-std/=lib/forge-std/src/",
+    "chainlink/=lib/chainlink-brownie/"
+]
+
 [rpc_endpoints]
 base_sepolia = "https://sepolia.base.org"
 base = "https://mainnet.base.org"
