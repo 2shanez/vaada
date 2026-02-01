@@ -31,7 +31,7 @@ export default function Home() {
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
           Bet on <span className="text-[#2EE59D]">yourself</span>
         </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
           The Accountability Market.
         </p>
       </section>
