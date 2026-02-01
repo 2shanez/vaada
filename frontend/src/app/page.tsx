@@ -13,7 +13,7 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
-          <span className="text-2xl font-bold text-[#2EE59D]">GoalStake</span>
+          <span className="text-[1.75rem] font-bold text-[#2EE59D]">GoalStake</span>
           <ConnectButton 
             showBalance={false}
             chainStatus="icon"
