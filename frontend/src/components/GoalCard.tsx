@@ -278,7 +278,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         className={`w-full py-3 rounded-xl font-semibold transition-all ${
           isLoading || (isConnected && !hasBalance)
             ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            : 'bg-[#2EE59D] text-black hover:bg-[#26c987]'
+            : 'bg-[#2EE59D] text-white hover:bg-[#26c987]'
         }`}
       >
         {!isConnected 
