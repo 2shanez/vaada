@@ -33,7 +33,8 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="max-w-6xl mx-auto px-6 pb-12">
+      <section className="max-w-6xl mx-auto px-6 pb-16">
+        <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">How it works</h3>
         <div className="grid md:grid-cols-4 gap-8">
           {[
             { step: '01', emoji: '🎯', title: 'Join a goal', desc: 'Pick a challenge that fits' },
