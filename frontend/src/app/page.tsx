@@ -32,6 +32,25 @@ export default function Home() {
         </p>
       </section>
 
+      {/* How It Works */}
+      <section className="max-w-6xl mx-auto px-6 pb-12">
+        <div className="grid md:grid-cols-4 gap-8">
+          {[
+            { step: '01', emoji: '🎯', title: 'Join a goal', desc: 'Pick a challenge that fits' },
+            { step: '02', emoji: '💰', title: 'Stake USDC', desc: 'Put money on the line' },
+            { step: '03', emoji: '📲', title: 'Connect Strava', desc: 'We verify automatically' },
+            { step: '04', emoji: '🏆', title: 'Win or lose', desc: 'Hit goal = keep stake + bonus' },
+          ].map((item) => (
+            <div key={item.step} className="text-center">
+              <div className="text-3xl mb-2">{item.emoji}</div>
+              <div className="text-[#2EE59D] font-mono text-xs mb-2">{item.step}</div>
+              <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
+              <p className="text-sm text-gray-500">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Browse Goals */}
       <section className="max-w-6xl mx-auto px-6 pb-12">
         <div className="flex items-center gap-2 mb-6">
@@ -55,30 +74,8 @@ export default function Home() {
         </section>
       )}
 
-      {/* How It Works */}
-      <section className="border-t border-gray-200 mt-8">
-        <div className="max-w-6xl mx-auto px-6 py-10">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">How it works</h3>
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { step: '01', emoji: '🎯', title: 'Join a goal', desc: 'Pick a challenge that fits' },
-              { step: '02', emoji: '💰', title: 'Stake USDC', desc: 'Put money on the line' },
-              { step: '03', emoji: '📲', title: 'Connect Strava', desc: 'We verify automatically' },
-              { step: '04', emoji: '🏆', title: 'Win or lose', desc: 'Hit goal = keep stake + bonus' },
-            ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="text-3xl mb-2">{item.emoji}</div>
-                <div className="text-[#2EE59D] font-mono text-xs mb-2">{item.step}</div>
-                <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
-                <p className="text-sm text-gray-500">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8">
+      <footer className="border-t border-gray-200 py-8 mt-8">
         <div className="max-w-6xl mx-auto px-6 flex justify-center items-center text-sm text-gray-500">
           <span>Built on <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors underline">Base</a> with <a href="https://chain.link" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 transition-colors underline">Chainlink</a></span>
         </div>
