@@ -7,8 +7,8 @@ const FEATURED_GOALS: Goal[] = [
   // Daily Goals (sorted by miles ascending)
   {
     id: '1',
-    title: 'Morning Mile',
-    description: 'Run 1 mile to start your day',
+    title: 'Daily Mile',
+    description: 'Run 1 mile today',
     emoji: '🌅',
     targetMiles: 1,
     durationDays: 1,
