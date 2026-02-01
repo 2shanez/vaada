@@ -85,7 +85,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     address: contracts.usdc,
     abi: USDC_ABI,
     functionName: 'allowance',
-    args: address ? [address, contracts.goalStake] : undefined,
+    args: [address!, contracts.goalStake],
+    query: { enabled: !!address },
   })
 
   // Read USDC balance
@@ -93,7 +94,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     address: contracts.usdc,
     abi: USDC_ABI,
     functionName: 'balanceOf',
-    args: address ? [address] : undefined,
+    args: [address!],
+    query: { enabled: !!address },
   })
 
   // Approve USDC
