@@ -33,7 +33,7 @@ export default function Home() {
           Bet on <span className="text-[#2EE59D]">yourself</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Join a fitness goal, stake money, and get moving. Hit your target, keep your stake. Miss it, lose it.
+          Join a goal. Stake money. Win it back + more. Miss it, it's gone.
         </p>
       </section>
 
