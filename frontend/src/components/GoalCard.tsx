@@ -103,9 +103,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const { isLoading: isJoinConfirming, isSuccess: isJoinSuccess } = useWaitForTransactionReceipt({ hash: joinHash })
 
   const stakeAmountWei = parseUnits(stakeAmount || '0', 6)
-  const hasAllowance = allowance !== undefined && allowance >= stakeAmountWei
-  const hasBalance = balance !== undefined && balance >= stakeAmountWei
-  const balanceNum = balance ? Number(formatUnits(balance, 6)) : 0
+  const hasAllowance = allowance != null && (allowance as bigint) >= stakeAmountWei
+  const hasBalance = balance != null && (balance as bigint) >= stakeAmountWei
+  const balanceNum = balance ? Number(formatUnits(balance as bigint, 6)) : 0
 
   const handleStravaConnect = () => {
     const callbackUrl = typeof window !== 'undefined' 

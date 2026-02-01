@@ -100,7 +100,7 @@ export function MyChallenges() {
           <p className="text-sm text-gray-400 mt-1">Create your first challenge to get started</p>
         </div>
         
-        {loserPool !== undefined && loserPool > 0n && (
+        {loserPool !== undefined && loserPool > BigInt(0) && (
           <div className="p-4 rounded-xl bg-[#2EE59D]/5 border border-[#2EE59D]/20">
             <p className="text-xs text-gray-500 text-center">Current Prize Pool</p>
             <p className="text-2xl font-semibold text-[#2EE59D] text-center">
@@ -115,7 +115,7 @@ export function MyChallenges() {
   return (
     <div className="space-y-4">
       {/* Loser Pool Banner */}
-      {loserPool !== undefined && loserPool > 0n && (
+      {loserPool !== undefined && loserPool > BigInt(0) && (
         <div className="bg-gray-50 border border-[#2EE59D]/20 rounded-xl p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">Prize Pool</span>
