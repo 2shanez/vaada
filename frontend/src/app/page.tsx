@@ -45,13 +45,13 @@ export default function Home() {
             { step: '01', emoji: '🎯', title: 'Join a goal', desc: 'Pick a challenge that fits' },
             { step: '02', emoji: '💰', title: 'Stake USDC', desc: 'Put money on the line' },
             { step: '03', emoji: '📲', title: 'Connect Strava', desc: 'We verify automatically' },
-            { step: '04', emoji: '🏆', title: 'Win or lose', desc: 'Hit = keep stake + bonus. Miss = distributed to winners.' },
+            { step: '04', emoji: '🏆', title: 'Win or lose', desc: 'Hit = keep stake + bonus\nMiss = distributed to winners' },
           ].map((item) => (
             <div key={item.step} className="text-center">
               <div className="text-3xl mb-2">{item.emoji}</div>
               <div className="text-[#2EE59D] font-mono text-xs mb-2">{item.step}</div>
               <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
-              <p className="text-sm text-gray-500">{item.desc}</p>
+              <p className="text-sm text-gray-500 whitespace-pre-line">{item.desc}</p>
             </div>
           ))}
         </div>
