@@ -32,8 +32,13 @@ export default function Home() {
         </p>
       </section>
 
+      {/* Divider */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="border-t border-gray-200"></div>
+      </div>
+
       {/* How It Works */}
-      <section className="max-w-6xl mx-auto px-6 pb-16">
+      <section className="max-w-6xl mx-auto px-6 py-12">
         <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">How it works</h3>
         <div className="grid md:grid-cols-4 gap-8">
           {[
@@ -52,8 +57,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Divider */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="border-t border-gray-200"></div>
+      </div>
+
       {/* Browse Goals */}
-      <section className="max-w-6xl mx-auto px-6 pb-12">
+      <section className="max-w-6xl mx-auto px-6 py-12">
         <div className="flex items-center gap-2 mb-6">
           <div className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2EE59D] opacity-75"></span>
