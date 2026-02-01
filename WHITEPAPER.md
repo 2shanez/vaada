@@ -61,11 +61,20 @@ User Stakes USDC
 
 ### Economic Model
 
-- **Winners**: Receive stake back + 10% of the loser pool
-- **Losers**: Stake added to loser pool
-- **Protocol**: 0% fee (MVP), potential 5-10% fee at scale
+**For Users:**
+- **Winners**: Receive stake back + equal share of loser pool
+- **Losers**: Stake distributed evenly to winners
+- **Fee**: 0% — platform never touches user stakes
 
-This creates a **positive-sum game for winners** funded by those who don't follow through.
+**Platform Revenue:**
+- All staked USDC is deposited into yield protocols (Aave, Compound, etc.)
+- Platform earns interest on TVL while funds are locked
+- Users get their full stakes back; platform keeps the yield
+
+This creates:
+- **Zero-fee UX** — users keep 100% of winnings
+- **Sustainable revenue** — scales with TVL and challenge duration
+- **Aligned incentives** — platform benefits from more stakes locked longer
 
 ---
 
