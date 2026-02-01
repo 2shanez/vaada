@@ -38,7 +38,7 @@ const FEATURED_GOALS: Goal[] = [
     description: 'Run 10 miles this weekend',
     emoji: '💪',
     targetMiles: 10,
-    durationDays: 7,
+    durationDays: 3,
     minStake: 5,
     maxStake: 75,
     participants: 234,
@@ -104,7 +104,7 @@ export function BrowseGoals() {
       <div>
         <h3 className="text-sm font-medium text-gray-400 mb-4">Weekly</h3>
         <div className="grid md:grid-cols-2 gap-6">
-          {FEATURED_GOALS.filter(g => g.durationDays === 7).map((goal) => (
+          {FEATURED_GOALS.filter(g => g.durationDays >= 3 && g.durationDays <= 7).map((goal) => (
             <GoalCard key={goal.id} goal={goal} />
           ))}
         </div>
