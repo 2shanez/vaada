@@ -184,7 +184,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
   if (step === 'done') {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6">
         <div className="text-center">
           <div className="w-12 h-12 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-4">
             <svg className="w-6 h-6 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -192,30 +192,30 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             </svg>
           </div>
           <h3 className="font-semibold text-lg mb-1">You're in! 🎉</h3>
-          <p className="text-gray-500 text-sm">Goal joined. Time to get moving!</p>
+          <p className="text-[var(--text-secondary)] text-sm">Goal joined. Time to get moving!</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:border-[#2EE59D]/50 transition-colors">
+    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6 hover:border-[#2EE59D]/50 transition-colors">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <span className="text-3xl">{goal.emoji}</span>
           <div>
             <h3 className="font-semibold text-lg">{goal.title}</h3>
-            <p className="text-sm text-gray-500">{goal.description}</p>
+            <p className="text-sm text-[var(--text-secondary)]">{goal.description}</p>
           </div>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-gray-200">
+      <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-[var(--border)]">
         <div className="text-center">
           <p className="text-2xl font-bold">{goal.targetMiles}</p>
-          <p className="text-xs text-gray-500">miles</p>
+          <p className="text-xs text-[var(--text-secondary)]">miles</p>
         </div>
         <div className="text-center">
           <p className="text-2xl font-bold">
@@ -223,13 +223,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               ? Math.round(goal.durationDays * 24 * 60) 
               : goal.durationDays}
           </p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-[var(--text-secondary)]">
             {goal.durationDays < 1 ? 'mins' : 'days'}
           </p>
         </div>
         <div className="text-center">
           <p className="text-2xl font-bold text-[#2EE59D]">{goal.participants}</p>
-          <p className="text-xs text-gray-500">joined</p>
+          <p className="text-xs text-[var(--text-secondary)]">joined</p>
         </div>
       </div>
 
@@ -237,11 +237,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       {isConnected && (
         <div className="mb-4">
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-500">Your stake</span>
-            <span className="text-gray-500">Balance: {balanceNum.toFixed(2)} USDC</span>
+            <span className="text-[var(--text-secondary)]">Your stake</span>
+            <span className="text-[var(--text-secondary)]">Balance: {balanceNum.toFixed(2)} USDC</span>
           </div>
-          <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-3">
-            <span className="text-gray-400">$</span>
+          <div className="flex items-center gap-2 bg-[var(--background)] border border-[var(--border)] rounded-lg p-3">
+            <span className="text-[var(--text-secondary)]">$</span>
             <input
               type="number"
               min={goal.minStake}
@@ -251,7 +251,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               disabled={isLoading}
               className="flex-1 bg-transparent outline-none text-lg font-semibold"
             />
-            <span className="text-gray-400 text-sm">USDC</span>
+            <span className="text-[var(--text-secondary)] text-sm">USDC</span>
           </div>
           <input
             type="range"
@@ -274,8 +274,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
       {/* Progress */}
       {isLoading && (
-        <div className="mb-4 p-3 rounded-lg bg-gray-100">
-          <p className="text-sm text-gray-600 text-center">
+        <div className="mb-4 p-3 rounded-lg bg-[var(--surface)]">
+          <p className="text-sm text-[var(--text-secondary)] text-center">
             {isApprovePending ? 'Confirm approval in wallet...' :
              isApproveConfirming ? 'Approving USDC...' :
              isJoinPending ? 'Confirm in wallet...' :
@@ -290,7 +290,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         disabled={isLoading || (isConnected && !hasBalance)}
         className={`w-full py-3 rounded-xl font-semibold transition-all ${
           isLoading || (isConnected && !hasBalance)
-            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            ? 'bg-gray-200 text-[var(--text-secondary)] cursor-not-allowed'
             : 'bg-[#2EE59D] text-white hover:bg-[#26c987]'
         }`}
       >
@@ -307,7 +307,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       </button>
 
       {/* Pool Info */}
-      <p className="text-center text-xs text-gray-400 mt-3">
+      <p className="text-center text-xs text-[var(--text-secondary)] mt-3">
         ${goal.totalStaked.toLocaleString()} total staked by {goal.participants} people
       </p>
     </div>

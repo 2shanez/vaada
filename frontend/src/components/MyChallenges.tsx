@@ -75,15 +75,15 @@ export function MyChallenges() {
 
   if (!address) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 text-center">
-        <p className="text-gray-500">Connect wallet to view challenges</p>
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
+        <p className="text-[var(--text-secondary)]">Connect wallet to view challenges</p>
       </div>
     )
   }
 
   if (isLoadingIds) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 text-center">
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
         <div className="w-6 h-6 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin mx-auto"></div>
       </div>
     )
@@ -91,18 +91,18 @@ export function MyChallenges() {
 
   if (!challengeIds || challengeIds.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8">
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8">
         <div className="text-center mb-6">
           <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">🎯</span>
           </div>
-          <p className="text-gray-500">No challenges yet</p>
+          <p className="text-[var(--text-secondary)]">No challenges yet</p>
           <p className="text-sm text-gray-400 mt-1">Create your first challenge to get started</p>
         </div>
         
         {loserPool !== undefined && loserPool > BigInt(0) && (
           <div className="p-4 rounded-xl bg-[#2EE59D]/5 border border-[#2EE59D]/20">
-            <p className="text-xs text-gray-500 text-center">Current Prize Pool</p>
+            <p className="text-xs text-[var(--text-secondary)] text-center">Current Prize Pool</p>
             <p className="text-2xl font-semibold text-[#2EE59D] text-center">
               ${formatUnits(loserPool, 6)}
             </p>
@@ -116,9 +116,9 @@ export function MyChallenges() {
     <div className="space-y-4">
       {/* Loser Pool Banner */}
       {loserPool !== undefined && loserPool > BigInt(0) && (
-        <div className="bg-gray-50 border border-[#2EE59D]/20 rounded-xl p-4">
+        <div className="bg-[var(--surface)] border border-[#2EE59D]/20 rounded-xl p-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Prize Pool</span>
+            <span className="text-sm text-[var(--text-secondary)]">Prize Pool</span>
             <span className="text-lg font-semibold text-[#2EE59D]">${formatUnits(loserPool, 6)}</span>
           </div>
         </div>
@@ -148,7 +148,7 @@ function ChallengeCardWrapper({
 
   if (isLoading) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 animate-pulse">
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-6 animate-pulse">
         <div className="h-5 bg-gray-100 rounded w-1/3 mb-3"></div>
         <div className="h-4 bg-gray-100 rounded w-2/3"></div>
       </div>
@@ -173,28 +173,28 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
   const daysLeft = Math.ceil((deadline - now) / (24 * 60 * 60 * 1000))
 
   return (
-    <div className={`bg-gray-50 border rounded-xl p-5 ${
+    <div className={`bg-[var(--surface)] border rounded-xl p-5 ${
       challenge.settled 
         ? challenge.success 
           ? 'border-[#2EE59D]/50' 
           : 'border-red-500/50'
-        : 'border-gray-200'
+        : 'border-[var(--border)]'
     }`}>
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
-          <p className="text-xs text-gray-500 mb-1">#{challenge.id.toString()}</p>
+          <p className="text-xs text-[var(--text-secondary)] mb-1">#{challenge.id.toString()}</p>
           <p className="font-semibold">{targetMiles.toFixed(0)} miles</p>
         </div>
         <div className="text-right">
           <p className="font-semibold">${stakeAmount.toFixed(0)}</p>
-          <p className="text-xs text-gray-500">staked</p>
+          <p className="text-xs text-[var(--text-secondary)]">staked</p>
         </div>
       </div>
 
       {/* Progress */}
       <div className="mb-4">
-        <div className="flex justify-between text-xs text-gray-500 mb-2">
+        <div className="flex justify-between text-xs text-[var(--text-secondary)] mb-2">
           <span>Progress</span>
           <span>{actualMiles.toFixed(1)} / {targetMiles.toFixed(0)} mi</span>
         </div>
@@ -228,7 +228,7 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
           </span>
         ) : null}
 
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-[var(--text-secondary)]">
           {new Date(deadline).toLocaleDateString()}
         </span>
       </div>

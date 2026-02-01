@@ -129,7 +129,7 @@ export function BrowseGoals() {
 
       {/* Daily Goals */}
       <div>
-        <h3 className="text-sm font-medium text-gray-400 mb-4">Daily</h3>
+        <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-4">Daily</h3>
         <div className="grid md:grid-cols-2 gap-6">
           {FEATURED_GOALS.filter(g => g.durationDays === 1).map((goal) => (
             <GoalCard key={goal.id} goal={goal} />
@@ -139,7 +139,7 @@ export function BrowseGoals() {
 
       {/* Weekly Goals */}
       <div>
-        <h3 className="text-sm font-medium text-gray-400 mb-4">Weekly</h3>
+        <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-4">Weekly</h3>
         <div className="grid md:grid-cols-2 gap-6">
           {FEATURED_GOALS.filter(g => g.durationDays >= 3 && g.durationDays <= 7).map((goal) => (
             <GoalCard key={goal.id} goal={goal} />
@@ -149,7 +149,7 @@ export function BrowseGoals() {
 
       {/* Monthly Goals */}
       <div>
-        <h3 className="text-sm font-medium text-gray-400 mb-4">Monthly</h3>
+        <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-4">Monthly</h3>
         <div className="grid md:grid-cols-2 gap-6">
           {FEATURED_GOALS.filter(g => g.durationDays >= 28).map((goal) => (
             <GoalCard key={goal.id} goal={goal} />
