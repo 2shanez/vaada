@@ -28,7 +28,7 @@ export default function Home() {
           Bet on <span className="text-[#2EE59D]">yourself</span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          The accountability market.
+          The Accountability Market.
         </p>
       </section>
 
