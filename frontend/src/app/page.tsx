@@ -14,8 +14,10 @@ export default function Home() {
       <header className="border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#2EE59D] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">G</span>
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2EE59D] to-[#1DB877] flex items-center justify-center shadow-lg shadow-[#2EE59D]/25">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 4L12 20M12 4L6 10M12 4L18 10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
             <span className="text-xl font-semibold tracking-tight">GoalStake</span>
           </div>
