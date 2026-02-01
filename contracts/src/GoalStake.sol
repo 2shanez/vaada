@@ -30,7 +30,7 @@ contract GoalStake {
     
     uint256 public challengeCount;
     uint256 public loserPool;     // Accumulated stakes from failed challenges
-    uint256 public minStake = 10e6;  // Minimum 10 USDC
+    uint256 public minStake = 1e6;   // Minimum 1 USDC (testnet)
     uint256 public maxStake = 1000e6; // Maximum 1000 USDC
     
     mapping(uint256 => Challenge) public challenges;
@@ -95,7 +95,7 @@ contract GoalStake {
         require(stakeAmount >= minStake, "Stake too low");
         require(stakeAmount <= maxStake, "Stake too high");
         require(targetMiles > 0, "Target must be > 0");
-        require(duration >= 1 days, "Duration too short");
+        require(duration >= 1 minutes, "Duration too short");
         require(duration <= 90 days, "Duration too long");
         
         // Transfer USDC from user
