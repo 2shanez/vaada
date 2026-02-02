@@ -2,12 +2,6 @@
 
 import { GoalCard, Goal } from './GoalCard'
 
-// Tiered stakes (10x ratio):
-// - Test (< 1 day): $1 - $10
-// - Daily (1 day): $5 - $50
-// - Weekly (2-7 days): $10 - $100
-// - Monthly (8+ days): $20 - $200
-
 const FEATURED_GOALS: Goal[] = [
   // Test Goals - $1-$10
   {
@@ -130,6 +124,12 @@ const FEATURED_GOALS: Goal[] = [
   },
 ]
 
+// Coming soon goals to fill the grid
+const COMING_SOON = [
+  { title: 'Cycling Goals', emoji: '🚴', category: 'Coming Soon' },
+  { title: 'Step Counter', emoji: '👟', category: 'Coming Soon' },
+]
+
 interface BrowseGoalsProps {
   filter?: 'All' | 'Test' | 'Daily' | 'Weekly' | 'Monthly'
 }
@@ -139,11 +139,56 @@ export function BrowseGoals({ filter = 'All' }: BrowseGoalsProps) {
     ? FEATURED_GOALS 
     : FEATURED_GOALS.filter(g => g.category === filter)
 
+  const showComingSoon = filter === 'All'
+
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {filteredGoals.map((goal) => (
-        <GoalCard key={goal.id} goal={goal} />
-      ))}
+    <div>
+      {/* Goals Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {filteredGoals.map((goal) => (
+          <GoalCard key={goal.id} goal={goal} />
+        ))}
+        
+        {/* Coming Soon Placeholders */}
+        {showComingSoon && COMING_SOON.map((item, i) => (
+          <div 
+            key={`coming-${i}`}
+            className="bg-gray-50 border border-dashed border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center min-h-[200px] group hover:border-gray-300 transition-colors"
+          >
+            <span className="text-3xl mb-3 grayscale group-hover:grayscale-0 transition-all">{item.emoji}</span>
+            <p className="font-semibold text-sm text-gray-400 mb-1">{item.title}</p>
+            <span className="text-[10px] text-gray-400 uppercase tracking-wide">Coming Soon</span>
+            <button className="mt-3 text-xs text-[#2EE59D] font-medium hover:underline opacity-0 group-hover:opacity-100 transition-opacity">
+              Get notified →
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Empty State */}
+      {filteredGoals.length === 0 && (
+        <div className="text-center py-16">
+          <div className="text-4xl mb-4">🏃</div>
+          <p className="text-gray-500 mb-2">No {filter.toLowerCase()} goals available yet</p>
+          <p className="text-sm text-gray-400">Check back soon or try a different category</p>
+        </div>
+      )}
+
+      {/* Stats Footer */}
+      <div className="mt-8 pt-6 border-t border-gray-100 flex justify-center gap-8 text-center">
+        <div>
+          <p className="text-2xl font-bold text-gray-900">{FEATURED_GOALS.length}</p>
+          <p className="text-xs text-gray-500">Active Goals</p>
+        </div>
+        <div>
+          <p className="text-2xl font-bold text-[#2EE59D]">$0</p>
+          <p className="text-xs text-gray-500">Total Staked</p>
+        </div>
+        <div>
+          <p className="text-2xl font-bold text-gray-900">0</p>
+          <p className="text-xs text-gray-500">Participants</p>
+        </div>
+      </div>
     </div>
   )
 }

@@ -179,23 +179,34 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
   // Duration display
   const durationText = goal.durationDays < 1 
-    ? `${Math.round(goal.durationDays * 24 * 60)} min`
+    ? `${Math.round(goal.durationDays * 24 * 60)}m`
     : goal.durationDays === 1 
-      ? '1 day' 
-      : `${goal.durationDays} days`
+      ? '24h' 
+      : `${goal.durationDays}d`
+
+  // Category colors
+  const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
+    Test: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200' },
+    Daily: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' },
+    Weekly: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200' },
+    Monthly: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' },
+  }
+  const catStyle = categoryColors[goal.category] || categoryColors.Daily
 
   if (step === 'done') {
     return (
-      <div className="bg-white border border-gray-200 rounded-xl p-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[#2EE59D]/5" />
-        <div className="relative text-center py-4">
-          <div className="w-10 h-10 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-2">
-            <svg className="w-5 h-5 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="bg-gradient-to-br from-[#2EE59D]/5 to-[#2EE59D]/10 border border-[#2EE59D]/30 rounded-xl p-4">
+        <div className="text-center py-6">
+          <div className="w-12 h-12 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-3 animate-pulse">
+            <svg className="w-6 h-6 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p className="font-semibold text-sm">You're in! 🎉</p>
-          <p className="text-xs text-gray-500 mt-1">Time to get moving</p>
+          <p className="font-bold text-lg mb-1">You're in! 🎉</p>
+          <p className="text-sm text-gray-500">Goal starts now. Time to move!</p>
+          <div className="mt-4 pt-4 border-t border-[#2EE59D]/20">
+            <p className="text-xs text-gray-400">Staked ${stakeAmount} USDC</p>
+          </div>
         </div>
       </div>
     )
@@ -203,71 +214,97 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
   return (
     <div 
-      className={`bg-white border rounded-xl transition-all hover:border-[#2EE59D]/50 hover:shadow-sm ${
-        expanded ? 'border-[#2EE59D]/50 shadow-sm' : 'border-gray-200'
-      }`}
+      className={`group bg-white border rounded-xl transition-all duration-200 cursor-pointer
+        ${expanded 
+          ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10 scale-[1.02]' 
+          : 'border-gray-200 hover:border-gray-300 hover:shadow-md hover:-translate-y-0.5'
+        }`}
     >
-      {/* Compact View */}
+      {/* Card Content */}
       <div className="p-4">
-        {/* Category Badge + Icon */}
-        <div className="flex items-start justify-between mb-3">
-          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
-            goal.category === 'Test' 
-              ? 'bg-orange-100 text-orange-600' 
-              : 'bg-gray-100 text-gray-600'
-          }`}>
-            {goal.category.toUpperCase()}
-          </span>
-          <span className="text-xl">{goal.emoji}</span>
+        {/* Header Row: Category + Duration + Emoji */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${catStyle.bg} ${catStyle.text}`}>
+              {goal.category.toUpperCase()}
+            </span>
+            <span className="text-[10px] text-gray-400 font-medium">{durationText}</span>
+          </div>
+          <span className="text-2xl group-hover:scale-110 transition-transform">{goal.emoji}</span>
         </div>
 
-        {/* Title */}
-        <h3 className="font-semibold text-sm mb-1">{goal.title}</h3>
-        <p className="text-xs text-gray-500 mb-3">{goal.description}</p>
+        {/* Title + Description */}
+        <h3 className="font-bold text-sm text-gray-900 mb-1 group-hover:text-[#2EE59D] transition-colors">
+          {goal.title}
+        </h3>
+        <p className="text-xs text-gray-500 mb-4 line-clamp-2">{goal.description}</p>
 
-        {/* Compact Stats */}
-        <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
-          <span className="flex items-center gap-1">
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {durationText}
-          </span>
-          <span className="flex items-center gap-1">
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            {goal.targetMiles} mi
-          </span>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="bg-gray-50 rounded-lg px-3 py-2">
+            <p className="text-lg font-bold text-gray-900">{goal.targetMiles}</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-wide">miles</p>
+          </div>
+          <div className="bg-gray-50 rounded-lg px-3 py-2">
+            <p className="text-lg font-bold text-[#2EE59D]">${goal.minStake}</p>
+            <p className="text-[10px] text-gray-500 uppercase tracking-wide">min stake</p>
+          </div>
         </div>
 
-        {/* Activity Row */}
-        <div className="text-xs text-gray-400 mb-3">
-          {goal.participants} joined · ${goal.totalStaked} staked
+        {/* Pool Progress Bar */}
+        <div className="mb-4">
+          <div className="flex justify-between text-[10px] text-gray-400 mb-1">
+            <span>{goal.participants === 0 ? 'Be the first to join' : `${goal.participants} joined`}</span>
+            <span>${goal.totalStaked} pooled</span>
+          </div>
+          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-[#2EE59D] to-[#26c987] rounded-full transition-all duration-500"
+              style={{ width: `${Math.min((goal.participants / 10) * 100, 100)}%` }}
+            />
+          </div>
         </div>
 
-        {/* Join Button or Expand */}
-        {!expanded ? (
+        {/* Join Button */}
+        {!expanded && (
           <button
-            onClick={() => isConnected ? setExpanded(true) : login()}
-            className="w-full py-2 bg-[#2EE59D] text-black text-sm font-semibold rounded-lg hover:bg-[#26c987] transition-colors"
+            onClick={(e) => {
+              e.stopPropagation()
+              isConnected ? setExpanded(true) : login()
+            }}
+            className="w-full py-2.5 bg-[#2EE59D] text-black text-sm font-bold rounded-lg 
+              hover:bg-[#26c987] active:scale-[0.98] transition-all duration-150
+              shadow-sm hover:shadow-md"
           >
-            Join · ${goal.minStake}+
+            Join Goal · ${goal.minStake}+
           </button>
-        ) : null}
+        )}
       </div>
 
-      {/* Expanded Stake Input */}
+      {/* Expanded Stake Panel */}
       {expanded && (
-        <div className="px-4 pb-4 border-t border-gray-100 pt-4">
-          {/* Stake Amount */}
+        <div className="px-4 pb-4 border-t border-gray-100 pt-4 animate-in slide-in-from-top-2 duration-200">
+          {/* Quick Stakes */}
+          <div className="flex gap-2 mb-3">
+            {[goal.minStake, Math.round((goal.minStake + goal.maxStake) / 2), goal.maxStake].map((amount) => (
+              <button
+                key={amount}
+                onClick={() => setStakeAmount(amount.toString())}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
+                  stakeAmount === amount.toString()
+                    ? 'bg-[#2EE59D]/10 border-[#2EE59D] text-[#2EE59D]'
+                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
+                }`}
+              >
+                ${amount}
+              </button>
+            ))}
+          </div>
+
+          {/* Custom Amount */}
           <div className="mb-3">
-            <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>Stake amount</span>
-              <span>Balance: {balanceNum.toFixed(2)} USDC</span>
-            </div>
-            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-              <span className="text-gray-400 text-sm">$</span>
+            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus-within:border-[#2EE59D] focus-within:ring-1 focus-within:ring-[#2EE59D]/20 transition-all">
+              <span className="text-gray-400 text-sm font-medium">$</span>
               <input
                 type="number"
                 min={goal.minStake}
@@ -275,59 +312,58 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 value={stakeAmount}
                 onChange={(e) => setStakeAmount(e.target.value)}
                 disabled={isLoading}
-                className="flex-1 bg-transparent outline-none text-sm font-semibold"
+                className="flex-1 bg-transparent outline-none text-sm font-bold text-gray-900"
+                placeholder={goal.minStake.toString()}
               />
-              <span className="text-gray-400 text-xs">USDC</span>
+              <span className="text-[10px] text-gray-400 font-medium">USDC</span>
             </div>
-            <input
-              type="range"
-              min={goal.minStake}
-              max={goal.maxStake}
-              value={stakeAmount}
-              onChange={(e) => setStakeAmount(e.target.value)}
-              disabled={isLoading}
-              className="w-full h-1 mt-2 bg-gray-200 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#2EE59D]"
-            />
-            <div className="flex justify-between text-xs text-gray-400 mt-1">
-              <span>${goal.minStake}</span>
-              <span>${goal.maxStake}</span>
+            <div className="flex justify-between text-[10px] text-gray-400 mt-1 px-1">
+              <span>Min ${goal.minStake}</span>
+              <span>Balance: {balanceNum.toFixed(2)}</span>
+              <span>Max ${goal.maxStake}</span>
             </div>
           </div>
 
           {/* Strava Warning */}
-          {!stravaConnected && (
-            <div className="mb-3 p-2 rounded-lg bg-orange-50 border border-orange-100">
-              <p className="text-xs text-orange-600">Connect Strava to verify your runs</p>
+          {isConnected && !stravaConnected && (
+            <div className="mb-3 p-2.5 rounded-lg bg-orange-50 border border-orange-100 flex items-center gap-2">
+              <svg className="w-4 h-4 text-orange-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <p className="text-xs text-orange-700">Connect Strava to verify your runs</p>
             </div>
           )}
 
-          {/* Progress */}
+          {/* Progress Indicator */}
           {isLoading && (
-            <div className="mb-3 p-2 rounded-lg bg-gray-50">
-              <p className="text-xs text-gray-500 text-center">
-                {isApprovePending ? 'Confirm approval...' :
-                 isApproveConfirming ? 'Approving USDC...' :
-                 isJoinPending ? 'Confirm in wallet...' :
-                 isJoinConfirming ? 'Joining...' : ''}
-              </p>
+            <div className="mb-3 p-3 rounded-lg bg-[#2EE59D]/5 border border-[#2EE59D]/20">
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-4 h-4 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin" />
+                <p className="text-xs text-[#2EE59D] font-medium">
+                  {isApprovePending ? 'Confirm in wallet...' :
+                   isApproveConfirming ? 'Approving USDC...' :
+                   isJoinPending ? 'Confirm transaction...' :
+                   isJoinConfirming ? 'Joining goal...' : ''}
+                </p>
+              </div>
             </div>
           )}
 
-          {/* Actions */}
+          {/* Action Buttons */}
           <div className="flex gap-2">
             <button
               onClick={() => setExpanded(false)}
-              className="px-3 py-2 text-xs text-gray-500 hover:text-gray-700"
+              className="px-4 py-2.5 text-xs font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleJoin}
-              disabled={isLoading || !hasBalance}
-              className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${
-                isLoading || !hasBalance
+              disabled={isLoading || (isConnected && !hasBalance)}
+              className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-150 ${
+                isLoading || (isConnected && !hasBalance)
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-[#2EE59D] text-black hover:bg-[#26c987]'
+                  : 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
               }`}
             >
               {!stravaConnected
@@ -336,7 +372,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   ? 'Insufficient USDC'
                   : isLoading
                     ? 'Processing...'
-                    : `Stake $${stakeAmount}`
+                    : `Stake $${stakeAmount} →`
               }
             </button>
           </div>
