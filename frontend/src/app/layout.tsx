@@ -6,8 +6,8 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'GoalStake | Bet on yourself',
-  description: 'Stake money on your fitness goals. Hit them, keep it. Miss them, lose it.',
+  title: 'goalstake | Bet on yourself',
+  description: 'Stake money on your goals. Hit them, keep it. Miss them, lose it.',
 }
 
 export default function RootLayout({
