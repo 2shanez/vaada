@@ -93,7 +93,7 @@ export default function Home() {
                 step: '01', 
                 icon: '🎯', 
                 title: 'Join a goal', 
-                desc: 'Pick a curated fitness challenge that matches your level.' 
+                desc: 'Pick a challenge that matches your level.' 
               },
               { 
                 step: '02', 
@@ -104,8 +104,8 @@ export default function Home() {
               { 
                 step: '03', 
                 icon: '📲', 
-                title: 'Connect Strava', 
-                desc: 'Link your account. We verify your activity automatically.' 
+                title: 'Connect your data', 
+                desc: 'Link your account. We verify your progress automatically.' 
               },
               { 
                 step: '04', 
