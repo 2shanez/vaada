@@ -161,14 +161,22 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   
   const handleStoreToken = async () => {
     if (isWrongNetwork) {
-      switchChain({ chainId: baseSepolia.id })
+      try {
+        await switchChain({ chainId: baseSepolia.id })
+      } catch (err) {
+        alert('Please switch to Base Sepolia network in your wallet')
+      }
       return
     }
     
     setStep('storing-token')
     try {
       const res = await fetch('/api/strava/token')
-      if (!res.ok) throw new Error('Failed to get token')
+      if (!res.ok) {
+        alert('Could not retrieve Strava token. Please reconnect Strava.')
+        setStep('idle')
+        return
+      }
       const { token } = await res.json()
       
       writeStoreToken({
@@ -179,6 +187,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       })
     } catch (err) {
       console.error('Error storing token:', err)
+      alert('Failed to enable verification. Please try again.')
       setStep('idle')
     }
   }
@@ -399,29 +408,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             </div>
           )}
           
-          {/* Need to store token on-chain */}
+          {/* Strava connected but needs on-chain verification - just show status */}
           {isConnected && stravaConnected && !hasTokenOnChain && (
-            <div className="mb-3 p-2.5 rounded-lg bg-[#FC4C02]/10 border border-[#FC4C02]/20">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7 13.828h4.169" />
-                  </svg>
-                  <p className="text-xs text-[#FC4C02] font-medium">Strava connected</p>
-                </div>
-                <button
-                  onClick={handleStoreToken}
-                  disabled={isStorePending || isStoreConfirming || isSwitchingNetwork}
-                  className="px-3 py-1 text-xs font-semibold rounded-lg bg-[#FC4C02] text-white hover:bg-[#FC4C02]/90 disabled:opacity-50 transition-colors"
-                >
-                  {isWrongNetwork ? 'Switch Network' : 
-                   isStorePending || isStoreConfirming ? 'Verifying...' : 
-                   'Enable Auto-Verify →'}
-                </button>
-              </div>
-              <p className="text-[10px] text-[var(--text-secondary)] mt-1">
-                Sign a transaction to enable automatic verification via Chainlink
-              </p>
+            <div className="mb-3 p-2.5 rounded-lg bg-[#FC4C02]/10 border border-[#FC4C02]/20 flex items-center gap-2">
+              <svg className="w-4 h-4 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7 13.828h4.169" />
+              </svg>
+              <p className="text-xs text-[#FC4C02]">Strava connected — one more step to enable verification</p>
             </div>
           )}
           
