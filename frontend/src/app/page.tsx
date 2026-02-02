@@ -253,19 +253,9 @@ export default function Home() {
             <span className="text-sm text-[var(--text-secondary)]">The Commitment Market</span>
           </div>
           
-          <div className="flex items-center gap-6 text-sm text-[var(--text-secondary)]">
-            <a href="https://github.com/2shanez/goalstake" target="_blank" rel="noopener noreferrer" className="hover:text-[#2EE59D] transition-colors">
-              GitHub
-            </a>
-            <a href="https://github.com/2shanez/goalstake/blob/main/WHITEPAPER.md" target="_blank" rel="noopener noreferrer" className="hover:text-[#2EE59D] transition-colors">
-              Whitepaper
-            </a>
-            <span>
-              Built on{' '}
-              <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
-              {' '}×{' '}
-              <a href="https://chain.link" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Chainlink</a>
-            </span>
+          <div className="text-sm text-[var(--text-secondary)]">
+            Built on{' '}
+            <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
           </div>
         </div>
       </footer>
