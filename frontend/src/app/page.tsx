@@ -14,7 +14,7 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
-          <span className="text-[1.75rem] font-bold text-[#2EE59D]">GoalStake</span>
+          <span className="text-[1.75rem] font-bold text-[#2EE59D]">goalstake</span>
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <ConnectButton 
