@@ -88,6 +88,32 @@ export default function Home() {
           <MyChallenges />
         </section>
       )}
+
+      {/* Footer */}
+      <footer className="border-t border-[var(--border)] mt-12">
+        <div className="max-w-6xl mx-auto px-6 py-8 text-center">
+          <p className="text-sm text-[var(--text-secondary)]">
+            Built on{' '}
+            <a 
+              href="https://base.org" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[#2EE59D] hover:underline"
+            >
+              Base
+            </a>
+            {' '}×{' '}
+            <a 
+              href="https://chain.link" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[#2EE59D] hover:underline"
+            >
+              Chainlink
+            </a>
+          </p>
+        </div>
+      </footer>
     </main>
   )
 }
