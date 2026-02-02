@@ -126,7 +126,7 @@ export function MyGoals() {
     )
   }
 
-  if (!goalIds || goalIds.length === 0) {
+  if (!goalIds || !Array.isArray(goalIds) || goalIds.length === 0) {
     return (
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8">
         <div className="text-center">
@@ -150,7 +150,7 @@ export function MyGoals() {
 
   return (
     <div className="space-y-4">
-      {goalIds.map((goalId) => (
+      {(goalIds as bigint[]).map((goalId) => (
         <GoalCard key={goalId.toString()} goalId={goalId} contracts={contracts} userAddress={address} />
       ))}
     </div>
