@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useChainId } from 'wagmi'
-import { usePrivy } from '@privy-io/react-auth'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { parseUnits, formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
 import { baseSepolia } from 'wagmi/chains'
@@ -71,7 +71,7 @@ interface GoalCardProps {
 
 export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const { address, isConnected } = useAccount()
-  const { login, authenticated } = usePrivy()
+  const { openConnectModal } = useConnectModal()
   const chainId = useChainId()
   const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
   
@@ -119,8 +119,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
 
   const handleJoin = async () => {
-    if (!isConnected && !authenticated) {
-      login()
+    if (!isConnected) {
+      openConnectModal?.()
       return
     }
 
@@ -236,7 +236,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       </div>
 
       {/* Stake Input */}
-      {(isConnected || authenticated) && (
+      {isConnected && (
         <div className="mb-4">
           <div className="flex justify-between text-sm mb-2">
             <span className="text-[var(--text-secondary)]">Your stake</span>
@@ -268,7 +268,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       )}
 
       {/* Strava Status */}
-      {(isConnected || authenticated) && !stravaConnected && (
+      {isConnected && !stravaConnected && (
         <div className="mb-4 p-3 rounded-lg bg-orange-50 border border-orange-200">
           <p className="text-sm text-orange-700">Connect Strava to join this goal</p>
         </div>
@@ -289,15 +289,15 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       {/* Join Button */}
       <button
         onClick={handleJoin}
-        disabled={isLoading || ((isConnected || authenticated) && !hasBalance)}
+        disabled={isLoading || (isConnected && !hasBalance)}
         className={`w-full py-3 rounded-xl font-semibold transition-all ${
-          isLoading || ((isConnected || authenticated) && !hasBalance)
+          isLoading || (isConnected && !hasBalance)
             ? 'bg-gray-200 text-[var(--text-secondary)] cursor-not-allowed'
             : 'bg-[#2EE59D] text-white hover:bg-[#26c987]'
         }`}
       >
-        {!isConnected && !authenticated
-          ? 'Sign In to Join'
+        {!isConnected 
+          ? 'Connect Wallet to Join'
           : !stravaConnected
             ? 'Connect Strava & Join'
             : !hasBalance
