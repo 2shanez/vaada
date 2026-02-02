@@ -83,8 +83,8 @@ export default function Home() {
       <section id="how-it-works" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-[#2EE59D] font-medium mb-3">How it works</p>
-            <h2 className="text-3xl md:text-5xl font-bold">Four steps to<br />financial accountability</h2>
+            <p className="text-lg text-[#2EE59D] font-semibold mb-3">How it works</p>
+            <h2 className="text-3xl md:text-5xl font-bold">Four steps to<br />financial commitment</h2>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -132,7 +132,7 @@ export default function Home() {
       <section className="py-24 px-6 bg-[var(--surface)]/50 border-y border-[var(--border)]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-[#2EE59D] font-medium mb-3">Why it works</p>
+            <p className="text-lg text-[#2EE59D] font-semibold mb-3">Why it works</p>
             <h2 className="text-3xl md:text-5xl font-bold">Built for commitment,<br />not willpower</h2>
           </div>
           
