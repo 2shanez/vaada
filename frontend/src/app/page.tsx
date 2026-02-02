@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
+import { usePrivy } from '@privy-io/react-auth'
 import { BrowseGoals } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { PrivyConnectButton } from '@/components/PrivyConnectButton'
@@ -11,6 +12,7 @@ type Category = typeof categories[number]
 
 export default function Home() {
   const { isConnected } = useAccount()
+  const { login } = usePrivy()
   const [activeCategory, setActiveCategory] = useState<Category>('All')
   const [mounted, setMounted] = useState(false)
 
@@ -21,6 +23,14 @@ export default function Home() {
   const scrollToGoals = (e: React.MouseEvent) => {
     e.preventDefault()
     document.getElementById('goals')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handleGetStarted = () => {
+    if (isConnected) {
+      document.getElementById('goals')?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      login()
+    }
   }
 
   return (
@@ -81,19 +91,18 @@ export default function Home() {
             Hit your goal, keep your stake + earn from those who don't.
           </p>
           
-          <a 
-            href="#goals" 
-            onClick={scrollToGoals}
+          <button 
+            onClick={handleGetStarted}
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#2EE59D] text-black font-semibold rounded-lg 
               hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 hover:-translate-y-0.5
               active:translate-y-0 active:shadow-md
               transition-all duration-200"
           >
-            Browse Goals
+            Get Started
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-          </a>
+          </button>
         </div>
       </section>
 
