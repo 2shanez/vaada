@@ -46,7 +46,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl md:text-2xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed">
-            The Commitment Market. Put money on the line, hit your fitness goals, 
+            The Commitment Market. Put money on the line, hit your goals, 
             keep your stake + earn from those who don't.
           </p>
           
