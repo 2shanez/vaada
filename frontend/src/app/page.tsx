@@ -230,9 +230,8 @@ export default function Home() {
           <p className="text-gray-400 mb-8 text-lg">
             Join the commitment market. Put money on your goals.
           </p>
-          <a 
-            href="#goals" 
-            onClick={(e) => scrollToSection(e, 'goals')}
+          <button 
+            onClick={handleGetStarted}
             className="inline-flex items-center gap-2 px-8 py-4 bg-[#2EE59D] text-black font-bold rounded-xl 
               hover:bg-white hover:shadow-xl hover:shadow-[#2EE59D]/25 hover:-translate-y-1
               active:translate-y-0
@@ -242,7 +241,7 @@ export default function Home() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-          </a>
+          </button>
         </div>
       </section>
 
