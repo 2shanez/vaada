@@ -1,0 +1,44 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Main gradient - Perplexity style depth -->
+    <radialGradient id="orbGradient" cx="35%" cy="35%" r="65%" fx="30%" fy="30%">
+      <stop offset="0%" stop-color="#5FFFB8"/>
+      <stop offset="50%" stop-color="#2EE59D"/>
+      <stop offset="100%" stop-color="#1a9e6a"/>
+    </radialGradient>
+    
+    <!-- Glow effect -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Inner shadow for depth -->
+    <radialGradient id="innerShadow" cx="65%" cy="65%" r="50%">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.3)"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Outer glow -->
+  <circle cx="100" cy="100" r="70" fill="#2EE59D" opacity="0.3" filter="url(#glow)"/>
+  
+  <!-- Main orb -->
+  <circle cx="100" cy="100" r="60" fill="url(#orbGradient)"/>
+  
+  <!-- Subtle depth overlay -->
+  <circle cx="100" cy="100" r="60" fill="url(#innerShadow)"/>
+  
+  <!-- Target rings - subtle, integrated -->
+  <circle cx="100" cy="100" r="40" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+  <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+  
+  <!-- Center dot -->
+  <circle cx="100" cy="100" r="6" fill="rgba(255,255,255,0.9)"/>
+  
+  <!-- Highlight for 3D effect -->
+  <ellipse cx="80" cy="80" rx="20" ry="15" fill="rgba(255,255,255,0.15)"/>
+</svg>
