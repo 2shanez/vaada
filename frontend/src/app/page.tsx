@@ -36,21 +36,21 @@ export default function Home() {
             <span className="text-[var(--text-secondary)]">Live on Base Sepolia</span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
             Stake Money on<br />
             <span className="text-[#2EE59D]">Your Goals</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto mb-10 leading-relaxed">
             The Commitment Market. Put money on the line, hit your goals, 
             keep your stake + earn from those who don't.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#goals" className="px-8 py-4 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#26c987] transition-all hover:scale-105">
+            <a href="#goals" className="px-6 py-3 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#26c987] transition-all hover:scale-105">
               Get Started
             </a>
-            <a href="#how-it-works" className="px-8 py-4 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface-hover)] transition-all">
+            <a href="#how-it-works" className="px-6 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface-hover)] transition-all">
               Learn More
             </a>
           </div>
@@ -61,15 +61,15 @@ export default function Home() {
       <section className="py-12 px-6 border-y border-[var(--border)] bg-[var(--surface)]/50">
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-8 text-center">
           <div>
-            <p className="text-3xl md:text-4xl font-bold text-[#2EE59D]">$0</p>
+            <p className="text-2xl md:text-3xl font-bold text-[#2EE59D]">$0</p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">Platform Fees</p>
           </div>
           <div>
-            <p className="text-3xl md:text-4xl font-bold">100%</p>
+            <p className="text-2xl md:text-3xl font-bold">100%</p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">Auto-Verified</p>
           </div>
           <div>
-            <p className="text-3xl md:text-4xl font-bold text-[#2EE59D]">2x</p>
+            <p className="text-2xl md:text-3xl font-bold text-[#2EE59D]">2x</p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">More Likely to Succeed</p>
           </div>
         </div>
@@ -79,8 +79,8 @@ export default function Home() {
       <section id="how-it-works" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-4">How It Works</h2>
-            <p className="text-xl text-[var(--text-secondary)]">Get started in 4 simple steps</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">How It Works</h2>
+            <p className="text-lg text-[var(--text-secondary)]">Get started in 4 simple steps</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -128,8 +128,8 @@ export default function Home() {
       <section className="py-24 px-6 bg-[var(--surface)]/50 border-y border-[var(--border)]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold mb-4">Why It Works</h2>
-            <p className="text-xl text-[var(--text-secondary)]">Built for commitment, not willpower</p>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">Why It Works</h2>
+            <p className="text-lg text-[var(--text-secondary)]">Built for commitment, not willpower</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6">
@@ -171,7 +171,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-4 mb-4">
-              <h2 className="text-4xl md:text-6xl font-bold">Active Goals</h2>
+              <h2 className="text-3xl md:text-5xl font-bold">Active Goals</h2>
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#2EE59D]/10 border border-[#2EE59D]/20">
                 <div className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2EE59D] opacity-75"></span>
@@ -180,7 +180,7 @@ export default function Home() {
                 <span className="text-sm font-medium text-[#2EE59D]">Live</span>
               </div>
             </div>
-            <p className="text-xl text-[var(--text-secondary)]">Browse open challenges and put your money where your mouth is.</p>
+            <p className="text-lg text-[var(--text-secondary)]">Browse open challenges and put your money where your mouth is.</p>
           </div>
           <BrowseGoals />
         </div>
@@ -192,13 +192,13 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-24 px-6 bg-gradient-to-b from-[var(--surface)]/50 to-transparent border-t border-[var(--border)]">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">
             Ready to bet on<br /><span className="text-[#2EE59D]">yourself?</span>
           </h2>
-          <p className="text-xl text-[var(--text-secondary)] mb-10">
+          <p className="text-lg text-[var(--text-secondary)] mb-10">
             Put money on the line. Hit your goals. Keep your stake.
           </p>
-          <a href="#goals" className="inline-flex px-8 py-4 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#26c987] transition-all hover:scale-105">
+          <a href="#goals" className="inline-flex px-6 py-3 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#26c987] transition-all hover:scale-105">
             Get Started
           </a>
         </div>
