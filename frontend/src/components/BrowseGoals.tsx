@@ -12,6 +12,7 @@ const FEATURED_GOALS: Goal[] = [
   // Test Goals - $1-$10
   {
     id: 'test-1',
+    onChainId: 0,  // V2 on-chain goal ID
     title: '🧪 Quick Test',
     description: 'Run 0.2 miles in 2 minutes (testing)',
     emoji: '🧪',
@@ -25,6 +26,7 @@ const FEATURED_GOALS: Goal[] = [
   },
   {
     id: 'test-2',
+    onChainId: 1,  // V2 on-chain goal ID
     title: '🧪 5-Min Test',
     description: 'Run 0.5 miles in 5 minutes (testing)',
     emoji: '⚗️',
@@ -40,6 +42,7 @@ const FEATURED_GOALS: Goal[] = [
   // Daily Goals - $5-$50
   {
     id: '1',
+    onChainId: 2,  // V2 on-chain goal ID
     title: 'Daily Mile',
     description: 'Run 1 mile today',
     emoji: '🌅',
@@ -47,12 +50,13 @@ const FEATURED_GOALS: Goal[] = [
     durationDays: 1,
     minStake: 5,
     maxStake: 50,
-    participants: 847,
-    totalStaked: 4235,
+    participants: 0,
+    totalStaked: 0,
     category: 'running',
   },
   {
     id: '2',
+    onChainId: 3,  // V2 on-chain goal ID
     title: 'Daily 3',
     description: 'Run 3 miles today',
     emoji: '☀️',
@@ -60,14 +64,15 @@ const FEATURED_GOALS: Goal[] = [
     durationDays: 1,
     minStake: 5,
     maxStake: 50,
-    participants: 423,
-    totalStaked: 3175,
+    participants: 0,
+    totalStaked: 0,
     category: 'running',
   },
 
   // Weekly Goals - $10-$100
   {
     id: '3',
+    onChainId: 4,  // V2 on-chain goal ID
     title: 'Weekend Warrior',
     description: 'Run 10 miles this weekend',
     emoji: '💪',
@@ -75,12 +80,13 @@ const FEATURED_GOALS: Goal[] = [
     durationDays: 3,
     minStake: 10,
     maxStake: 100,
-    participants: 312,
-    totalStaked: 6240,
+    participants: 0,
+    totalStaked: 0,
     category: 'running',
   },
   {
     id: '4', 
+    onChainId: 5,  // V2 on-chain goal ID
     title: 'Weekly 15',
     description: 'Run 15 miles this week',
     emoji: '⚡',
@@ -88,14 +94,15 @@ const FEATURED_GOALS: Goal[] = [
     durationDays: 7,
     minStake: 10,
     maxStake: 100,
-    participants: 198,
-    totalStaked: 5940,
+    participants: 0,
+    totalStaked: 0,
     category: 'running',
   },
 
   // Monthly Goals - $20-$200
   {
     id: '5',
+    onChainId: 6,  // V2 on-chain goal ID
     title: 'February 50',
     description: 'Run 50 miles this month',
     emoji: '🏃',
@@ -103,12 +110,13 @@ const FEATURED_GOALS: Goal[] = [
     durationDays: 28,
     minStake: 20,
     maxStake: 200,
-    participants: 156,
-    totalStaked: 11700,
+    participants: 0,
+    totalStaked: 0,
     category: 'running',
   },
   {
     id: '6',
+    onChainId: 7,  // V2 on-chain goal ID
     title: 'Marathon Prep',
     description: 'Hit 100 miles in 30 days',
     emoji: '🏅',
@@ -116,8 +124,8 @@ const FEATURED_GOALS: Goal[] = [
     durationDays: 30,
     minStake: 20,
     maxStake: 200,
-    participants: 67,
-    totalStaked: 8710,
+    participants: 0,
+    totalStaked: 0,
     category: 'running',
   },
 ]

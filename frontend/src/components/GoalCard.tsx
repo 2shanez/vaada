@@ -39,19 +39,19 @@ const USDC_ABI = [
 
 const GOALSTAKE_ABI = [
   {
-    name: 'createChallenge',
+    name: 'joinGoal',
     type: 'function',
     inputs: [
-      { name: 'targetMiles', type: 'uint256' },
-      { name: 'stakeAmount', type: 'uint256' },
-      { name: 'duration', type: 'uint256' },
+      { name: 'goalId', type: 'uint256' },
+      { name: 'stake', type: 'uint256' },
     ],
-    outputs: [{ type: 'uint256' }],
+    outputs: [],
   },
 ] as const
 
 export interface Goal {
   id: string
+  onChainId?: number  // V2: on-chain goal ID for joinGoal()
   title: string
   description: string
   emoji: string
@@ -145,33 +145,30 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         args: [contracts.goalStake, stakeAmountWei],
       })
     } else {
+      if (goal.onChainId === undefined) {
+        alert('This goal is not yet available on-chain. Please check back soon!')
+        setIsJoining(false)
+        return
+      }
       setStep('joining')
       writeJoin({
         address: contracts.goalStake,
         abi: GOALSTAKE_ABI,
-        functionName: 'createChallenge',
-        args: [
-          parseUnits(goal.targetMiles.toString(), 18),
-          stakeAmountWei,
-          BigInt(Math.round(goal.durationDays * 24 * 60 * 60)),
-        ],
+        functionName: 'joinGoal',
+        args: [BigInt(goal.onChainId), stakeAmountWei],
       })
     }
   }
 
   // Handle approval success
-  if (isApproveSuccess && step === 'approving') {
+  if (isApproveSuccess && step === 'approving' && goal.onChainId !== undefined) {
     refetchAllowance()
     setStep('joining')
     writeJoin({
       address: contracts.goalStake,
       abi: GOALSTAKE_ABI,
-      functionName: 'createChallenge',
-      args: [
-        parseUnits(goal.targetMiles.toString(), 18),
-        stakeAmountWei,
-        BigInt(Math.round(goal.durationDays * 24 * 60 * 60)),
-      ],
+      functionName: 'joinGoal',
+      args: [BigInt(goal.onChainId), stakeAmountWei],
     })
   }
 
