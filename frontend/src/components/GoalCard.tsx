@@ -51,7 +51,7 @@ const GOALSTAKE_ABI = [
 
 export interface Goal {
   id: string
-  onChainId?: number  // V2: on-chain goal ID for joinGoal()
+  onChainId?: number
   title: string
   description: string
   emoji: string
@@ -61,7 +61,7 @@ export interface Goal {
   maxStake: number
   participants: number
   totalStaked: number
-  category: 'running' | 'cycling' | 'walking'
+  category: string
 }
 
 interface GoalCardProps {
@@ -75,8 +75,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const chainId = useChainId()
   const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
   
+  const [expanded, setExpanded] = useState(false)
   const [stakeAmount, setStakeAmount] = useState(goal.minStake.toString())
-  const [isJoining, setIsJoining] = useState(false)
   const [step, setStep] = useState<'idle' | 'approving' | 'joining' | 'done'>('idle')
   const stravaConnected = isStravaConnected()
 
@@ -134,8 +134,6 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       return
     }
 
-    setIsJoining(true)
-
     if (!hasAllowance) {
       setStep('approving')
       writeApprove({
@@ -146,8 +144,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       })
     } else {
       if (goal.onChainId === undefined) {
-        alert('This goal is not yet available on-chain. Please check back soon!')
-        setIsJoining(false)
+        alert('This goal is not yet available on-chain.')
         return
       }
       setStep('joining')
@@ -175,140 +172,176 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   // Handle join success
   if (isJoinSuccess && step === 'joining') {
     setStep('done')
-    setIsJoining(false)
     onJoined?.()
   }
 
   const isLoading = isApprovePending || isApproveConfirming || isJoinPending || isJoinConfirming
 
+  // Duration display
+  const durationText = goal.durationDays < 1 
+    ? `${Math.round(goal.durationDays * 24 * 60)} min`
+    : goal.durationDays === 1 
+      ? '1 day' 
+      : `${goal.durationDays} days`
+
   if (step === 'done') {
     return (
-      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-4">
-            <svg className="w-6 h-6 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="bg-white border border-gray-200 rounded-xl p-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[#2EE59D]/5" />
+        <div className="relative text-center py-4">
+          <div className="w-10 h-10 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-2">
+            <svg className="w-5 h-5 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="font-semibold text-lg mb-1">You're in! 🎉</h3>
-          <p className="text-[var(--text-secondary)] text-sm">Goal joined. Time to get moving!</p>
+          <p className="font-semibold text-sm">You're in! 🎉</p>
+          <p className="text-xs text-gray-500 mt-1">Time to get moving</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6 hover:border-[#2EE59D]/50 transition-colors">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">{goal.emoji}</span>
-          <div>
-            <h3 className="font-semibold text-lg">{goal.title}</h3>
-            <p className="text-sm text-[var(--text-secondary)]">{goal.description}</p>
-          </div>
+    <div 
+      className={`bg-white border rounded-xl transition-all hover:border-[#2EE59D]/50 hover:shadow-sm ${
+        expanded ? 'border-[#2EE59D]/50 shadow-sm' : 'border-gray-200'
+      }`}
+    >
+      {/* Compact View */}
+      <div className="p-4">
+        {/* Category Badge + Icon */}
+        <div className="flex items-start justify-between mb-3">
+          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
+            goal.category === 'Test' 
+              ? 'bg-orange-100 text-orange-600' 
+              : 'bg-gray-100 text-gray-600'
+          }`}>
+            {goal.category.toUpperCase()}
+          </span>
+          <span className="text-xl">{goal.emoji}</span>
         </div>
+
+        {/* Title */}
+        <h3 className="font-semibold text-sm mb-1">{goal.title}</h3>
+        <p className="text-xs text-gray-500 mb-3">{goal.description}</p>
+
+        {/* Compact Stats */}
+        <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+          <span className="flex items-center gap-1">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {durationText}
+          </span>
+          <span className="flex items-center gap-1">
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            {goal.targetMiles} mi
+          </span>
+        </div>
+
+        {/* Activity Row */}
+        <div className="text-xs text-gray-400 mb-3">
+          {goal.participants} joined · ${goal.totalStaked} staked
+        </div>
+
+        {/* Join Button or Expand */}
+        {!expanded ? (
+          <button
+            onClick={() => isConnected ? setExpanded(true) : login()}
+            className="w-full py-2 bg-[#2EE59D] text-black text-sm font-semibold rounded-lg hover:bg-[#26c987] transition-colors"
+          >
+            Join · ${goal.minStake}+
+          </button>
+        ) : null}
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-[var(--border)]">
-        <div className="text-center">
-          <p className="text-2xl font-bold">{goal.targetMiles}</p>
-          <p className="text-xs text-[var(--text-secondary)]">miles</p>
-        </div>
-        <div className="text-center">
-          <p className="text-2xl font-bold">
-            {goal.durationDays < 1 
-              ? Math.round(goal.durationDays * 24 * 60) 
-              : goal.durationDays}
-          </p>
-          <p className="text-xs text-[var(--text-secondary)]">
-            {goal.durationDays < 1 ? 'mins' : 'days'}
-          </p>
-        </div>
-        <div className="text-center">
-          <p className="text-2xl font-bold text-[#2EE59D]">{goal.participants}</p>
-          <p className="text-xs text-[var(--text-secondary)]">joined</p>
-        </div>
-      </div>
-
-      {/* Stake Input */}
-      {isConnected && (
-        <div className="mb-4">
-          <div className="flex justify-between text-sm mb-2">
-            <span className="text-[var(--text-secondary)]">Your stake</span>
-            <span className="text-[var(--text-secondary)]">Balance: {balanceNum.toFixed(2)} USDC</span>
-          </div>
-          <div className="flex items-center gap-2 bg-[var(--background)] border border-[var(--border)] rounded-lg p-3">
-            <span className="text-[var(--text-secondary)]">$</span>
+      {/* Expanded Stake Input */}
+      {expanded && (
+        <div className="px-4 pb-4 border-t border-gray-100 pt-4">
+          {/* Stake Amount */}
+          <div className="mb-3">
+            <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <span>Stake amount</span>
+              <span>Balance: {balanceNum.toFixed(2)} USDC</span>
+            </div>
+            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+              <span className="text-gray-400 text-sm">$</span>
+              <input
+                type="number"
+                min={goal.minStake}
+                max={goal.maxStake}
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(e.target.value)}
+                disabled={isLoading}
+                className="flex-1 bg-transparent outline-none text-sm font-semibold"
+              />
+              <span className="text-gray-400 text-xs">USDC</span>
+            </div>
             <input
-              type="number"
+              type="range"
               min={goal.minStake}
               max={goal.maxStake}
               value={stakeAmount}
               onChange={(e) => setStakeAmount(e.target.value)}
               disabled={isLoading}
-              className="flex-1 bg-transparent outline-none text-lg font-semibold"
+              className="w-full h-1 mt-2 bg-gray-200 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#2EE59D]"
             />
-            <span className="text-[var(--text-secondary)] text-sm">USDC</span>
+            <div className="flex justify-between text-xs text-gray-400 mt-1">
+              <span>${goal.minStake}</span>
+              <span>${goal.maxStake}</span>
+            </div>
           </div>
-          <input
-            type="range"
-            min={goal.minStake}
-            max={goal.maxStake}
-            value={stakeAmount}
-            onChange={(e) => setStakeAmount(e.target.value)}
-            disabled={isLoading}
-            className="w-full h-1 mt-2 bg-gray-200 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#2EE59D] [&::-webkit-slider-thumb]:cursor-pointer"
-          />
+
+          {/* Strava Warning */}
+          {!stravaConnected && (
+            <div className="mb-3 p-2 rounded-lg bg-orange-50 border border-orange-100">
+              <p className="text-xs text-orange-600">Connect Strava to verify your runs</p>
+            </div>
+          )}
+
+          {/* Progress */}
+          {isLoading && (
+            <div className="mb-3 p-2 rounded-lg bg-gray-50">
+              <p className="text-xs text-gray-500 text-center">
+                {isApprovePending ? 'Confirm approval...' :
+                 isApproveConfirming ? 'Approving USDC...' :
+                 isJoinPending ? 'Confirm in wallet...' :
+                 isJoinConfirming ? 'Joining...' : ''}
+              </p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setExpanded(false)}
+              className="px-3 py-2 text-xs text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleJoin}
+              disabled={isLoading || !hasBalance}
+              className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${
+                isLoading || !hasBalance
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-[#2EE59D] text-black hover:bg-[#26c987]'
+              }`}
+            >
+              {!stravaConnected
+                ? 'Connect Strava'
+                : !hasBalance
+                  ? 'Insufficient USDC'
+                  : isLoading
+                    ? 'Processing...'
+                    : `Stake $${stakeAmount}`
+              }
+            </button>
+          </div>
         </div>
       )}
-
-      {/* Strava Status */}
-      {isConnected && !stravaConnected && (
-        <div className="mb-4 p-3 rounded-lg bg-orange-50 border border-orange-200">
-          <p className="text-sm text-orange-700">Connect Strava to join this goal</p>
-        </div>
-      )}
-
-      {/* Progress */}
-      {isLoading && (
-        <div className="mb-4 p-3 rounded-lg bg-[var(--surface)]">
-          <p className="text-sm text-[var(--text-secondary)] text-center">
-            {isApprovePending ? 'Confirm approval in wallet...' :
-             isApproveConfirming ? 'Approving USDC...' :
-             isJoinPending ? 'Confirm in wallet...' :
-             isJoinConfirming ? 'Joining goal...' : ''}
-          </p>
-        </div>
-      )}
-
-      {/* Join Button */}
-      <button
-        onClick={handleJoin}
-        disabled={isLoading || (isConnected && !hasBalance)}
-        className={`w-full py-3 rounded-xl font-semibold transition-all ${
-          isLoading || (isConnected && !hasBalance)
-            ? 'bg-gray-200 text-[var(--text-secondary)] cursor-not-allowed'
-            : 'bg-[#2EE59D] text-white hover:bg-[#26c987]'
-        }`}
-      >
-        {!isConnected 
-          ? 'Connect Wallet to Join'
-          : !stravaConnected
-            ? 'Connect Strava & Join'
-            : !hasBalance
-              ? 'Insufficient USDC'
-              : isLoading
-                ? 'Processing...'
-                : `Stake $${stakeAmount} & Join`
-        }
-      </button>
-
-      {/* Pool Info */}
-      <p className="text-center text-xs text-[var(--text-secondary)] mt-3">
-        ${goal.totalStaked.toLocaleString()} total staked by {goal.participants} people
-      </p>
     </div>
   )
 }
