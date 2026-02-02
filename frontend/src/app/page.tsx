@@ -171,19 +171,18 @@ export default function Home() {
       </section>
 
       {/* Browse Goals */}
-      <section id="goals" className="py-24 px-6">
+      <section id="goals" className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <p className="text-[#2EE59D] font-medium mb-2">Active Goals</p>
-              <h2 className="text-3xl font-bold">Join a challenge</h2>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2EE59D] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2EE59D]"></span>
+          <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center gap-4">
+              <h2 className="text-3xl md:text-4xl font-bold">Active Goals</h2>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#2EE59D]/10 border border-[#2EE59D]/20">
+                <div className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2EE59D] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2EE59D]"></span>
+                </div>
+                <span className="text-sm font-medium text-[#2EE59D]">Live</span>
               </div>
-              <span className="text-sm text-[var(--text-secondary)]">Live</span>
             </div>
           </div>
           <BrowseGoals />
