@@ -18,8 +18,13 @@ export default function Home() {
     setMounted(true)
   }, [])
 
+  const scrollToGoals = (e: React.MouseEvent) => {
+    e.preventDefault()
+    document.getElementById('goals')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <main className="min-h-screen bg-white text-gray-900 scroll-smooth">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] scroll-smooth">
       {/* Subtle Background Pattern */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2EE59D]/5 rounded-full blur-3xl" />
@@ -27,7 +32,7 @@ export default function Home() {
       </div>
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
           <a 
             href="/" 
@@ -37,11 +42,11 @@ export default function Home() {
             goalstake
           </a>
           <div className="flex items-center gap-6">
-            <a href="#how-it-works" className="text-sm text-gray-500 hover:text-gray-900 transition-colors hidden sm:block relative group">
+            <a href="#how-it-works" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors hidden sm:block relative group">
               How it works
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2EE59D] group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#goals" className="text-sm text-gray-500 hover:text-gray-900 transition-colors hidden sm:block relative group">
+            <a href="#goals" onClick={scrollToGoals} className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors hidden sm:block relative group">
               Goals
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2EE59D] group-hover:w-full transition-all duration-300" />
             </a>
@@ -54,7 +59,7 @@ export default function Home() {
       {/* Hero - Compact with animation */}
       <section className={`pt-24 pb-12 px-6 relative transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100/80 text-xs text-gray-600 mb-6 backdrop-blur-sm border border-gray-200/50">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface)] text-xs text-[var(--text-secondary)] mb-6 border border-[var(--border)]">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2EE59D] opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2EE59D]" />
@@ -72,12 +77,13 @@ export default function Home() {
             </span>
           </h1>
           
-          <p className="text-lg text-gray-500 max-w-xl mx-auto mb-8">
+          <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
             Hit your goal, keep your stake + earn from those who don't.
           </p>
           
           <a 
             href="#goals" 
+            onClick={scrollToGoals}
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#2EE59D] text-black font-semibold rounded-lg 
               hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 hover:-translate-y-0.5
               active:translate-y-0 active:shadow-md
@@ -92,23 +98,23 @@ export default function Home() {
       </section>
 
       {/* Category Filter Pills - Sticky */}
-      <div id="goals" className="sticky top-[57px] z-30 bg-white/80 backdrop-blur-md border-b border-gray-200/50 py-3">
+      <div id="goals" className="sticky top-[57px] z-30 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] py-3">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex gap-2 p-1 bg-gray-100/80 rounded-full">
+          <div className="flex gap-2 p-1 bg-[var(--surface)] rounded-full">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200
                   ${activeCategory === cat 
-                    ? 'bg-white text-gray-900 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-900'}`}
+                    ? 'bg-[var(--background)] text-[var(--foreground)] shadow-sm' 
+                    : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'}`}
               >
                 {cat}
               </button>
             ))}
           </div>
-          <div className="text-sm text-gray-400 hidden sm:flex items-center gap-2">
+          <div className="text-sm text-[var(--text-secondary)] hidden sm:flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#2EE59D] animate-pulse" />
             8 goals live
           </div>
@@ -123,7 +129,7 @@ export default function Home() {
       </section>
 
       {/* How It Works - Compact horizontal */}
-      <section id="how-it-works" className="py-16 px-6 bg-gradient-to-b from-gray-50 to-white border-t border-gray-200/50">
+      <section id="how-it-works" className="py-16 px-6 bg-[var(--surface)] border-t border-[var(--border)]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-xs font-semibold text-[#2EE59D] uppercase tracking-wider">Simple Process</span>
@@ -132,7 +138,7 @@ export default function Home() {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative">
             {/* Connecting line */}
-            <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+            <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
               { step: '01', icon: '👤', title: 'Sign up', desc: 'Email or Google. No crypto needed.' },
@@ -145,14 +151,14 @@ export default function Home() {
                 className="text-center group relative"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white shadow-sm border border-gray-100 mb-4 group-hover:shadow-md group-hover:border-[#2EE59D]/30 group-hover:scale-110 transition-all duration-300">
+                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--background)] shadow-sm border border-[var(--border)] mb-4 group-hover:shadow-md group-hover:border-[#2EE59D]/30 group-hover:scale-110 transition-all duration-300">
                   <span className="text-2xl">{item.icon}</span>
                   <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#2EE59D] text-[10px] font-bold text-black flex items-center justify-center">
                     {item.step.slice(-1)}
                   </span>
                 </div>
                 <h3 className="font-semibold mb-1 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
-                <p className="text-sm text-gray-500">{item.desc}</p>
+                <p className="text-sm text-[var(--text-secondary)]">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -175,13 +181,13 @@ export default function Home() {
             ].map((item, i) => (
               <div 
                 key={item.title}
-                className="group p-6 rounded-xl border border-gray-200 hover:border-[#2EE59D]/50 hover:shadow-lg hover:shadow-[#2EE59D]/5 hover:-translate-y-1 transition-all duration-300 bg-white"
+                className="group p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[#2EE59D]/50 hover:shadow-lg hover:shadow-[#2EE59D]/5 hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2EE59D]/10 to-[#2EE59D]/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <span className="text-2xl">{item.icon}</span>
                 </div>
                 <h3 className="font-semibold mb-2 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -205,6 +211,7 @@ export default function Home() {
           </p>
           <a 
             href="#goals" 
+            onClick={scrollToGoals}
             className="inline-flex items-center gap-2 px-8 py-4 bg-[#2EE59D] text-black font-bold rounded-xl 
               hover:bg-white hover:shadow-xl hover:shadow-[#2EE59D]/25 hover:-translate-y-1
               active:translate-y-0
@@ -219,14 +226,14 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8 px-6 bg-white">
+      <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--background)]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-4">
             <span className="font-bold text-[#2EE59D] text-lg">goalstake</span>
-            <span className="text-sm text-gray-400">The Commitment Market</span>
+            <span className="text-sm text-[var(--text-secondary)]">The Commitment Market</span>
           </div>
           
-          <div className="flex items-center gap-6 text-sm text-gray-500">
+          <div className="flex items-center gap-6 text-sm text-[var(--text-secondary)]">
             <a href="https://github.com/2shanez/goalstake" target="_blank" rel="noopener noreferrer" className="hover:text-[#2EE59D] transition-colors">
               GitHub
             </a>

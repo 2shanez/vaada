@@ -176,14 +176,14 @@ export function BrowseGoals({ filter = 'All' }: BrowseGoalsProps) {
             }`}
             style={{ transitionDelay: `${(filteredGoals.length + i) * 50}ms` }}
           >
-            <div className="h-full bg-gradient-to-br from-gray-50 to-gray-100/50 border border-dashed border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center min-h-[240px] group hover:border-gray-300 hover:from-gray-100 hover:to-gray-50 transition-all duration-300">
+            <div className="h-full bg-gradient-to-br from-[var(--surface)] to-[var(--surface)]/50 border border-dashed border-[var(--border)] rounded-xl p-4 flex flex-col items-center justify-center min-h-[240px] group hover:border-gray-300 hover:from-[var(--surface)] hover:to-[var(--surface)] transition-all duration-300">
               <div className="relative">
                 <span className="text-4xl grayscale group-hover:grayscale-0 transition-all duration-300">{item.emoji}</span>
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-gray-300 rounded-full animate-pulse" />
               </div>
-              <p className="font-semibold text-sm text-gray-500 mt-4 mb-1">{item.title}</p>
-              <p className="text-xs text-gray-400 mb-4">{item.desc}</p>
-              <button className="px-4 py-1.5 text-xs font-medium text-gray-500 bg-white border border-gray-200 rounded-full hover:border-[#2EE59D] hover:text-[#2EE59D] transition-colors">
+              <p className="font-semibold text-sm text-[var(--text-secondary)] mt-4 mb-1">{item.title}</p>
+              <p className="text-xs text-[var(--text-secondary)] mb-4">{item.desc}</p>
+              <button className="px-4 py-1.5 text-xs font-medium text-[var(--text-secondary)] bg-[var(--background)] border border-[var(--border)] rounded-full hover:border-[#2EE59D] hover:text-[#2EE59D] transition-colors">
                 Notify me
               </button>
             </div>
@@ -194,41 +194,41 @@ export function BrowseGoals({ filter = 'All' }: BrowseGoalsProps) {
       {/* Empty State */}
       {filteredGoals.length === 0 && (
         <div className="text-center py-16 animate-in fade-in duration-300">
-          <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-full bg-[var(--surface)] flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">🏃</span>
           </div>
-          <p className="text-gray-600 font-medium mb-2">No {filter.toLowerCase()} goals yet</p>
-          <p className="text-sm text-gray-400">Check back soon or try a different category</p>
+          <p className="text-[var(--text-secondary)] font-medium mb-2">No {filter.toLowerCase()} goals yet</p>
+          <p className="text-sm text-[var(--text-secondary)]">Check back soon or try a different category</p>
         </div>
       )}
 
       {/* Stats Footer */}
-      <div className="mt-10 pt-8 border-t border-gray-100">
+      <div className="mt-10 pt-8 border-t border-[var(--border)]">
         <div className="flex justify-center gap-12">
           <div className="text-center group">
             <div className="flex items-baseline justify-center gap-1">
-              <p className="text-3xl font-bold text-gray-900 tabular-nums">{FEATURED_GOALS.length}</p>
+              <p className="text-3xl font-bold text-[var(--foreground)] tabular-nums">{FEATURED_GOALS.length}</p>
             </div>
-            <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Active Goals</p>
+            <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Active Goals</p>
           </div>
           <div className="text-center group">
             <div className="flex items-baseline justify-center gap-1">
-              <span className="text-lg text-gray-400">$</span>
+              <span className="text-lg text-[var(--text-secondary)]">$</span>
               <p className="text-3xl font-bold text-[#2EE59D] tabular-nums">{totalStaked}</p>
             </div>
-            <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Total Staked</p>
+            <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Total Staked</p>
           </div>
           <div className="text-center group">
             <div className="flex items-baseline justify-center gap-1">
-              <p className="text-3xl font-bold text-gray-900 tabular-nums">{totalParticipants}</p>
+              <p className="text-3xl font-bold text-[var(--foreground)] tabular-nums">{totalParticipants}</p>
             </div>
-            <p className="text-xs text-gray-500 uppercase tracking-wider mt-1">Participants</p>
+            <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Participants</p>
           </div>
         </div>
         
         {/* Call to action when empty */}
         {totalParticipants === 0 && (
-          <p className="text-center text-sm text-gray-400 mt-4">
+          <p className="text-center text-sm text-[var(--text-secondary)] mt-4">
             Be the first to stake on a goal ✨
           </p>
         )}

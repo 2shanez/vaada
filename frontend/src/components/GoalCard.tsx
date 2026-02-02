@@ -203,9 +203,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             </svg>
           </div>
           <p className="font-bold text-lg mb-1">You're in! 🎉</p>
-          <p className="text-sm text-gray-500">Goal starts now. Time to move!</p>
+          <p className="text-sm text-[var(--text-secondary)]">Goal starts now. Time to move!</p>
           <div className="mt-4 pt-4 border-t border-[#2EE59D]/20">
-            <p className="text-xs text-gray-400">Staked ${stakeAmount} USDC</p>
+            <p className="text-xs text-[var(--text-secondary)]">Staked ${stakeAmount} USDC</p>
           </div>
         </div>
       </div>
@@ -214,10 +214,10 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
   return (
     <div 
-      className={`group bg-white border rounded-xl transition-all duration-200 cursor-pointer
+      className={`group bg-[var(--surface)] border rounded-xl transition-all duration-200 cursor-pointer
         ${expanded 
           ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10 scale-[1.02]' 
-          : 'border-gray-200 hover:border-gray-300 hover:shadow-md hover:-translate-y-0.5'
+          : 'border-[var(--border)] hover:border-[var(--text-secondary)]/30 hover:shadow-md hover:-translate-y-0.5'
         }`}
     >
       {/* Card Content */}
@@ -228,32 +228,32 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${catStyle.bg} ${catStyle.text}`}>
               {goal.category.toUpperCase()}
             </span>
-            <span className="text-[10px] text-gray-400 font-medium">{durationText}</span>
+            <span className="text-[10px] text-[var(--text-secondary)] font-medium">{durationText}</span>
           </div>
           <span className="text-2xl group-hover:scale-110 transition-transform">{goal.emoji}</span>
         </div>
 
         {/* Title + Description */}
-        <h3 className="font-bold text-sm text-gray-900 mb-1 group-hover:text-[#2EE59D] transition-colors">
+        <h3 className="font-bold text-sm text-[var(--foreground)] mb-1 group-hover:text-[#2EE59D] transition-colors">
           {goal.title}
         </h3>
-        <p className="text-xs text-gray-500 mb-4 line-clamp-2">{goal.description}</p>
+        <p className="text-xs text-[var(--text-secondary)] mb-4 line-clamp-2">{goal.description}</p>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="bg-gray-50 rounded-lg px-3 py-2">
-            <p className="text-lg font-bold text-gray-900">{goal.targetMiles}</p>
-            <p className="text-[10px] text-gray-500 uppercase tracking-wide">miles</p>
+          <div className="bg-[var(--surface)] rounded-lg px-3 py-2">
+            <p className="text-lg font-bold text-[var(--foreground)]">{goal.targetMiles}</p>
+            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">miles</p>
           </div>
-          <div className="bg-gray-50 rounded-lg px-3 py-2">
+          <div className="bg-[var(--surface)] rounded-lg px-3 py-2">
             <p className="text-lg font-bold text-[#2EE59D]">${goal.minStake}</p>
-            <p className="text-[10px] text-gray-500 uppercase tracking-wide">min stake</p>
+            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">min stake</p>
           </div>
         </div>
 
         {/* Pool Progress Bar */}
         <div className="mb-4">
-          <div className="flex justify-between text-[10px] text-gray-400 mb-1">
+          <div className="flex justify-between text-[10px] text-[var(--text-secondary)] mb-1">
             <span>{goal.participants === 0 ? 'Be the first to join' : `${goal.participants} joined`}</span>
             <span>${goal.totalStaked} pooled</span>
           </div>
@@ -283,7 +283,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
       {/* Expanded Stake Panel */}
       {expanded && (
-        <div className="px-4 pb-4 border-t border-gray-100 pt-4 animate-in slide-in-from-top-2 duration-200">
+        <div className="px-4 pb-4 border-t border-[var(--border)] pt-4 animate-in slide-in-from-top-2 duration-200">
           {/* Quick Stakes */}
           <div className="flex gap-2 mb-3">
             {[goal.minStake, Math.round((goal.minStake + goal.maxStake) / 2), goal.maxStake].map((amount) => (
@@ -293,7 +293,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 className={`flex-1 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
                   stakeAmount === amount.toString()
                     ? 'bg-[#2EE59D]/10 border-[#2EE59D] text-[#2EE59D]'
-                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
+                    : 'bg-[var(--surface)] border-[var(--border)] text-gray-600 hover:border-gray-300'
                 }`}
               >
                 ${amount}
@@ -303,8 +303,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
           {/* Custom Amount */}
           <div className="mb-3">
-            <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus-within:border-[#2EE59D] focus-within:ring-1 focus-within:ring-[#2EE59D]/20 transition-all">
-              <span className="text-gray-400 text-sm font-medium">$</span>
+            <div className="flex items-center gap-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg px-3 py-2 focus-within:border-[#2EE59D] focus-within:ring-1 focus-within:ring-[#2EE59D]/20 transition-all">
+              <span className="text-[var(--text-secondary)] text-sm font-medium">$</span>
               <input
                 type="number"
                 min={goal.minStake}
@@ -312,12 +312,12 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 value={stakeAmount}
                 onChange={(e) => setStakeAmount(e.target.value)}
                 disabled={isLoading}
-                className="flex-1 bg-transparent outline-none text-sm font-bold text-gray-900"
+                className="flex-1 bg-transparent outline-none text-sm font-bold text-[var(--foreground)]"
                 placeholder={goal.minStake.toString()}
               />
-              <span className="text-[10px] text-gray-400 font-medium">USDC</span>
+              <span className="text-[10px] text-[var(--text-secondary)] font-medium">USDC</span>
             </div>
-            <div className="flex justify-between text-[10px] text-gray-400 mt-1 px-1">
+            <div className="flex justify-between text-[10px] text-[var(--text-secondary)] mt-1 px-1">
               <span>Min ${goal.minStake}</span>
               <span>Balance: {balanceNum.toFixed(2)}</span>
               <span>Max ${goal.maxStake}</span>
@@ -353,7 +353,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           <div className="flex gap-2">
             <button
               onClick={() => setExpanded(false)}
-              className="px-4 py-2.5 text-xs font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+              className="px-4 py-2.5 text-xs font-medium text-[var(--text-secondary)] hover:text-gray-700 hover:bg-[var(--surface)] rounded-lg transition-colors"
             >
               Cancel
             </button>
@@ -362,7 +362,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               disabled={isLoading || (isConnected && !hasBalance)}
               className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-150 ${
                 isLoading || (isConnected && !hasBalance)
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  ? 'bg-gray-100 text-[var(--text-secondary)] cursor-not-allowed'
                   : 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
               }`}
             >
