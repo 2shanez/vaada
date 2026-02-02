@@ -206,21 +206,25 @@ function GoalCard({
 
   if (!goal || !participant) return null
 
-  const targetMiles = Number(formatUnits(goal.targetMiles, 18))
-  const actualMiles = Number(formatUnits(participant.actualMiles, 18))
-  const stake = Number(formatUnits(participant.stake, 6))
-  const payout = expectedPayout ? Number(formatUnits(expectedPayout, 6)) : 0
-  const deadline = Number(goal.deadline) * 1000
+  // Type assertions for contract return data
+  const g = goal as Goal
+  const p = participant as Participant
+
+  const targetMiles = Number(formatUnits(g.targetMiles, 18))
+  const actualMiles = Number(formatUnits(p.actualMiles, 18))
+  const stake = Number(formatUnits(p.stake, 6))
+  const payout = expectedPayout ? Number(formatUnits(expectedPayout as bigint, 6)) : 0
+  const deadline = Number(g.deadline) * 1000
   const now = Date.now()
   
   const progress = targetMiles > 0 ? (actualMiles / targetMiles) * 100 : 0
-  const isActive = !goal.settled && deadline > now
-  const isPastDeadline = deadline <= now && !goal.settled
+  const isActive = !g.settled && deadline > now
+  const isPastDeadline = deadline <= now && !g.settled
   const timeLeft = deadline - now
   const daysLeft = Math.ceil(timeLeft / (24 * 60 * 60 * 1000))
   const hoursLeft = Math.ceil(timeLeft / (60 * 60 * 1000))
 
-  const canClaim = goal.settled && participant.succeeded && !participant.claimed
+  const canClaim = g.settled && p.succeeded && !p.claimed
 
   const handleClaim = () => {
     writeContract({
@@ -233,8 +237,8 @@ function GoalCard({
 
   return (
     <div className={`bg-[var(--surface)] border rounded-xl p-6 ${
-      goal.settled 
-        ? participant.succeeded 
+      g.settled 
+        ? p.succeeded 
           ? 'border-[#2EE59D]/50' 
           : 'border-red-500/50'
         : 'border-[var(--border)]'
@@ -242,7 +246,7 @@ function GoalCard({
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
-          <p className="font-semibold text-lg">{goal.name}</p>
+          <p className="font-semibold text-lg">{g.name}</p>
           <p className="text-sm text-[var(--text-secondary)]">{targetMiles} miles target</p>
         </div>
         <div className="text-right">
@@ -269,16 +273,16 @@ function GoalCard({
 
       {/* Status & Actions */}
       <div className="flex items-center justify-between">
-        {goal.settled ? (
+        {g.settled ? (
           <div className="flex items-center gap-3">
             <span className={`px-3 py-1.5 rounded-full text-sm font-medium ${
-              participant.succeeded 
+              p.succeeded 
                 ? 'bg-[#2EE59D]/10 text-[#2EE59D]'
                 : 'bg-red-500/10 text-red-400'
             }`}>
-              {participant.succeeded ? '✓ Success' : '✗ Missed'}
+              {p.succeeded ? '✓ Success' : '✗ Missed'}
             </span>
-            {participant.succeeded && (
+            {p.succeeded && (
               <span className="text-sm text-[var(--text-secondary)]">
                 Payout: <span className="text-[#2EE59D] font-semibold">${payout.toFixed(2)}</span>
               </span>
@@ -294,7 +298,7 @@ function GoalCard({
           </span>
         ) : null}
 
-        {canClaim && !participant.claimed && (
+        {canClaim && !p.claimed && (
           <button
             onClick={handleClaim}
             disabled={isPending || isConfirming}
@@ -304,7 +308,7 @@ function GoalCard({
           </button>
         )}
 
-        {participant.claimed && (
+        {p.claimed && (
           <span className="text-sm text-[var(--text-secondary)]">✓ Claimed</span>
         )}
       </div>
@@ -313,11 +317,11 @@ function GoalCard({
       <div className="mt-4 pt-4 border-t border-[var(--border)] flex gap-6 text-sm">
         <div>
           <span className="text-[var(--text-secondary)]">Pool: </span>
-          <span className="font-medium">${Number(formatUnits(goal.totalStaked, 6)).toFixed(0)}</span>
+          <span className="font-medium">${Number(formatUnits(g.totalStaked, 6)).toFixed(0)}</span>
         </div>
         <div>
           <span className="text-[var(--text-secondary)]">Participants: </span>
-          <span className="font-medium">{goal.participantCount.toString()}</span>
+          <span className="font-medium">{g.participantCount.toString()}</span>
         </div>
         <div>
           <span className="text-[var(--text-secondary)]">Deadline: </span>
