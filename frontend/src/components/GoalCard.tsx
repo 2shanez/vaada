@@ -160,6 +160,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
   
   const handleStoreToken = async () => {
+    console.log('handleStoreToken called', { isWrongNetwork, chainId })
+    
     if (isWrongNetwork) {
       try {
         await switchChain({ chainId: baseSepolia.id })
@@ -171,13 +173,19 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     
     setStep('storing-token')
     try {
+      console.log('Fetching Strava token...')
       const res = await fetch('/api/strava/token')
+      console.log('Token response:', res.status)
+      
       if (!res.ok) {
+        const errorText = await res.text()
+        console.error('Token fetch failed:', errorText)
         alert('Could not retrieve Strava token. Please reconnect Strava.')
         setStep('idle')
         return
       }
       const { token } = await res.json()
+      console.log('Got token, storing on chain...')
       
       writeStoreToken({
         address: contracts.oracle,
@@ -452,7 +460,16 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               Cancel
             </button>
             <button
-              onClick={!stravaConnected ? handleStravaConnect : (!hasTokenOnChain ? handleStoreToken : handleJoin)}
+              onClick={() => {
+                console.log('Button clicked', { stravaConnected, hasTokenOnChain })
+                if (!stravaConnected) {
+                  handleStravaConnect()
+                } else if (!hasTokenOnChain) {
+                  handleStoreToken()
+                } else {
+                  handleJoin()
+                }
+              }}
               disabled={isLoading || (isConnected && stravaConnected && hasTokenOnChain && !hasBalance)}
               className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-150 ${
                 isLoading || (isConnected && stravaConnected && hasTokenOnChain && !hasBalance)
