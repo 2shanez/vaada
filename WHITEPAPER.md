@@ -208,6 +208,32 @@ Building in public. Shipping fast. Automating everything.
 - Owner functions limited to parameter updates
 - No upgradability (immutable MVP)
 
+### Known Limitations & Risks
+
+**Data Integrity:**
+- Strava data can be spoofed (GPS spoofing, fake activities)
+- Single data source creates single point of failure
+- *Future mitigation:* Multi-source verification (Strava + Apple Health + GPS trail analysis)
+
+**Economic Gaming:**
+- Retroactive staking (run first, stake after) — mitigated by only counting post-stake activities
+- Sybil attacks (multiple accounts) — mitigated by minimum stakes, future identity verification
+- Small stake farming — self-limiting when loser pool is empty
+
+**Oracle Trust:**
+- Chainlink Functions executes off-chain JS code
+- Oracle compromise could falsify results
+- *Mitigation:* Transparent source code, Chainlink's decentralized network
+
+**Smart Contract:**
+- MVP contracts are unaudited
+- Mainnet deployment will require professional audit
+- Bug bounty program planned for launch
+
+**General:**
+- Early stage product — expect bugs and iterations
+- Not financial advice — stake only what you can afford to lose
+
 ---
 
 ## Why Now?
