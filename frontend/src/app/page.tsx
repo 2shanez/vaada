@@ -101,7 +101,7 @@ export default function Home() {
                 step: '03', 
                 icon: '💵', 
                 title: 'Put money on it', 
-                desc: 'Stake real money. Choose an amount you're comfortable with.' 
+                desc: 'Stake real money. Choose an amount you\'re comfortable with.' 
               },
               { 
                 step: '04', 
