@@ -210,10 +210,10 @@ export default function Home() {
             Ready to bet on<br /><span className="text-[#2EE59D]">yourself?</span>
           </h2>
           <p className="text-xl text-[var(--text-secondary)] mb-10">
-            Join thousands who've discovered that money on the line means goals get done.
+            Put money on the line. Hit your goals. Keep your stake.
           </p>
           <a href="#goals" className="inline-flex px-8 py-4 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#26c987] transition-all hover:scale-105">
-            Get Started — It's Free
+            Get Started
           </a>
         </div>
       </section>
