@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useChainId } from 'wagmi'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { parseUnits, formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
 import { baseSepolia } from 'wagmi/chains'
@@ -71,7 +71,7 @@ interface GoalCardProps {
 
 export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const { address, isConnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const chainId = useChainId()
   const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
   
@@ -120,7 +120,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
   const handleJoin = async () => {
     if (!isConnected) {
-      openConnectModal?.()
+      login()
       return
     }
 

@@ -1,16 +1,13 @@
 import { http, createConfig } from 'wagmi'
 import { base, baseSepolia } from 'wagmi/chains'
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 
-export const config = getDefaultConfig({
-  appName: 'GoalStake',
-  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'YOUR_PROJECT_ID',
-  chains: [base, baseSepolia],
+// Privy wagmi config
+export const privyConfig = createConfig({
+  chains: [baseSepolia, base],
   transports: {
-    [base.id]: http(),
     [baseSepolia.id]: http(),
+    [base.id]: http(),
   },
-  ssr: true,
 })
 
 // Contract addresses (update after deployment)

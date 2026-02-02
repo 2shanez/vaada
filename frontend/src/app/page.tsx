@@ -1,10 +1,10 @@
 'use client'
 
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useAccount } from 'wagmi'
 import { BrowseGoals } from '@/components/BrowseGoals'
 import { MyChallenges } from '@/components/MyChallenges'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { PrivyConnectButton } from '@/components/PrivyConnectButton'
 
 export default function Home() {
   const { isConnected } = useAccount()
@@ -19,11 +19,7 @@ export default function Home() {
             <a href="#how-it-works" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors hidden sm:block">How it works</a>
             <a href="#goals" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors hidden sm:block">Goals</a>
             <ThemeToggle />
-            <ConnectButton 
-              showBalance={false}
-              chainStatus="icon"
-              accountStatus="address"
-            />
+            <PrivyConnectButton />
           </div>
         </div>
       </header>
