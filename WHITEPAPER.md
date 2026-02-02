@@ -1,4 +1,4 @@
-# GoalStake: The Accountability Market
+# GoalStake: The Commitment Market
 
 **Version 1.0 — February 2026**
 
@@ -6,7 +6,7 @@
 
 ## Abstract
 
-GoalStake is a decentralized accountability protocol that allows users to stake money on personal goals. Users commit USDC to fitness challenges verified by Strava data through Chainlink oracles. Hit your goal, keep your stake plus earn from those who didn't. Miss it, your stake goes to the winners.
+GoalStake is a decentralized commitment protocol that allows users to stake money on personal goals. Users commit USDC to fitness challenges verified by Strava data through Chainlink oracles. Hit your goal, keep your stake plus earn from those who didn't. Miss it, your stake goes to the winners.
 
 This is the "put your money where your mouth is" protocol.
 
@@ -20,7 +20,7 @@ This is the "put your money where your mouth is" protocol.
 - 50% of gym memberships go unused
 - Fitness apps have <5% long-term retention
 
-The missing ingredient isn't information or access — it's **accountability with real stakes**.
+The missing ingredient isn't information or access — it's **commitment with real stakes**.
 
 Behavioral economics shows loss aversion is 2x stronger than gain motivation. People work harder to avoid losing $100 than to gain $100. GoalStake weaponizes this.
 
@@ -28,7 +28,7 @@ Behavioral economics shows loss aversion is 2x stronger than gain motivation. Pe
 
 ## The Solution
 
-GoalStake creates **financial accountability** for personal goals:
+GoalStake creates **financial commitment** for personal goals:
 
 1. **Stake** — Commit USDC to a fitness goal (e.g., "Run 10 miles this week")
 2. **Perform** — Complete your activity on Strava
@@ -133,15 +133,15 @@ Crypto enables:
 
 ## Market Opportunity
 
-### The Accountability Market
+### The Commitment Market
 
-Accountability isn't a feature — it's a **market**.
+Commitment isn't a feature — it's a **market**.
 
 Every coach, gym buddy, AA sponsor, and accountability partner proves demand exists. People pay for someone to hold them to their word. GoalStake makes that programmable.
 
 **Market signals:**
 - $15B+ spent on personal coaching annually
-- Accountability partners are the #1 predictor of goal success
+- Commitment partners are the #1 predictor of goal success
 - 2x completion rates when money is on the line (behavioral econ)
 - Prediction markets just proved crypto + stakes + outcomes = massive engagement
 
@@ -151,7 +151,7 @@ Every coach, gym buddy, AA sponsor, and accountability partner proves demand exi
 - Habit/productivity apps: **$12B**
 - Corporate wellness: **$56B**
 
-GoalStake isn't competing in these markets. We're creating **The Accountability Market** — a new category where commitment meets capital.
+GoalStake isn't competing in these markets. We're creating **The Commitment Market** — a new category where commitment meets capital.
 
 ### Competitive Landscape
 
@@ -183,7 +183,7 @@ GoalStake isn't competing in these markets. We're creating **The Accountability 
 - [ ] 10,000 users / $1M TVL
 
 ### Phase 3: Scale
-- [ ] B2B (corporate wellness, creator accountability)
+- [ ] B2B (corporate wellness, creator commitments)
 - [ ] SDK for third-party integrations
 - [ ] Token/governance (if aligned)
 - [ ] 100,000 users / $10M TVL
@@ -281,11 +281,11 @@ The infrastructure is ready. The psychology is proven. The market is waiting.
 
 ## The Vision
 
-GoalStake becomes the **accountability layer for the internet**.
+GoalStake becomes the **commitment layer for the internet**.
 
 Every commitment — fitness, learning, work, habits — can have financial stakes attached. Not as punishment, but as **commitment devices** that help people become who they want to be.
 
-We're not building a fitness app. We're building **The Accountability Market**.
+We're not building a fitness app. We're building **The Commitment Market**.
 
 ---
 
