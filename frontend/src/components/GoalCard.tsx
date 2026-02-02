@@ -1,12 +1,30 @@
 'use client'
 
-import { useState } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useChainId } from 'wagmi'
+import { useState, useEffect } from 'react'
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useChainId, useSwitchChain } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { parseUnits, formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
 import { baseSepolia } from 'wagmi/chains'
 import { isStravaConnected, getStravaAuthUrl } from '@/lib/strava'
+
+// Automation contract ABI for token storage
+const AUTOMATION_ABI = [
+  {
+    name: 'storeToken',
+    type: 'function',
+    stateMutability: 'nonpayable',
+    inputs: [{ name: 'token', type: 'string' }],
+    outputs: [],
+  },
+  {
+    name: 'hasToken',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'user', type: 'address' }],
+    outputs: [{ type: 'bool' }],
+  },
+] as const
 
 const USDC_ABI = [
   {
@@ -73,12 +91,35 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const { address, isConnected } = useAccount()
   const { login } = usePrivy()
   const chainId = useChainId()
+  const { switchChain, isPending: isSwitchingNetwork } = useSwitchChain()
   const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
+  const isWrongNetwork = chainId !== baseSepolia.id
   
   const [expanded, setExpanded] = useState(false)
   const [stakeAmount, setStakeAmount] = useState(goal.minStake.toString())
-  const [step, setStep] = useState<'idle' | 'approving' | 'joining' | 'done'>('idle')
+  const [step, setStep] = useState<'idle' | 'approving' | 'joining' | 'storing-token' | 'done'>('idle')
   const stravaConnected = isStravaConnected()
+  
+  // Check if user has token stored on-chain for Chainlink
+  const { data: hasTokenOnChain, refetch: refetchToken } = useReadContract({
+    address: contracts.oracle,
+    abi: AUTOMATION_ABI,
+    functionName: 'hasToken',
+    args: address ? [address] : undefined,
+    query: { enabled: !!address },
+  })
+  
+  // Store token on-chain
+  const { writeContract: writeStoreToken, data: storeTokenHash, isPending: isStorePending } = useWriteContract()
+  const { isLoading: isStoreConfirming, isSuccess: isStoreSuccess } = useWaitForTransactionReceipt({ hash: storeTokenHash })
+  
+  // Refetch token status after storing
+  useEffect(() => {
+    if (isStoreSuccess) {
+      refetchToken()
+      setStep('idle')
+    }
+  }, [isStoreSuccess, refetchToken])
 
   // Read USDC allowance
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
@@ -116,6 +157,30 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       ? `${window.location.origin}/api/strava/callback`
       : 'http://localhost:3000/api/strava/callback'
     window.location.href = getStravaAuthUrl(callbackUrl)
+  }
+  
+  const handleStoreToken = async () => {
+    if (isWrongNetwork) {
+      switchChain({ chainId: baseSepolia.id })
+      return
+    }
+    
+    setStep('storing-token')
+    try {
+      const res = await fetch('/api/strava/token')
+      if (!res.ok) throw new Error('Failed to get token')
+      const { token } = await res.json()
+      
+      writeStoreToken({
+        address: contracts.oracle,
+        abi: AUTOMATION_ABI,
+        functionName: 'storeToken',
+        args: [token],
+      })
+    } catch (err) {
+      console.error('Error storing token:', err)
+      setStep('idle')
+    }
   }
 
   const handleJoin = async () => {
@@ -175,7 +240,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     onJoined?.()
   }
 
-  const isLoading = isApprovePending || isApproveConfirming || isJoinPending || isJoinConfirming
+  const isLoading = isApprovePending || isApproveConfirming || isJoinPending || isJoinConfirming || isStorePending || isStoreConfirming
 
   // Duration display
   const durationText = goal.durationDays < 1 
@@ -324,13 +389,49 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             </div>
           </div>
 
-          {/* Fitness App Warning */}
+          {/* Strava Connection Status */}
           {isConnected && !stravaConnected && (
             <div className="mb-3 p-2.5 rounded-lg bg-orange-50 border border-orange-100 flex items-center gap-2">
               <svg className="w-4 h-4 text-orange-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <p className="text-xs text-orange-700">Connect fitness app to verify progress</p>
+            </div>
+          )}
+          
+          {/* Need to store token on-chain */}
+          {isConnected && stravaConnected && !hasTokenOnChain && (
+            <div className="mb-3 p-2.5 rounded-lg bg-[#FC4C02]/10 border border-[#FC4C02]/20">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7 13.828h4.169" />
+                  </svg>
+                  <p className="text-xs text-[#FC4C02] font-medium">Strava connected</p>
+                </div>
+                <button
+                  onClick={handleStoreToken}
+                  disabled={isStorePending || isStoreConfirming || isSwitchingNetwork}
+                  className="px-3 py-1 text-xs font-semibold rounded-lg bg-[#FC4C02] text-white hover:bg-[#FC4C02]/90 disabled:opacity-50 transition-colors"
+                >
+                  {isWrongNetwork ? 'Switch Network' : 
+                   isStorePending || isStoreConfirming ? 'Verifying...' : 
+                   'Enable Auto-Verify →'}
+                </button>
+              </div>
+              <p className="text-[10px] text-[var(--text-secondary)] mt-1">
+                Sign a transaction to enable automatic verification via Chainlink
+              </p>
+            </div>
+          )}
+          
+          {/* Token stored - ready to go */}
+          {isConnected && stravaConnected && hasTokenOnChain && (
+            <div className="mb-3 p-2.5 rounded-lg bg-[#2EE59D]/10 border border-[#2EE59D]/20 flex items-center gap-2">
+              <svg className="w-4 h-4 text-[#2EE59D]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+              <p className="text-xs text-[#2EE59D] font-medium">Auto-verification enabled</p>
             </div>
           )}
 
@@ -358,21 +459,29 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               Cancel
             </button>
             <button
-              onClick={handleJoin}
-              disabled={isLoading || (isConnected && !hasBalance)}
+              onClick={!stravaConnected ? handleStravaConnect : (!hasTokenOnChain ? handleStoreToken : handleJoin)}
+              disabled={isLoading || (isConnected && stravaConnected && hasTokenOnChain && !hasBalance)}
               className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-150 ${
-                isLoading || (isConnected && !hasBalance)
+                isLoading || (isConnected && stravaConnected && hasTokenOnChain && !hasBalance)
                   ? 'bg-gray-100 text-[var(--text-secondary)] cursor-not-allowed'
-                  : 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
+                  : !stravaConnected || !hasTokenOnChain
+                    ? 'bg-[#FC4C02] text-white hover:bg-[#FC4C02]/90 active:scale-[0.98] shadow-sm hover:shadow-md'
+                    : 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
               }`}
             >
               {!stravaConnected
-                ? 'Connect App'
-                : !hasBalance
-                  ? 'Insufficient USDC'
-                  : isLoading
-                    ? 'Processing...'
-                    : `Stake $${stakeAmount} →`
+                ? '🏃 Connect Strava'
+                : !hasTokenOnChain
+                  ? isWrongNetwork 
+                    ? '⚠️ Switch to Base Sepolia'
+                    : isStorePending || isStoreConfirming
+                      ? 'Verifying...'
+                      : '🔗 Enable Auto-Verify'
+                  : !hasBalance
+                    ? 'Insufficient USDC'
+                    : isLoading
+                      ? 'Processing...'
+                      : `Stake $${stakeAmount} →`
               }
             </button>
           </div>

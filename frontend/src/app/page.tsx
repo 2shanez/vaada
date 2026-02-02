@@ -6,7 +6,6 @@ import { usePrivy } from '@privy-io/react-auth'
 import { BrowseGoals } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { PrivyConnectButton } from '@/components/PrivyConnectButton'
-import { StravaConnect } from '@/components/StravaConnect'
 
 const categories = ['All', 'Test', 'Daily', 'Weekly', 'Monthly'] as const
 type Category = typeof categories[number]
@@ -74,7 +73,6 @@ export default function Home() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2EE59D] group-hover:w-full transition-all duration-300" />
             </a>
             <ThemeToggle />
-            <StravaConnect />
             <PrivyConnectButton />
           </div>
         </div>
