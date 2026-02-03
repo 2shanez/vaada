@@ -38,9 +38,9 @@ export default function Dashboard() {
           <div className="w-16 h-16 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mb-6">
             <span className="text-3xl">🔐</span>
           </div>
-          <h1 className="text-2xl font-bold mb-2">Sign in to view your goals</h1>
+          <h1 className="text-2xl font-bold mb-2">Sign in to view your promises</h1>
           <p className="text-[var(--text-secondary)] mb-8 text-center">
-            Connect your wallet or sign in with email to see your active stakes.
+            Sign in with email to see your active stakes.
           </p>
           <PrivyConnectButton />
         </div>
@@ -56,7 +56,7 @@ export default function Dashboard() {
           <Link href="/" className="text-xl font-bold text-[#2EE59D]">vaada</Link>
           <div className="flex items-center gap-4">
             <Link href="/" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors">
-              Browse Goals
+              Browse Promises
             </Link>
             <ThemeToggle />
             <PrivyConnectButton />
@@ -68,7 +68,7 @@ export default function Dashboard() {
       <div className="pt-24 pb-16 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">My Goals</h1>
+            <h1 className="text-3xl font-bold mb-2">My Promises</h1>
             <p className="text-[var(--text-secondary)]">
               Track your active stakes and claim winnings.
             </p>

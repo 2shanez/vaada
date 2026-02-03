@@ -113,7 +113,7 @@ export function MyGoals() {
   if (!address) {
     return (
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
-        <p className="text-[var(--text-secondary)]">Connect wallet to view your goals</p>
+        <p className="text-[var(--text-secondary)]">Connect wallet to view your promises</p>
       </div>
     )
   }
@@ -133,15 +133,15 @@ export function MyGoals() {
           <div className="w-16 h-16 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">🎯</span>
           </div>
-          <h3 className="font-semibold text-lg mb-2">No active goals</h3>
+          <h3 className="font-semibold text-lg mb-2">No active promises</h3>
           <p className="text-[var(--text-secondary)] mb-6">
-            Join a goal to start putting your money where your mouth is.
+            Make a promise to start putting your money where your mouth is.
           </p>
           <Link 
-            href="/#goals"
+            href="/#promises"
             className="inline-flex px-6 py-3 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#26c987] transition-all"
           >
-            Browse Goals
+            Browse Promises
           </Link>
         </div>
       </div>
