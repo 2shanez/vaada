@@ -117,12 +117,12 @@ const FEATURED_GOALS: Goal[] = [
   // Test Goals (V3 - IDs start at 0)
   {
     id: 'test-1',
-    onChainId: 0,  // V3 goal 0
+    onChainId: 1,  // V3 goal 1 (5 min entry, 10 min total)
     title: 'Quick Test',
-    description: 'Run 0.32 miles in 5 minutes',
+    description: 'Run 0.32 miles in 10 minutes',
     emoji: '🧪',
     targetMiles: 0.32,
-    durationDays: 0.00347,
+    durationDays: 0.00694,  // ~10 min
     minStake: 1,
     maxStake: 10,
     participants: 0,
