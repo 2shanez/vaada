@@ -100,7 +100,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
-            Keep your promise, keep your stake.
+            Keep your promise, keep your stake + earn from those who don't.
           </p>
           
           <button 
