@@ -116,6 +116,20 @@ function NotifyModal({
 const FEATURED_GOALS: Goal[] = [
   // Test Goals (V3 - IDs start at 0)
   {
+    id: 'test-e2e',
+    onChainId: 8,  // V3 goal 8 - E2E Test
+    title: 'E2E Test',
+    description: 'Run 0.2 miles - quick test',
+    emoji: '🚀',
+    targetMiles: 0.2,
+    durationDays: 0.00694,  // ~10 min
+    minStake: 1,
+    maxStake: 5,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Test',
+  },
+  {
     id: 'test-1',
     onChainId: 6,  // V3 goal 6 (30 min entry, 60 min total)
     title: 'Quick Test',
