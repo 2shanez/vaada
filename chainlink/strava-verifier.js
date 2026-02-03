@@ -34,8 +34,10 @@ const activities = stravaResponse.data;
 let totalMeters = 0;
 
 for (const activity of activities) {
-  // Only count runs (type = "Run")
-  if (activity.type === "Run") {
+  // Only count runs that are device-recorded (not manually typed)
+  // activity.manual === true means user typed it in by hand (easy to fake)
+  // activity.manual === false means it came from app/device (treadmill w/ watch OK)
+  if (activity.type === "Run" && activity.manual === false) {
     totalMeters += activity.distance; // Strava returns meters
   }
 }
