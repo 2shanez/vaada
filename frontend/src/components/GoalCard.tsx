@@ -168,7 +168,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
   // Parse participant data
   const participant = participantData as { user: string; stake: bigint; actualMiles: bigint; verified: boolean; succeeded: boolean; claimed: boolean } | undefined
-  const hasJoined = participant && participant.stake > 0n
+  const hasJoined = participant && participant.stake > BigInt(0)
   const userStake = participant ? Number(formatUnits(participant.stake, 6)) : 0
 
   // Check if user has token stored on-chain for Chainlink
