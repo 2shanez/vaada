@@ -90,9 +90,9 @@ export default function Home() {
           </div>
           
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
-            Stake Money on{' '}
+            Stake Your{' '}
             <span className="text-[#2EE59D] relative">
-              Your Goals
+              Promise
               <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#2EE59D]/20" viewBox="0 0 200 12" preserveAspectRatio="none">
                 <path d="M0,8 Q50,0 100,8 T200,8" stroke="currentColor" strokeWidth="4" fill="none" />
               </svg>
@@ -100,7 +100,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
-            Hit your goal, keep your stake + earn from those who don't.
+            Keep your promise, keep your stake.
           </p>
           
           <button 
