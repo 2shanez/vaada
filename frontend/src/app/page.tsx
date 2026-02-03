@@ -33,7 +33,7 @@ export default function Home() {
 
   const handleGetStarted = () => {
     if (isConnected) {
-      const element = document.getElementById('goals')
+      const element = document.getElementById('promises')
       if (element) {
         const headerOffset = 70
         const elementPosition = element.getBoundingClientRect().top
@@ -68,8 +68,8 @@ export default function Home() {
               How it works
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2EE59D] group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#goals" onClick={(e) => scrollToSection(e, 'goals')} className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors hidden sm:block relative group cursor-pointer">
-              Goals
+            <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors hidden sm:block relative group cursor-pointer">
+              Promises
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2EE59D] group-hover:w-full transition-all duration-300" />
             </a>
             <ThemeToggle />
@@ -119,7 +119,7 @@ export default function Home() {
       </section>
 
       {/* Category Filter Pills - Sticky */}
-      <div id="goals" className="sticky top-[57px] z-30 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] py-3">
+      <div id="promises" className="sticky top-[57px] z-30 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] py-3">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
           <div className="flex gap-2 p-1 bg-[var(--surface)] rounded-full">
             {categories.map(cat => (
@@ -137,12 +137,12 @@ export default function Home() {
           </div>
           <div className="text-sm text-[var(--text-secondary)] hidden sm:flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#2EE59D] animate-pulse" />
-            8 goals live
+            8 promises live
           </div>
         </div>
       </div>
 
-      {/* Goals Grid */}
+      {/* Promises Grid */}
       <section className="py-8 px-6 relative">
         <div className="max-w-6xl mx-auto">
           <BrowseGoals filter={activeCategory} />
@@ -155,7 +155,7 @@ export default function Home() {
           <div className="flex justify-center gap-12">
             <div className="text-center">
               <p className="text-3xl font-bold tabular-nums">8</p>
-              <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Active Goals</p>
+              <p className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Active Promises</p>
             </div>
             <div className="text-center">
               <p className="text-3xl font-bold text-[#2EE59D] tabular-nums">$0</p>
@@ -167,7 +167,7 @@ export default function Home() {
             </div>
           </div>
           <p className="text-center text-sm text-[var(--text-secondary)] mt-4">
-            Be the first to stake on a goal ✨
+            Be the first to stake on a promise ✨
           </p>
         </div>
       </section>
@@ -186,9 +186,9 @@ export default function Home() {
             
             {[
               { step: '01', icon: '👤', title: 'Sign up', desc: 'Email or Google. No crypto needed.' },
-              { step: '02', icon: '🎯', title: 'Pick a goal', desc: 'Choose your challenge level.' },
+              { step: '02', icon: '🤝', title: 'Make a promise', desc: 'Choose your commitment.' },
               { step: '03', icon: '💵', title: 'Stake money', desc: 'Put real money on the line.' },
-              { step: '04', icon: '🏆', title: 'Hit your goal', desc: 'Win = keep stake + bonus.' },
+              { step: '04', icon: '🏆', title: 'Keep it', desc: 'Win = keep stake + bonus.' },
             ].map((item, i) => (
               <div 
                 key={item.step} 
@@ -221,7 +221,7 @@ export default function Home() {
             {[
               { icon: '🧠', title: 'Loss Aversion', desc: 'We work 2x harder to avoid losing money than to gain it.' },
               { icon: '🔗', title: 'Trustless Verification', desc: 'Chainlink oracles verify your progress automatically.' },
-              { icon: '💸', title: 'Real Consequences', desc: 'Miss your goal = stake goes to winners. No excuses.' },
+              { icon: '💸', title: 'Real Consequences', desc: 'Break your promise = stake goes to winners. No excuses.' },
             ].map((item, i) => (
               <div 
                 key={item.title}
@@ -248,10 +248,10 @@ export default function Home() {
         
         <div className="max-w-3xl mx-auto text-center relative">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to bet on yourself?
+            Ready to stake your word?
           </h2>
           <p className="text-gray-400 mb-8 text-lg">
-            Join the commitment market. Put money on your goals.
+            Join the commitment market. Put money on your promises.
           </p>
           <button 
             onClick={handleGetStarted}
