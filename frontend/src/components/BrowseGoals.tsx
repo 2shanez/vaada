@@ -1,7 +1,117 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { GoalCard, Goal } from './GoalCard'
+
+// Email Modal Component
+function NotifyModal({ 
+  feature, 
+  onClose, 
+  onSuccess 
+}: { 
+  feature: string
+  onClose: () => void
+  onSuccess: () => void 
+}) {
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, feature }),
+      })
+
+      const data = await res.json()
+      
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong')
+        setLoading(false)
+        return
+      }
+
+      onSuccess()
+    } catch {
+      setError('Failed to subscribe')
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative bg-[var(--background)] border border-[var(--border)] rounded-2xl p-6 w-full max-w-sm shadow-xl animate-in fade-in zoom-in-95 duration-200">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div className="text-center mb-6">
+          <div className="w-12 h-12 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-3">
+            <span className="text-2xl">🔔</span>
+          </div>
+          <h3 className="font-semibold text-lg">Get notified</h3>
+          <p className="text-sm text-[var(--text-secondary)] mt-1">
+            We'll email you when <span className="font-medium text-[var(--foreground)]">{feature}</span> launches.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            ref={inputRef}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+            className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] 
+              focus:outline-none focus:border-[#2EE59D] focus:ring-1 focus:ring-[#2EE59D]/50
+              placeholder:text-[var(--text-secondary)] transition-all"
+          />
+          
+          {error && (
+            <p className="text-red-500 text-sm mt-2">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-4 px-4 py-3 bg-[#2EE59D] text-black font-semibold rounded-xl
+              hover:bg-[#26c987] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Subscribing...' : 'Notify me'}
+          </button>
+        </form>
+
+        <p className="text-xs text-[var(--text-secondary)] text-center mt-4">
+          No spam, just one email when it's ready.
+        </p>
+      </div>
+    </div>
+  )
+}
 
 const FEATURED_GOALS: Goal[] = [
   // Test Goals
@@ -136,6 +246,7 @@ interface BrowseGoalsProps {
 export function BrowseGoals({ filter = 'All' }: BrowseGoalsProps) {
   const [mounted, setMounted] = useState(false)
   const [notified, setNotified] = useState<string[]>([])
+  const [modalFeature, setModalFeature] = useState<string | null>(null)
   
   useEffect(() => {
     setMounted(true)
@@ -144,10 +255,17 @@ export function BrowseGoals({ filter = 'All' }: BrowseGoalsProps) {
     if (saved) setNotified(JSON.parse(saved))
   }, [])
 
-  const handleNotify = (title: string) => {
-    const updated = [...notified, title]
-    setNotified(updated)
-    localStorage.setItem('vaada_notified', JSON.stringify(updated))
+  const handleNotifyClick = (title: string) => {
+    setModalFeature(title)
+  }
+
+  const handleNotifySuccess = () => {
+    if (modalFeature) {
+      const updated = [...notified, modalFeature]
+      setNotified(updated)
+      localStorage.setItem('vaada_notified', JSON.stringify(updated))
+    }
+    setModalFeature(null)
   }
 
   const filteredGoals = filter === 'All' 
@@ -201,7 +319,7 @@ export function BrowseGoals({ filter = 'All' }: BrowseGoalsProps) {
                 </span>
               ) : (
                 <button 
-                  onClick={() => handleNotify(item.title)}
+                  onClick={() => handleNotifyClick(item.title)}
                   className="px-4 py-1.5 text-xs font-medium text-[var(--text-secondary)] bg-[var(--background)] border border-[var(--border)] rounded-full hover:border-[#2EE59D] hover:text-[#2EE59D] transition-colors"
                 >
                   Notify me
@@ -218,11 +336,19 @@ export function BrowseGoals({ filter = 'All' }: BrowseGoalsProps) {
           <div className="w-16 h-16 rounded-full bg-[var(--surface)] flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">🏃</span>
           </div>
-          <p className="text-[var(--text-secondary)] font-medium mb-2">No {filter.toLowerCase()} goals yet</p>
+          <p className="text-[var(--text-secondary)] font-medium mb-2">No {filter.toLowerCase()} promises yet</p>
           <p className="text-sm text-[var(--text-secondary)]">Check back soon or try a different category</p>
         </div>
       )}
 
+      {/* Notify Modal */}
+      {modalFeature && (
+        <NotifyModal
+          feature={modalFeature}
+          onClose={() => setModalFeature(null)}
+          onSuccess={handleNotifySuccess}
+        />
+      )}
       </div>
   )
 }
