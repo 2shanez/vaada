@@ -249,7 +249,7 @@ Building in public. Shipping fast. Automating everything.
 
 - **Chain**: Base (Coinbase L2)
 - **Oracles**: Chainlink Functions + Automation
-- **Frontend**: Next.js, RainbowKit, wagmi
+- **Frontend**: Next.js, Privy (embedded wallets), wagmi
 - **Verification**: Strava API via Chainlink
 
 ### Security Considerations
