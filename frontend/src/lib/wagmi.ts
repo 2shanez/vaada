@@ -14,7 +14,7 @@ export const privyConfig = createConfig({
 export const CONTRACTS = {
   // Base Sepolia (testnet)
   [baseSepolia.id]: {
-    goalStake: '0x615f7165f0ae886319cc0dc2754fe85b14c51b53' as `0x${string}`, // V2 - shared goals
+    goalStake: '0x13b8eaEb7F7927527CE1fe7A600f05e61736d217' as `0x${string}`, // V3 - entry windows
     oracle: '0x8E69bf57b08992204317584b5e906c1B6e6E609E' as `0x${string}`,
     usdc: '0x036CbD53842c5426634e7929541eC2318f3dCF7e' as `0x${string}`, // Base Sepolia USDC
   },
