@@ -191,7 +191,7 @@ Vaada isn't competing in these markets. We're creating **The Commitment Market**
 ## Roadmap
 
 ### Phase 1: Foundation (Current)
-- [x] Core staking contract (GoalStakeV2 deployed)
+- [x] Core staking contract (GoalStakeV3 deployed)
 - [x] Strava integration (OAuth + on-chain token storage)
 - [x] Chainlink Functions verification
 - [x] Chainlink Automation for triggers
@@ -245,8 +245,8 @@ Building in public. Shipping fast. Automating everything.
 
 ### Contracts (Base Sepolia)
 
-- **GoalStakeV2**: `0x615f7165f0ae886319cc0dc2754fe85b14c51b53`
-- **Automation**: `0x8E69bf57b08992204317584b5e906c1B6e6E609E`
+- **GoalStakeV3**: `0x13b8eaEb7F7927527CE1fe7A600f05e61736d217`
+- **AutomationV3**: `0xB10fCE97fc6eE84ff7772Bc44A651Dd076F7180D`
 - **USDC**: `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
 
 ### Stack
