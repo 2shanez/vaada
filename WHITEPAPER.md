@@ -235,7 +235,7 @@ Same contract. Different oracles. Infinite use cases.
 **Solo Founder** — Shane Sarin
 - UNC Chapel Hill, Economics
 - Product @ Consensys (2023-2025)
-- Founding team @ RECUR
+- Analyst @ RECUR
 
 Building in public. Shipping fast. Automating everything.
 
