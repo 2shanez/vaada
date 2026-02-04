@@ -38,14 +38,12 @@ export async function GET(request: NextRequest) {
   const now = Math.floor(Date.now() / 1000)
   const bufferSeconds = 60 * 60 // 1 hour buffer for on-chain updates
 
-  // Token is still fresh - but always offer to update on-chain
-  // since the on-chain token may be stale even if the browser token is fresh
+  // Token is still fresh
   if (expiryTime > 0 && expiryTime >= now + bufferSeconds) {
     return NextResponse.json({
       token: accessToken,
       expiresAt: expiryTime,
-      needsRefresh: true,
-      reason: 'on-chain-sync'
+      needsRefresh: false,
     })
   }
 
@@ -61,7 +59,7 @@ export async function GET(request: NextRequest) {
     const response = NextResponse.json({
       token: tokenData.access_token,
       expiresAt: tokenData.expires_at,
-      needsRefresh: true,
+      needsRefresh: false,
       refreshed: true
     })
 
