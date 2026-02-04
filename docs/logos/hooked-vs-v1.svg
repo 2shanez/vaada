@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Two Vs with tops curving inward like pinky hooks -->
+  <g fill="none" stroke="#2EE59D" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- First V with hooked top ends curving right -->
+    <path d="M15 35 Q15 25 25 25 L40 70 L55 25 Q65 25 65 35"/>
+    <!-- Second V with hooked top ends curving left -->
+    <path d="M35 35 Q35 25 45 25 L60 70 L75 25 Q85 25 85 35"/>
+  </g>
+</svg>

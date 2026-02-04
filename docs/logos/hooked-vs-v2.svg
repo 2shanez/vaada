@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Two Vs tight with hooks curving toward each other -->
+  <g fill="none" stroke="#2EE59D" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- First V - outer hook curves outward, inner curves toward center -->
+    <path d="M18 40 Q18 25 28 25 L43 70 L58 25 Q58 20 53 20"/>
+    <!-- Second V - hooks mirror -->
+    <path d="M47 20 Q42 20 42 25 L57 70 L72 25 Q82 25 82 40"/>
+  </g>
+</svg>

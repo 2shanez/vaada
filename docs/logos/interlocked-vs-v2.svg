@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Two V shapes facing each other, interlocked like a handshake -->
+  <g fill="none" stroke="#2EE59D" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- V pointing down -->
+    <path d="M25 30 L50 70 L75 30"/>
+    <!-- Inverted V pointing up, offset -->
+    <path d="M25 70 L50 30 L75 70"/>
+  </g>
+</svg>
