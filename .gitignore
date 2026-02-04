@@ -1,1 +1,34 @@
+# Environment
 .env
+.env.local
+.env*.local
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+contracts/out/
+contracts/cache/
+frontend/.next/
+frontend/out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Foundry
+cache/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
