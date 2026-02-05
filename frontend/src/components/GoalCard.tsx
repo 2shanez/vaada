@@ -228,69 +228,70 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
 
   return (
-    <div className={`group bg-[var(--surface)] border rounded-xl transition-all duration-200 cursor-pointer
+    <div className={`group bg-[var(--surface)] border rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden
       ${expanded 
-        ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10 scale-[1.02]' 
-        : 'border-[var(--border)] hover:border-[var(--text-secondary)]/30 hover:shadow-md hover:-translate-y-0.5'
+        ? 'border-[#2EE59D]/40 shadow-lg shadow-[#2EE59D]/5' 
+        : 'border-[var(--border)] hover:border-[var(--border)]/80 hover:shadow-lg hover:-translate-y-1'
       }`}
     >
-      <div className="p-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${catStyle.bg} ${catStyle.text}`}>
-              {goal.category.toUpperCase()}
-            </span>
-            {phaseInfo && (
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${phaseInfo.color}`}>
-                {phaseInfo.emoji} {phaseInfo.label}
-              </span>
-            )}
-            <span className="text-[10px] text-[var(--text-secondary)] font-medium">{durationText}</span>
+      <div className="p-5">
+        {/* Header — emoji + category + status */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2EE59D]/10 to-[#2EE59D]/5 flex items-center justify-center text-xl shrink-0">
+              {goal.emoji}
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-[9px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">{goal.category}</span>
+                {phaseInfo && (
+                  <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${phaseInfo.color}`}>
+                    {phaseInfo.label}
+                  </span>
+                )}
+              </div>
+              <h3 className="font-semibold text-[var(--foreground)] leading-tight">{goal.title}</h3>
+              <p className="text-xs text-[var(--text-secondary)] mt-0.5">{goal.description}</p>
+            </div>
           </div>
-          <span className="text-2xl group-hover:scale-110 transition-transform">{goal.emoji}</span>
         </div>
 
-        {/* Title + Description */}
-        <h3 className="font-bold text-sm text-[var(--foreground)] mb-1 group-hover:text-[#2EE59D] transition-colors">
-          {goal.title}
-        </h3>
-        <p className="text-xs text-[var(--text-secondary)] mb-2 line-clamp-2">{goal.description}</p>
-
-        {/* Deadlines */}
+        {/* Deadlines — clean inline */}
         {goalDetails.entryDeadline && !isSettled && (
-          <div className="flex flex-col gap-1 mb-4 text-[10px] text-[var(--text-secondary)]">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4">
             {entryOpen && goalDetails.entryDeadline && (
-              <span className="whitespace-nowrap">🟢 Entry closes in <strong className="text-[var(--foreground)]">{formatTimeLeft(goalDetails.entryDeadline)}</strong></span>
+              <span className="text-[11px] text-[var(--text-secondary)]">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#2EE59D] mr-1.5 align-middle" />
+                Entry closes <span className="font-semibold text-[var(--foreground)]">{formatTimeLeft(goalDetails.entryDeadline)}</span>
+              </span>
             )}
             {goalDetails.deadline && (
-              <span className="whitespace-nowrap">⏰ Deadline in <strong className="text-[var(--foreground)]">{formatTimeLeft(goalDetails.deadline)}</strong></span>
+              <span className="text-[11px] text-[var(--text-secondary)]">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-orange-400 mr-1.5 align-middle" />
+                Deadline <span className="font-semibold text-[var(--foreground)]">{formatTimeLeft(goalDetails.deadline)}</span>
+              </span>
             )}
           </div>
         )}
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="bg-[var(--surface)] rounded-lg px-3 py-2">
-            <p className="text-lg font-bold text-[var(--foreground)]">{goal.targetMiles}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">miles</p>
+        {/* Stats Row */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1 text-center py-2.5 rounded-xl bg-[var(--background)]">
+            <p className="text-base font-bold text-[var(--foreground)]">{goal.targetMiles} <span className="text-[10px] font-normal text-[var(--text-secondary)] uppercase">mi</span></p>
           </div>
-          <div className="bg-[var(--surface)] rounded-lg px-3 py-2">
-            <p className="text-lg font-bold text-[#2EE59D]">${goal.minStake}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">min stake</p>
+          <div className="flex-1 text-center py-2.5 rounded-xl bg-[var(--background)]">
+            <p className="text-base font-bold text-[var(--foreground)]">${goal.minStake} <span className="text-[10px] font-normal text-[var(--text-secondary)] uppercase">min</span></p>
+          </div>
+          <div className="flex-1 text-center py-2.5 rounded-xl bg-[var(--background)]">
+            <p className="text-base font-bold text-[#2EE59D]">${goalDetails.totalStaked || 0} <span className="text-[10px] font-normal text-[var(--text-secondary)] uppercase">pool</span></p>
           </div>
         </div>
 
-        {/* Participants + Pool */}
-        <div className="flex justify-between items-center mb-4 px-3 py-2 rounded-lg bg-[var(--background)]/50 border border-[var(--border)]/50">
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs">👥</span>
-            <span className="text-xs font-medium text-[var(--foreground)]">{(goalDetails.participantCount || 0) === 0 ? 'Be the first' : `${goalDetails.participantCount} joined`}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-semibold text-[#2EE59D]">${goalDetails.totalStaked || 0}</span>
-            <span className="text-[10px] text-[var(--text-secondary)]">pooled</span>
-          </div>
+        {/* Joined count */}
+        <div className="text-center text-[11px] text-[var(--text-secondary)] mb-4">
+          {(goalDetails.participantCount || 0) === 0 
+            ? 'Be the first to join' 
+            : `${goalDetails.participantCount} ${goalDetails.participantCount === 1 ? 'person' : 'people'} joined`}
         </div>
 
         {/* Action Button (collapsed) */}
