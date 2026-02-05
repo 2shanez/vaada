@@ -213,23 +213,17 @@ export function StravaConnect() {
       )
     }
 
-    // Token is fresh - show verified with reconnect option
+    // Token is fresh - show compact verified icon (click to reconnect)
     return (
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#2EE59D]/10 border border-[#2EE59D]/20">
-          <svg className="w-4 h-4 text-[#2EE59D]" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-          </svg>
-          <span className="text-sm font-medium text-[#2EE59D]">Strava Verified</span>
-        </div>
-        <button
-          onClick={handleReconnect}
-          className="text-xs text-zinc-500 hover:text-[#FC4C02] transition-colors underline underline-offset-2"
-          title="Disconnect and reconnect your Strava account"
-        >
-          Reconnect
-        </button>
-      </div>
+      <button
+        onClick={handleReconnect}
+        className="flex items-center justify-center w-9 h-9 rounded-lg bg-[#2EE59D]/10 border border-[#2EE59D]/20 hover:bg-[#2EE59D]/20 transition-colors"
+        title="Strava Verified ✓ — Click to reconnect"
+      >
+        <svg className="w-4 h-4 text-[#2EE59D]" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      </button>
     )
   }
 

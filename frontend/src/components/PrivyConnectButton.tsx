@@ -47,27 +47,28 @@ export function PrivyConnectButton() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm font-medium text-[#2EE59D]">
-        ${balanceNum.toFixed(2)}
-      </span>
       <button
         onClick={copyAddress}
-        title={address || 'No address'}
-        className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm hover:border-[#2EE59D]/50 transition-all flex items-center gap-1.5"
+        title={address ? `Click to copy: ${address}` : 'No address'}
+        className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm hover:border-[#2EE59D]/50 transition-all flex items-center gap-2"
       >
         {copied ? (
-          <>
-            <svg className="w-3.5 h-3.5 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <span className="text-[#2EE59D] flex items-center gap-1">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span className="text-[#2EE59D]">Copied!</span>
-          </>
+            Copied!
+          </span>
         ) : (
           <>
-            <svg className="w-3.5 h-3.5 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            {displayAddress}
+            <span className="text-[#2EE59D] font-medium">${balanceNum.toFixed(2)}</span>
+            <span className="text-[var(--border)]">|</span>
+            <span className="flex items-center gap-1">
+              <svg className="w-3 h-3 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              {displayAddress}
+            </span>
           </>
         )}
       </button>
