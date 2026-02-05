@@ -81,6 +81,36 @@ export const GOALSTAKE_ABI = [
     inputs: [{ name: 'goalId', type: 'uint256' }],
     outputs: [],
   },
+  {
+    name: 'goalCount',
+    type: 'function',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    name: 'getGoal',
+    type: 'function',
+    inputs: [{ name: 'goalId', type: 'uint256' }],
+    outputs: [{
+      type: 'tuple',
+      components: [
+        { name: 'id', type: 'uint256' },
+        { name: 'name', type: 'string' },
+        { name: 'targetMiles', type: 'uint256' },
+        { name: 'minStake', type: 'uint256' },
+        { name: 'maxStake', type: 'uint256' },
+        { name: 'startTime', type: 'uint256' },
+        { name: 'entryDeadline', type: 'uint256' },
+        { name: 'deadline', type: 'uint256' },
+        { name: 'active', type: 'bool' },
+        { name: 'settled', type: 'bool' },
+        { name: 'totalStaked', type: 'uint256' },
+        { name: 'participantCount', type: 'uint256' },
+      ],
+    }],
+    stateMutability: 'view',
+  },
 ] as const
 
 export const AUTOMATION_ABI = [

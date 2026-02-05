@@ -1,6 +1,7 @@
 'use client'
 
-import { useAccount, useReadContract, useChainId } from 'wagmi'
+import { useState, useEffect } from 'react'
+import { useAccount, useReadContract, useReadContracts, useChainId } from 'wagmi'
 import { formatUnits } from 'viem'
 import { baseSepolia } from 'wagmi/chains'
 import { CONTRACTS } from '@/lib/wagmi'
@@ -125,4 +126,58 @@ export function useStravaToken() {
     hasTokenOnChain: hasToken as boolean | undefined,
     refetch,
   }
+}
+
+// Platform-wide stats (total staked, participants, active goals)
+export function usePlatformStats() {
+  const contracts = useContracts()
+  const [stats, setStats] = useState({ totalStaked: 0, totalParticipants: 0, activeGoals: 0 })
+
+  const { data: goalCount } = useReadContract({
+    address: contracts.goalStake,
+    abi: GOALSTAKE_ABI,
+    functionName: 'goalCount',
+    query: { refetchInterval: 30000 },
+  })
+
+  const count = goalCount ? Number(goalCount) : 0
+
+  // Build array of getGoal calls
+  const goalCalls = Array.from({ length: count }, (_, i) => ({
+    address: contracts.goalStake as `0x${string}`,
+    abi: GOALSTAKE_ABI,
+    functionName: 'getGoal' as const,
+    args: [BigInt(i)],
+  }))
+
+  const { data: goalsData } = useReadContracts({
+    contracts: goalCalls,
+    query: { enabled: count > 0, refetchInterval: 30000 },
+  })
+
+  useEffect(() => {
+    if (!goalsData) return
+
+    let totalStaked = BigInt(0)
+    let totalParticipants = 0
+    let activeGoals = 0
+
+    for (const result of goalsData) {
+      if (result.status !== 'success' || !result.result) continue
+      const goal = result.result as any
+      if (goal.active) {
+        activeGoals++
+        totalStaked += goal.totalStaked
+        totalParticipants += Number(goal.participantCount)
+      }
+    }
+
+    setStats({
+      totalStaked: Number(formatUnits(totalStaked, 6)),
+      totalParticipants,
+      activeGoals,
+    })
+  }, [goalsData])
+
+  return stats
 }

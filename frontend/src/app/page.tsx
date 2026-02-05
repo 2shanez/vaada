@@ -7,12 +7,14 @@ import { BrowseGoals } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { PrivyConnectButton } from '@/components/PrivyConnectButton'
 import { StravaConnect } from '@/components/StravaConnect'
+import { usePlatformStats } from '@/lib/hooks'
 
 const categories = ['All', 'Daily', 'Weekly', 'Monthly'] as const
 type Category = typeof categories[number]
 
 export default function Home() {
   const { isConnected } = useAccount()
+  const platformStats = usePlatformStats()
   const { login } = usePrivy()
   const [activeCategory, setActiveCategory] = useState<Category>('All')
   const [mounted, setMounted] = useState(false)
@@ -140,7 +142,7 @@ export default function Home() {
           </div>
           <div className="text-xs sm:text-sm text-[var(--text-secondary)] hidden sm:flex items-center gap-2 flex-shrink-0">
             <span className="w-2 h-2 rounded-full bg-[#2EE59D] animate-pulse" />
-            6 promises live
+            {platformStats.activeGoals} promises live
           </div>
         </div>
       </div>
@@ -157,15 +159,15 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-center gap-6 sm:gap-12">
             <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-bold text-[#2EE59D] tabular-nums">$1</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#2EE59D] tabular-nums">${platformStats.totalStaked}</p>
               <p className="text-[10px] sm:text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Total Staked</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-bold tabular-nums">1</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums">{platformStats.totalParticipants}</p>
               <p className="text-[10px] sm:text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Total Participants</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-bold tabular-nums">6</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums">{platformStats.activeGoals}</p>
               <p className="text-[10px] sm:text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Total Promises</p>
             </div>
           </div>
