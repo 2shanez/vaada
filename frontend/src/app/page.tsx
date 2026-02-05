@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
-import { BrowseGoals } from '@/components/BrowseGoals'
+import { BrowseGoals, FEATURED_GOALS } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { PrivyConnectButton } from '@/components/PrivyConnectButton'
 import { StravaConnect } from '@/components/StravaConnect'
@@ -14,7 +14,8 @@ type Category = typeof categories[number]
 
 export default function Home() {
   const { isConnected } = useAccount()
-  const platformStats = usePlatformStats()
+  const onChainIds = FEATURED_GOALS.filter(g => g.onChainId !== undefined).map(g => g.onChainId!)
+  const platformStats = usePlatformStats(onChainIds, FEATURED_GOALS.length)
   const { login } = usePrivy()
   const [activeCategory, setActiveCategory] = useState<Category>('Active')
   const [mounted, setMounted] = useState(false)

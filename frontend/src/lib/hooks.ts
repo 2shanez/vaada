@@ -152,34 +152,37 @@ export function useGoalDetails(goalId?: number) {
 }
 
 // Platform-wide stats (total staked, participants, active goals)
-export function usePlatformStats() {
+// relevantIds: only count on-chain goals with these IDs (filters out old test goals)
+// totalDisplayed: total number of promises shown in the UI
+export function usePlatformStats(relevantIds?: number[], totalDisplayed?: number) {
   const contracts = useContracts()
   const [stats, setStats] = useState({ totalStaked: 0, totalParticipants: 0, activeGoals: 0, totalGoals: 0 })
 
-  const { data: goalCount } = useReadContract({
-    address: contracts.goalStake,
-    abi: GOALSTAKE_ABI,
-    functionName: 'goalCount',
-    query: { refetchInterval: 30000 },
-  })
+  // Only fetch the specific goals we care about
+  const idsToFetch = relevantIds ?? []
 
-  const count = goalCount ? Number(goalCount) : 0
-
-  // Build array of getGoal calls
-  const goalCalls = Array.from({ length: count }, (_, i) => ({
+  const goalCalls = idsToFetch.map(id => ({
     address: contracts.goalStake as `0x${string}`,
     abi: GOALSTAKE_ABI as any,
     functionName: 'getGoal',
-    args: [BigInt(i)],
+    args: [BigInt(id)],
   }))
 
   const { data: goalsData } = useReadContracts({
     contracts: goalCalls as any,
-    query: { enabled: count > 0, refetchInterval: 30000 },
+    query: { enabled: idsToFetch.length > 0, refetchInterval: 30000 },
   })
 
   useEffect(() => {
-    if (!goalsData) return
+    if (!goalsData) {
+      setStats({
+        totalStaked: 0,
+        totalParticipants: 0,
+        activeGoals: 0,
+        totalGoals: totalDisplayed ?? 0,
+      })
+      return
+    }
 
     let totalStaked = BigInt(0)
     let totalParticipants = 0
@@ -199,9 +202,9 @@ export function usePlatformStats() {
       totalStaked: Number(formatUnits(totalStaked, 6)),
       totalParticipants,
       activeGoals,
-      totalGoals: count,
+      totalGoals: totalDisplayed ?? idsToFetch.length,
     })
-  }, [goalsData])
+  }, [goalsData, totalDisplayed, idsToFetch.length])
 
   return stats
 }

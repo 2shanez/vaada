@@ -211,6 +211,9 @@ const COMING_SOON = [
   { title: 'Step Counter', emoji: '👟', desc: 'Daily step challenges' },
 ]
 
+// Export for stats calculation
+export { FEATURED_GOALS }
+
 interface BrowseGoalsProps {
   filter?: 'Active' | 'All' | 'Test' | 'Daily' | 'Weekly' | 'Monthly'
 }
