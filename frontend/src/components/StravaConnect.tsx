@@ -213,23 +213,21 @@ export function StravaConnect() {
       )
     }
 
-    // Token is fresh - show verified with reconnect option
+    // Token is fresh - show compact verified badge
     return (
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#2EE59D]/10 border border-[#2EE59D]/20">
-          <svg className="w-4 h-4 text-[#2EE59D]" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+      <button
+        onClick={handleReconnect}
+        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[#FC4C02]/50 transition-all text-sm"
+        title="Strava connected — Click to reconnect"
+      >
+        <div className="relative">
+          <svg className="w-4 h-4 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7 13.828h4.169" />
           </svg>
-          <span className="text-sm font-medium text-[#2EE59D]">Strava Verified</span>
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#2EE59D] rounded-full border border-[var(--background)]" />
         </div>
-        <button
-          onClick={handleReconnect}
-          className="text-xs text-zinc-500 hover:text-[#FC4C02] transition-colors underline underline-offset-2"
-          title="Disconnect and reconnect your Strava account"
-        >
-          Reconnect
-        </button>
-      </div>
+        <span className="hidden sm:inline text-[var(--foreground)]">Strava</span>
+      </button>
     )
   }
 
