@@ -15,6 +15,7 @@ const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => (
 })
 const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton').then(m => ({ default: m.PrivyConnectButton })), { ssr: false })
 const StravaConnect = dynamic(() => import('@/components/StravaConnect').then(m => ({ default: m.StravaConnect })), { ssr: false })
+const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
 
 const categories = ['Active', 'Daily', 'Weekly', 'Monthly'] as const
 type Category = typeof categories[number]
@@ -83,6 +84,7 @@ export default function Home() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2EE59D] group-hover:w-full transition-all duration-300" />
             </a>
             <StravaConnect />
+            <FundWalletButton />
             <ThemeToggle />
             <PrivyConnectButton />
           </div>
