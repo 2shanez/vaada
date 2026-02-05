@@ -1,13 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { useAccount } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
-import { BrowseGoals, FEATURED_GOALS } from '@/components/BrowseGoals'
+import { FEATURED_GOALS } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { PrivyConnectButton } from '@/components/PrivyConnectButton'
-import { StravaConnect } from '@/components/StravaConnect'
 import { usePlatformStats } from '@/lib/hooks'
+
+// Dynamic imports for heavy components - don't block first paint
+const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => ({ default: m.BrowseGoals })), {
+  loading: () => <div className="flex justify-center py-12"><div className="w-8 h-8 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin" /></div>,
+  ssr: false,
+})
+const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton').then(m => ({ default: m.PrivyConnectButton })), { ssr: false })
+const StravaConnect = dynamic(() => import('@/components/StravaConnect').then(m => ({ default: m.StravaConnect })), { ssr: false })
 
 const categories = ['Active', 'Daily', 'Weekly', 'Monthly'] as const
 type Category = typeof categories[number]

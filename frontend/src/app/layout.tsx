@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'vaada | keep your promise',
   description: 'Stake money on your goals. Hit them, keep it. Miss them, lose it.',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
 }
 
 export default function RootLayout({
@@ -18,6 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://auth.privy.io" />
+        <link rel="dns-prefetch" href="https://auth.privy.io" />
+      </head>
       <body className={`${inter.className} bg-[var(--background)] text-[var(--foreground)]`} suppressHydrationWarning>
         <Providers>
           {children}
