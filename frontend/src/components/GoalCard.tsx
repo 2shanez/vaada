@@ -319,7 +319,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 ? 'Coming Soon' 
                 : !entryOpen 
                 ? 'Entry Closed' 
-                : `Join Promise · $${goal.minStake}+`}
+                : `Stake $${goal.minStake}+`}
             </button>
           )
         )}
