@@ -287,7 +287,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span>{(goalDetails.participantCount || 0) === 0 ? 'Be the first to join' : `${goalDetails.participantCount} joined`}</span>
             <span>${goalDetails.totalStaked || 0} pooled</span>
           </div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden">
             <div 
               className="h-full bg-gradient-to-r from-[#2EE59D] to-[#26c987] rounded-full transition-all duration-500"
               style={{ width: `${Math.min(((goalDetails.participantCount || 0) / 10) * 100, 100)}%` }}
