@@ -36,13 +36,6 @@
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-/* Smooth touch scrolling on iOS */
-html, body {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none;
 }
 
 body {
