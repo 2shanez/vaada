@@ -230,41 +230,67 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   return (
     <div className={`group bg-[var(--surface)] border rounded-xl transition-all duration-200 cursor-pointer
       ${expanded 
-        ? 'border-[#2EE59D]/40 ring-1 ring-[#2EE59D]/10' 
-        : 'border-[var(--border)] hover:border-[var(--text-secondary)]/20'
+        ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10 scale-[1.02]' 
+        : 'border-[var(--border)] hover:border-[var(--text-secondary)]/30 hover:shadow-md hover:-translate-y-0.5'
       }`}
     >
       <div className="p-4">
-        {/* Title */}
-        <div className="mb-3">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="font-semibold text-base text-[var(--foreground)]">{goal.title}</h3>
-            <span className="text-[10px] font-medium text-[var(--text-secondary)] uppercase tracking-wider">{goal.category}</span>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${catStyle.bg} ${catStyle.text}`}>
+              {goal.category.toUpperCase()}
+            </span>
+            {phaseInfo && (
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${phaseInfo.color}`}>
+                {phaseInfo.emoji} {phaseInfo.label}
+              </span>
+            )}
+            <span className="text-[10px] text-[var(--text-secondary)] font-medium">{durationText}</span>
           </div>
-          <p className="text-sm text-[var(--text-secondary)]">{goal.description}</p>
+          <span className="text-2xl group-hover:scale-110 transition-transform">{goal.emoji}</span>
         </div>
 
-        {/* Key Numbers */}
-        <div className="flex items-baseline gap-4 mb-3 text-sm text-[var(--text-secondary)]">
-          <span><span className="font-semibold text-[var(--foreground)]">{goal.targetMiles}</span> mi</span>
-          <span className="text-[var(--border)]">·</span>
-          <span><span className="font-semibold text-[var(--foreground)]">${goal.minStake}</span> min</span>
-          <span className="text-[var(--border)]">·</span>
-          <span>{durationText}</span>
-        </div>
+        {/* Title + Description */}
+        <h3 className="font-bold text-sm text-[var(--foreground)] mb-1 group-hover:text-[#2EE59D] transition-colors">
+          {goal.title}
+        </h3>
+        <p className="text-xs text-[var(--text-secondary)] mb-2 line-clamp-2">{goal.description}</p>
 
-        {/* Time Left */}
-        {goalDetails.entryDeadline && !isSettled && entryOpen && (
-          <div className="text-xs text-[var(--text-secondary)] mb-3">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#2EE59D] mr-1.5 align-middle" />
-            {formatTimeLeft(goalDetails.entryDeadline)} left to join
+        {/* Deadlines */}
+        {goalDetails.entryDeadline && !isSettled && (
+          <div className="flex flex-col gap-1 mb-4 text-[10px] text-[var(--text-secondary)]">
+            {entryOpen && goalDetails.entryDeadline && (
+              <span className="whitespace-nowrap">🟢 Entry closes in <strong className="text-[var(--foreground)]">{formatTimeLeft(goalDetails.entryDeadline)}</strong></span>
+            )}
+            {goalDetails.deadline && (
+              <span className="whitespace-nowrap">⏰ Deadline in <strong className="text-[var(--foreground)]">{formatTimeLeft(goalDetails.deadline)}</strong></span>
+            )}
           </div>
         )}
 
-        {/* Pool + Participants */}
-        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)] mb-4 pt-3 border-t border-[var(--border)]">
-          <span className="font-medium text-[#2EE59D]">${goalDetails.totalStaked || 0} <span className="text-[var(--text-secondary)] font-normal">pooled</span></span>
-          <span>{(goalDetails.participantCount || 0) === 0 ? 'No participants yet' : `${goalDetails.participantCount} joined`}</span>
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div className="bg-[var(--background)] rounded-lg px-3 py-2">
+            <p className="text-lg font-bold text-[var(--foreground)]">{goal.targetMiles}</p>
+            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">miles</p>
+          </div>
+          <div className="bg-[var(--background)] rounded-lg px-3 py-2">
+            <p className="text-lg font-bold text-[#2EE59D]">${goal.minStake}</p>
+            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">min stake</p>
+          </div>
+        </div>
+
+        {/* Participants + Pool */}
+        <div className="flex justify-between items-center mb-4 px-3 py-2 rounded-lg bg-[var(--background)]/50 border border-[var(--border)]/50">
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs">👥</span>
+            <span className="text-xs font-medium text-[var(--foreground)]">{(goalDetails.participantCount || 0) === 0 ? 'Be the first' : `${goalDetails.participantCount} joined`}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-semibold text-[#2EE59D]">${goalDetails.totalStaked || 0}</span>
+            <span className="text-[10px] text-[var(--text-secondary)]">pooled</span>
+          </div>
         </div>
 
         {/* Action Button (collapsed) */}
