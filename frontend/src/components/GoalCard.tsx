@@ -271,11 +271,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="bg-[var(--background)] rounded-lg px-3 py-2">
+          <div className="bg-[var(--background)] rounded-lg px-3 py-2 text-center">
             <p className="text-lg font-bold text-[var(--foreground)]">{goal.targetMiles}</p>
             <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">miles</p>
           </div>
-          <div className="bg-[var(--background)] rounded-lg px-3 py-2">
+          <div className="bg-[var(--background)] rounded-lg px-3 py-2 text-center">
             <p className="text-lg font-bold text-[#2EE59D]">${goal.minStake}</p>
             <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">min stake</p>
           </div>
