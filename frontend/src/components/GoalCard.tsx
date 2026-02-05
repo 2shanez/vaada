@@ -207,20 +207,40 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const catStyle = CATEGORY_STYLES[goal.category] || CATEGORY_STYLES.Daily
   const phaseInfo = phase !== undefined ? PHASE_LABELS[phase as GoalPhase] : null
 
+  // Payout estimate: if you're the only one, you get your stake back
+  // If others fail, you split the pool — estimate assumes ~50% win rate
+  const pooled = goalDetails.totalStaked || 0
+  const participants = goalDetails.participantCount || 0
+  const estimatedPayout = participants > 0 
+    ? Math.round((pooled / Math.max(Math.ceil(participants * 0.5), 1)) * 100) / 100
+    : goal.minStake * 2
+
+  // Phase timeline
+  const getPhaseStep = () => {
+    if (isSettled) return 3
+    if (phase === GoalPhase.Competition) return 1
+    if (phase === GoalPhase.Entry || entryOpen) return 0
+    return 0
+  }
+  const currentPhaseStep = getPhaseStep()
+
   // Success state
   if (step === 'done') {
     return (
-      <div className="bg-gradient-to-br from-[#2EE59D]/5 to-[#2EE59D]/10 border border-[#2EE59D]/30 rounded-xl p-4">
-        <div className="text-center py-6">
-          <div className="w-12 h-12 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-3 animate-pulse">
-            <svg className="w-6 h-6 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <p className="font-bold text-lg mb-1">You're in! 🎉</p>
-          <p className="text-sm text-[var(--text-secondary)]">Goal starts now. Time to move!</p>
-          <div className="mt-4 pt-4 border-t border-[#2EE59D]/20">
-            <p className="text-xs text-[var(--text-secondary)]">Staked ${stakeAmount} USDC</p>
+      <div className="bg-[var(--surface)] border border-[#2EE59D]/30 rounded-2xl overflow-hidden">
+        <div className="bg-gradient-to-br from-[#2EE59D]/10 to-[#2EE59D]/5 p-6">
+          <div className="text-center">
+            <div className="w-16 h-16 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="font-bold text-xl mb-1">You're in! 🎉</p>
+            <p className="text-sm text-[var(--text-secondary)]">Time to move.</p>
+            <div className="mt-4 pt-4 border-t border-[#2EE59D]/20 inline-flex items-center gap-2">
+              <span className="text-sm text-[var(--text-secondary)]">Staked</span>
+              <span className="text-sm font-bold text-[#2EE59D]">${stakeAmount} USDC</span>
+            </div>
           </div>
         </div>
       </div>
@@ -228,134 +248,173 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
 
   return (
-    <div className={`group bg-[var(--surface)] border rounded-xl transition-all duration-200 cursor-pointer
+    <div className={`group bg-[var(--surface)] border rounded-2xl transition-all duration-200 overflow-hidden
       ${expanded 
-        ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10 scale-[1.02]' 
-        : 'border-[var(--border)] hover:border-[var(--text-secondary)]/30 hover:shadow-md hover:-translate-y-0.5'
+        ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10' 
+        : 'border-[var(--border)] hover:border-[var(--text-secondary)]/30 hover:shadow-lg'
       }`}
     >
-      <div className="p-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-3">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-[var(--background)] to-[var(--surface)] px-5 pt-6 pb-4">
+        <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2">
-            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${catStyle.bg} ${catStyle.text}`}>
+            <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${catStyle.bg} ${catStyle.text}`}>
               {goal.category.toUpperCase()}
             </span>
             {phaseInfo && (
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${phaseInfo.color}`}>
+              <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${phaseInfo.color}`}>
                 {phaseInfo.emoji} {phaseInfo.label}
               </span>
             )}
-            {/* Duration shown via deadline timestamps instead */}
           </div>
-          <span className="text-2xl group-hover:scale-110 transition-transform">{goal.emoji}</span>
         </div>
 
-        {/* Title + Description */}
-        <h3 className="font-bold text-sm text-[var(--foreground)] mb-1 group-hover:text-[#2EE59D] transition-colors">
-          {goal.title}
-        </h3>
-        <p className="text-xs text-[var(--text-secondary)] mb-2 line-clamp-2">{goal.description}</p>
+        {/* Large emoji hero */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2EE59D]/20 to-[#2EE59D]/5 flex items-center justify-center flex-shrink-0 border border-[#2EE59D]/10">
+            <span className="text-3xl">{goal.emoji}</span>
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-bold text-lg text-[var(--foreground)] leading-tight mb-0.5">
+              {goal.title}
+            </h3>
+            <p className="text-xs text-[var(--text-secondary)] line-clamp-2">{goal.description}</p>
+          </div>
+        </div>
 
-        {/* Deadlines */}
-        {goalDetails.entryDeadline && !isSettled && (
-          <div className="flex flex-col gap-1 mb-4 text-[10px] text-[var(--text-secondary)]">
-            {entryOpen && goalDetails.entryDeadline && (
-              <span className="whitespace-nowrap">🟢 Entry closes in <strong className="text-[var(--foreground)]">{formatTimeLeft(goalDetails.entryDeadline)}</strong></span>
-            )}
-            {goalDetails.deadline && (
-              <span className="whitespace-nowrap">⏰ Deadline in <strong className="text-[var(--foreground)]">{formatTimeLeft(goalDetails.deadline)}</strong></span>
-            )}
+        {/* Stats row */}
+        <div className="flex gap-2">
+          <div className="flex-1 bg-[var(--surface)] rounded-xl px-3 py-2.5 text-center border border-[var(--border)]/50">
+            <p className="text-xl font-bold text-[var(--foreground)]">{goal.targetMiles}</p>
+            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">miles</p>
+          </div>
+          <div className="flex-1 bg-[var(--surface)] rounded-xl px-3 py-2.5 text-center border border-[var(--border)]/50">
+            <p className="text-xl font-bold text-[#2EE59D]">${goal.minStake}</p>
+            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">min stake</p>
+          </div>
+          <div className="flex-1 bg-[var(--surface)] rounded-xl px-3 py-2.5 text-center border border-[var(--border)]/50">
+            <p className="text-xl font-bold text-[var(--foreground)]">{participants}</p>
+            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">{participants === 1 ? 'player' : 'players'}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-5 pb-5">
+        {/* Timeline */}
+        {!isSettled && (
+          <div className="py-4 border-t border-[var(--border)]/50">
+            <div className="flex items-start gap-3">
+              {[
+                { label: 'Entry', sub: goalDetails.entryDeadline ? formatTimeLeft(goalDetails.entryDeadline) : durationText },
+                { label: 'Compete', sub: goalDetails.deadline ? formatTimeLeft(goalDetails.deadline) : durationText },
+                { label: 'Verify', sub: 'Strava' },
+                { label: 'Payout', sub: 'Auto' },
+              ].map((step, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                  <div className="flex items-center w-full">
+                    {i > 0 && (
+                      <div className={`flex-1 h-[2px] ${i <= currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'}`} />
+                    )}
+                    <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                      i < currentPhaseStep ? 'bg-[#2EE59D]' :
+                      i === currentPhaseStep ? 'bg-[#2EE59D] ring-4 ring-[#2EE59D]/20' :
+                      'bg-[var(--border)]'
+                    }`} />
+                    {i < 3 && (
+                      <div className={`flex-1 h-[2px] ${i < currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'}`} />
+                    )}
+                  </div>
+                  <span className={`text-[10px] font-medium ${i <= currentPhaseStep ? 'text-[var(--foreground)]' : 'text-[var(--text-secondary)]'}`}>
+                    {step.label}
+                  </span>
+                  <span className="text-[9px] text-[var(--text-secondary)]">{step.sub}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          <div className="bg-[var(--background)] rounded-lg px-3 py-2 text-center">
-            <p className="text-lg font-bold text-[var(--foreground)]">{goal.targetMiles}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">miles</p>
+        {/* Pool + Payout */}
+        <div className="flex items-center justify-between py-3 border-t border-[var(--border)]/50">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-[var(--text-secondary)]">Pool</span>
+            <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-          <div className="bg-[var(--background)] rounded-lg px-3 py-2 text-center">
-            <p className="text-lg font-bold text-[#2EE59D]">${goal.minStake}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wide">min stake</p>
-          </div>
-        </div>
-
-        {/* Participants + Pool */}
-        <div className="flex justify-between items-center mb-4 px-3 py-2 rounded-lg bg-[var(--background)]/50 border border-[var(--border)]/50">
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs">👥</span>
-            <span className="text-xs font-medium text-[var(--foreground)]">{(goalDetails.participantCount || 0) === 0 ? 'Be the first' : `${goalDetails.participantCount} joined`}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-semibold text-[#2EE59D]">${goalDetails.totalStaked || 0}</span>
-            <span className="text-[10px] text-[var(--text-secondary)]">pooled</span>
-          </div>
+          {participants > 0 && (
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-[var(--text-secondary)]">${goal.minStake}</span>
+              <span className="text-xs text-[var(--text-secondary)]">→</span>
+              <span className="text-sm font-bold text-[#2EE59D]">${estimatedPayout}</span>
+              <span className="text-[10px] text-[var(--text-secondary)]">est. payout</span>
+            </div>
+          )}
         </div>
 
         {/* Action Button (collapsed) */}
         {!expanded && (
-          canClaim ? (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                writeClaim({
-                  address: contracts.goalStake,
-                  abi: GOALSTAKE_ABI,
-                  functionName: 'claimPayout',
-                  args: [BigInt(goal.onChainId!)],
-                })
-              }}
-              disabled={isClaimPending || isClaimConfirming}
-              className="w-full py-2.5 text-sm font-bold rounded-lg transition-all duration-150 bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md"
-            >
-              {isClaimConfirming ? 'Claiming...' : isClaimPending ? 'Confirm in wallet...' : isClaimSuccess ? 'Claimed! 🎉' : 'Claim Winnings 💰'}
-            </button>
-          ) : userClaimed ? (
-            <button
-              disabled
-              className="w-full py-2.5 text-sm font-bold rounded-lg bg-[#2EE59D]/20 text-[#2EE59D] cursor-default border border-[#2EE59D]/30"
-            >
-              Claimed ✓ · ${userStake}
-            </button>
-          ) : isSettled && hasJoined && !userWon ? (
-            <button
-              disabled
-              className="w-full py-2.5 text-sm font-bold rounded-lg bg-red-500/10 text-red-400 cursor-default border border-red-500/20"
-            >
-              Missed target ✗
-            </button>
-          ) : (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                if (goal.onChainId === undefined || !entryOpen || hasJoined) return
-                isConnected ? setExpanded(true) : login()
-              }}
-              disabled={goal.onChainId === undefined || !entryOpen || hasJoined}
-              className={`w-full py-2.5 text-sm font-bold rounded-lg transition-all duration-150 ${
-                hasJoined
-                  ? 'bg-[#2EE59D]/20 text-[#2EE59D] cursor-default border border-[#2EE59D]/30'
-                  : goal.onChainId === undefined || !entryOpen
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
-              }`}
-            >
-              {hasJoined 
-                ? `Joined ✓ · $${userStake}` 
-                : goal.onChainId === undefined 
-                ? 'Coming Soon' 
-                : !entryOpen 
-                ? 'Entry Closed' 
-                : `Stake $${goal.minStake}+`}
-            </button>
-          )
+          <div className="pt-2">
+            {canClaim ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  writeClaim({
+                    address: contracts.goalStake,
+                    abi: GOALSTAKE_ABI,
+                    functionName: 'claimPayout',
+                    args: [BigInt(goal.onChainId!)],
+                  })
+                }}
+                disabled={isClaimPending || isClaimConfirming}
+                className="w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md"
+              >
+                {isClaimConfirming ? 'Claiming...' : isClaimPending ? 'Confirm in wallet...' : isClaimSuccess ? 'Claimed! 🎉' : 'Claim Winnings 💰'}
+              </button>
+            ) : userClaimed ? (
+              <button
+                disabled
+                className="w-full py-3 text-sm font-bold rounded-xl bg-[#2EE59D]/20 text-[#2EE59D] cursor-default border border-[#2EE59D]/30"
+              >
+                Claimed ✓ · ${userStake}
+              </button>
+            ) : isSettled && hasJoined && !userWon ? (
+              <button
+                disabled
+                className="w-full py-3 text-sm font-bold rounded-xl bg-red-500/10 text-red-400 cursor-default border border-red-500/20"
+              >
+                Missed target ✗
+              </button>
+            ) : (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (goal.onChainId === undefined || !entryOpen || hasJoined) return
+                  isConnected ? setExpanded(true) : login()
+                }}
+                disabled={goal.onChainId === undefined || !entryOpen || hasJoined}
+                className={`w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 ${
+                  hasJoined
+                    ? 'bg-[#2EE59D]/20 text-[#2EE59D] cursor-default border border-[#2EE59D]/30'
+                    : goal.onChainId === undefined || !entryOpen
+                    ? 'bg-[var(--border)] text-[var(--text-secondary)] cursor-not-allowed'
+                    : 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
+                }`}
+              >
+                {hasJoined 
+                  ? `Joined ✓ · $${userStake}` 
+                  : goal.onChainId === undefined 
+                  ? 'Coming Soon' 
+                  : !entryOpen 
+                  ? 'Entry Closed' 
+                  : `Stake $${goal.minStake}+ →`}
+              </button>
+            )}
+          </div>
         )}
       </div>
 
       {/* Expanded Panel */}
       {expanded && (
-        <div className="px-4 pb-4 border-t border-[var(--border)] pt-4 animate-in slide-in-from-top-2 duration-200">
+        <div className="px-5 pb-5 border-t border-[var(--border)]/50 pt-4 animate-in slide-in-from-top-2 duration-200">
           <StakeSelector 
             goal={goal} 
             stakeAmount={stakeAmount} 
@@ -381,7 +440,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           <div className="flex gap-2">
             <button
               onClick={() => setExpanded(false)}
-              className="px-4 py-2.5 text-xs font-medium text-[var(--text-secondary)] hover:text-gray-700 hover:bg-[var(--surface)] rounded-lg transition-colors"
+              className="px-4 py-3 text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)] rounded-xl transition-colors border border-[var(--border)]"
             >
               Cancel
             </button>
@@ -420,10 +479,10 @@ function StakeSelector({ goal, stakeAmount, setStakeAmount, balanceNum }: {
           <button
             key={amount}
             onClick={() => setStakeAmount(amount.toString())}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
+            className={`flex-1 py-2 text-xs font-semibold rounded-xl border transition-all ${
               stakeAmount === amount.toString()
                 ? 'bg-[#2EE59D]/10 border-[#2EE59D] text-[#2EE59D]'
-                : 'bg-[var(--surface)] border-[var(--border)] text-gray-600 hover:border-gray-300'
+                : 'bg-[var(--background)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--text-secondary)]/50'
             }`}
           >
             ${amount}
@@ -432,7 +491,7 @@ function StakeSelector({ goal, stakeAmount, setStakeAmount, balanceNum }: {
       </div>
 
       <div className="mb-3">
-        <div className="flex items-center gap-2 bg-[var(--surface)] border border-[var(--border)] rounded-lg px-3 py-2 focus-within:border-[#2EE59D] focus-within:ring-1 focus-within:ring-[#2EE59D]/20 transition-all">
+        <div className="flex items-center gap-2 bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-2.5 focus-within:border-[#2EE59D] focus-within:ring-2 focus-within:ring-[#2EE59D]/20 transition-all">
           <span className="text-[var(--text-secondary)] text-sm font-medium">$</span>
           <input
             type="number"
@@ -445,7 +504,7 @@ function StakeSelector({ goal, stakeAmount, setStakeAmount, balanceNum }: {
           />
           <span className="text-[10px] text-[var(--text-secondary)] font-medium">USDC</span>
         </div>
-        <div className="flex justify-between text-[10px] text-[var(--text-secondary)] mt-1 px-1">
+        <div className="flex justify-between text-[10px] text-[var(--text-secondary)] mt-1.5 px-1">
           <span>Min ${goal.minStake}</span>
           <span>Balance: {balanceNum.toFixed(2)}</span>
           <span>Max ${goal.maxStake}</span>
@@ -550,7 +609,7 @@ function ActionButton({ stravaConnected, hasTokenOnChain, hasBalance, isLoading,
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all duration-150 ${getStyle()}`}
+      className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-150 ${getStyle()}`}
     >
       {getLabel()}
     </button>
