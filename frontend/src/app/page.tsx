@@ -57,28 +57,28 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] scroll-smooth">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] scroll-smooth overflow-x-hidden">
       {/* Subtle Background Pattern */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2EE59D]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#2EE59D]/3 rounded-full blur-3xl" />
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-0 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-[#2EE59D]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-[#2EE59D]/3 rounded-full blur-3xl" />
       </div>
 
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center gap-2">
           <a 
             href="/" 
             onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
-            className="text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer"
+            className="text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer flex-shrink-0"
           >
             vaada
           </a>
-          <div className="flex items-center gap-6">
-            <a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
+          <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto hide-scrollbar flex-shrink min-w-0">
+            <a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer flex-shrink-0">
               How it works
             </a>
-            <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
+            <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer flex-shrink-0">
               Promises
             </a>
             <StravaConnect />
@@ -132,7 +132,7 @@ export default function Home() {
       {/* Scroll anchor (outside sticky so offsetTop is correct) */}
       <div id="promises" />
       {/* Category Filter Pills - Sticky */}
-      <div className="sticky top-[57px] z-30 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] py-3">
+      <div className="sticky top-[53px] sm:top-[57px] z-30 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] py-2 sm:py-3">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
           <div className="flex gap-1.5 sm:gap-2 p-1 bg-[var(--surface)] rounded-full overflow-x-auto hide-scrollbar">
             {categories.map(cat => (
@@ -165,7 +165,7 @@ export default function Home() {
       {/* Stats Bar - Full Width */}
       <section className="border-t border-[var(--border)] py-8 sm:py-10 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-center gap-6 sm:gap-12">
+          <div className="grid grid-cols-2 sm:flex sm:justify-center gap-4 sm:gap-12">
             <div className="text-center">
               <p className="text-2xl sm:text-3xl font-bold tabular-nums">${platformStats.totalStaked}</p>
               <p className="text-[10px] sm:text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Total Staked</p>
@@ -194,7 +194,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold mt-2">How It Works</h2>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 relative">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 relative">
             {/* Connecting line */}
             <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
