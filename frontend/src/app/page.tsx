@@ -295,6 +295,8 @@ export default function Home() {
             <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
             {' '}×{' '}
             <a href="https://chain.link" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Chainlink</a>
+            {' '}×{' '}
+            <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Privy</a>
           </div>
         </div>
       </footer>
