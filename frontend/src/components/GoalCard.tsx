@@ -350,13 +350,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 { 
                   label: 'Entry', 
                   desc: goalDetails.entryDeadline 
-                    ? `Closes in ${formatTimeLeft(goalDetails.entryDeadline)}`
+                    ? (formatTimeLeft(goalDetails.entryDeadline) === 'Passed' ? 'Closed' : `Closes in ${formatTimeLeft(goalDetails.entryDeadline)}`)
                     : 'Join now'
                 },
                 { 
                   label: 'Compete', 
                   desc: goalDetails.deadline 
-                    ? `${formatTimeLeft(goalDetails.deadline)} left`
+                    ? (formatTimeLeft(goalDetails.deadline) === 'Passed' ? 'Ended' : `${formatTimeLeft(goalDetails.deadline)} left`)
                     : `${durationText} window`
                 },
                 { 
