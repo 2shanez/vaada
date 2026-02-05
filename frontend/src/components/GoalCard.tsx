@@ -439,7 +439,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   })
                 }}
                 disabled={isClaimPending || isClaimConfirming}
-                className="w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md"
+                className="w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md"
               >
                 {isClaimConfirming ? 'Claiming...' : isClaimPending ? 'Confirm in wallet...' : isClaimSuccess ? 'Claimed! 🎉' : 'Claim Winnings 💰'}
               </button>
@@ -470,7 +470,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                     ? 'bg-[#2EE59D]/20 text-[#2EE59D] cursor-default border border-[#2EE59D]/30'
                     : goal.onChainId === undefined || !entryOpen
                     ? 'bg-[var(--border)] text-[var(--text-secondary)] cursor-not-allowed'
-                    : 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
+                    : 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
                 }`}
               >
                 {hasJoined 
@@ -676,7 +676,7 @@ function ActionButton({ stravaConnected, hasTokenOnChain, hasBalance, isLoading,
   const getStyle = () => {
     if (disabled) return 'bg-gray-100 text-[var(--text-secondary)] cursor-not-allowed'
     if (!stravaConnected || !hasTokenOnChain) return 'bg-[#FC4C02] text-white hover:bg-[#FC4C02]/90 active:scale-[0.98] shadow-sm hover:shadow-md'
-    return 'bg-[#2EE59D] text-black hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
+    return 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
   }
 
   return (

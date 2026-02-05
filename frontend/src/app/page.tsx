@@ -125,7 +125,7 @@ export default function Home() {
           
           <button 
             onClick={handleGetStarted}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#2EE59D] text-black font-semibold rounded-lg 
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#2EE59D] text-white font-semibold rounded-lg 
               hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 hover:-translate-y-0.5
               active:translate-y-0 active:shadow-md
               transition-all duration-200"
@@ -150,7 +150,7 @@ export default function Home() {
                 onClick={() => setActiveCategory(cat)}
                 className={`px-3.5 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 whitespace-nowrap active:scale-95
                   ${activeCategory === cat 
-                    ? 'bg-[#2EE59D] text-black shadow-md shadow-[#2EE59D]/20' 
+                    ? 'bg-[#2EE59D] text-white shadow-md shadow-[#2EE59D]/20' 
                     : 'text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)]/50 active:bg-[var(--background)]'}`}
               >
                 {cat}
@@ -278,7 +278,7 @@ export default function Home() {
           </p>
           <button 
             onClick={handleGetStarted}
-            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[#2EE59D] text-black font-bold rounded-xl 
+            className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[#2EE59D] text-white font-bold rounded-xl 
               hover:bg-white hover:shadow-xl hover:shadow-[#2EE59D]/25 hover:-translate-y-1
               active:translate-y-0
               transition-all duration-200 text-base sm:text-lg"
