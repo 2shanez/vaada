@@ -207,13 +207,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const catStyle = CATEGORY_STYLES[goal.category] || CATEGORY_STYLES.Daily
   const phaseInfo = phase !== undefined ? PHASE_LABELS[phase as GoalPhase] : null
 
-  // Payout estimate: if you're the only one, you get your stake back
-  // If others fail, you split the pool — estimate assumes ~50% win rate
   const pooled = goalDetails.totalStaked || 0
   const participants = goalDetails.participantCount || 0
-  const estimatedPayout = participants > 0 
-    ? Math.round((pooled / Math.max(Math.ceil(participants * 0.5), 1)) * 100) / 100
-    : goal.minStake * 2
 
   // Phase timeline
   const getPhaseStep = () => {
@@ -334,20 +329,16 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           </div>
         )}
 
-        {/* Pool + Payout */}
+        {/* Pool */}
         <div className="flex items-center justify-between py-3 border-t border-[var(--border)]/50">
           <div className="flex items-center gap-2">
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-          {participants > 0 && (
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs text-[var(--text-secondary)]">${goal.minStake}</span>
-              <span className="text-xs text-[var(--text-secondary)]">→</span>
-              <span className="text-sm font-bold text-[#2EE59D]">${estimatedPayout}</span>
-              <span className="text-[10px] text-[var(--text-secondary)]">est. payout</span>
-            </div>
-          )}
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs">👥</span>
+            <span className="text-xs font-medium text-[var(--foreground)]">{participants === 0 ? 'Be the first' : `${participants} ${participants === 1 ? 'player' : 'players'}`}</span>
+          </div>
         </div>
 
         {/* Action Button (collapsed) */}
