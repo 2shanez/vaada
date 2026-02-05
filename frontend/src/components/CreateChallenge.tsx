@@ -310,7 +310,7 @@ export function CreateChallenge() {
               disabled={isLoading}
               className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
                 durationUnit === unit
-                  ? 'bg-[#2EE59D] text-black'
+                  ? 'bg-[#2EE59D] text-white'
                   : 'bg-gray-100 text-gray-500 hover:text-gray-900'
               }`}
             >
@@ -379,7 +379,7 @@ export function CreateChallenge() {
         <div className="mb-6 p-4 rounded-xl bg-gray-100">
           <div className="flex items-center gap-4">
             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-              isApproveSuccess ? 'bg-[#2EE59D] text-black' : step === 'approving' ? 'bg-[#2EE59D]/20 text-[#2EE59D]' : 'bg-gray-200 text-gray-500'
+              isApproveSuccess ? 'bg-[#2EE59D] text-white' : step === 'approving' ? 'bg-[#2EE59D]/20 text-[#2EE59D]' : 'bg-gray-200 text-gray-500'
             }`}>
               {isApproveSuccess ? '✓' : '1'}
             </div>
@@ -387,7 +387,7 @@ export function CreateChallenge() {
               <div className={`h-full bg-[#2EE59D] transition-all ${isApproveSuccess ? 'w-full' : 'w-0'}`}></div>
             </div>
             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-              isCreateSuccess ? 'bg-[#2EE59D] text-black' : step === 'creating' ? 'bg-[#2EE59D]/20 text-[#2EE59D]' : 'bg-gray-200 text-gray-500'
+              isCreateSuccess ? 'bg-[#2EE59D] text-white' : step === 'creating' ? 'bg-[#2EE59D]/20 text-[#2EE59D]' : 'bg-gray-200 text-gray-500'
             }`}>
               {isCreateSuccess ? '✓' : '2'}
             </div>
@@ -408,7 +408,7 @@ export function CreateChallenge() {
         className={`w-full py-4 rounded-xl font-semibold text-lg transition-all ${
           isLoading || !stravaConnected || !hasBalance || !stakeAmount || stakeAmount === '0'
             ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-            : 'bg-[#2EE59D] text-black hover:bg-[#26c987]'
+            : 'bg-[#2EE59D] text-white hover:bg-[#26c987]'
         }`}
       >
         {!stravaConnected 

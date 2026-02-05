@@ -64,14 +64,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] scroll-smooth overflow-x-hidden">
-      {/* Subtle Background Pattern */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      {/* Subtle Background Pattern - hidden on mobile for performance */}
+      <div className="hidden sm:block fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2EE59D]/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#2EE59D]/3 rounded-full blur-3xl" />
       </div>
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)] sm:bg-[var(--background)]/80 sm:backdrop-blur-md border-b border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
           <a 
             href="/" 
@@ -141,7 +141,7 @@ export default function Home() {
       {/* Scroll anchor (outside sticky so offsetTop is correct) */}
       <div id="promises" />
       {/* Category Filter Pills - Sticky */}
-      <div className="sticky top-[57px] z-30 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)] py-3">
+      <div className="sticky top-[57px] z-30 bg-[var(--background)] sm:bg-[var(--background)]/80 sm:backdrop-blur-md border-b border-[var(--border)] py-3">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
           <div className="flex gap-1.5 sm:gap-2 p-1 bg-[var(--surface)] rounded-full overflow-x-auto hide-scrollbar">
             {categories.map(cat => (
@@ -264,8 +264,8 @@ export default function Home() {
 
       {/* Footer CTA */}
       <section ref={ctaView.ref} className={`py-12 sm:py-20 px-4 sm:px-6 bg-gray-900 text-white relative overflow-hidden transition-all duration-700 ${ctaView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-        {/* Background decoration */}
-        <div className="absolute inset-0 opacity-30">
+        {/* Background decoration - hidden on mobile for performance */}
+        <div className="hidden sm:block absolute inset-0 opacity-30">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#2EE59D]/20 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-[#2EE59D]/10 rounded-full blur-3xl" />
         </div>

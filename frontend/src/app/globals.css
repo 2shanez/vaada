@@ -38,6 +38,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Mobile scroll performance */
+@media (max-width: 640px) {
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  .fixed, .sticky {
+    will-change: transform;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

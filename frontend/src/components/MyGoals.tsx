@@ -139,7 +139,7 @@ export function MyGoals() {
           </p>
           <Link 
             href="/#promises"
-            className="inline-flex px-6 py-3 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#26c987] transition-all"
+            className="inline-flex px-6 py-3 bg-[#2EE59D] text-white font-semibold rounded-xl hover:bg-[#26c987] transition-all"
           >
             Browse Promises
           </Link>
@@ -302,7 +302,7 @@ function GoalCard({
           <button
             onClick={handleClaim}
             disabled={isPending || isConfirming}
-            className="px-4 py-2 bg-[#2EE59D] text-black font-semibold rounded-lg hover:bg-[#26c987] transition-all disabled:opacity-50"
+            className="px-4 py-2 bg-[#2EE59D] text-white font-semibold rounded-lg hover:bg-[#26c987] transition-all disabled:opacity-50"
           >
             {isPending ? 'Confirm...' : isConfirming ? 'Claiming...' : `Claim $${payout.toFixed(2)}`}
           </button>

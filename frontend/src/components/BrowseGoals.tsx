@@ -98,7 +98,7 @@ function NotifyModal({
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-4 px-4 py-3 bg-[#2EE59D] text-black font-semibold rounded-xl
+            className="w-full mt-4 px-4 py-3 bg-[#2EE59D] text-white font-semibold rounded-xl
               hover:bg-[#26c987] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Subscribing...' : 'Notify me'}

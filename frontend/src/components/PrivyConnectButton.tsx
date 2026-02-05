@@ -35,7 +35,7 @@ export function PrivyConnectButton() {
     return (
       <button
         onClick={login}
-        className="px-4 py-2 bg-[#2EE59D] text-black rounded-xl text-sm font-semibold hover:bg-[#26c987] transition-all"
+        className="px-4 py-2 bg-[#2EE59D] text-white rounded-xl text-sm font-semibold hover:bg-[#26c987] transition-all"
       >
         Sign In
       </button>
