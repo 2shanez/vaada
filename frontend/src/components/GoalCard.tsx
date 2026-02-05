@@ -392,16 +392,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           </div>
         )}
 
-        {/* Pool */}
-        <div className="flex items-center justify-between py-3 border-t border-[var(--border)]/50">
+        {/* Pool + Players */}
+        <div className="flex items-center justify-between py-3 border-t border-[var(--border)]/50 mb-3">
           <div className="flex items-center gap-2">
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-        </div>
-
-        {/* Players pill */}
-        <div className="flex justify-end mb-3 relative">
+          <div className="relative">
           <button 
             onClick={(e) => { e.stopPropagation(); if (participants > 0) setShowPlayers(!showPlayers) }}
             className="inline-flex items-center gap-1.5 rounded-full bg-[#1a1a2e] py-1 px-3 hover:bg-[#252547] transition-colors"
@@ -424,6 +421,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               ))}
             </div>
           )}
+          </div>
         </div>
 
         {/* Action Button (collapsed) */}
