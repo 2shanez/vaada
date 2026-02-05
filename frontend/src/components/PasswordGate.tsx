@@ -71,10 +71,6 @@ export function PasswordGate({ children }: { children: React.ReactNode }) {
             Enter
           </button>
         </form>
-        
-        <p className="text-center text-xs text-[var(--text-secondary)] mt-6">
-          Request access from the team
-        </p>
       </div>
     </div>
   )
