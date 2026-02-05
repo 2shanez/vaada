@@ -79,7 +79,7 @@ export default function Home() {
             className="flex items-center gap-2 text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer"
           >
             <div className="w-7 h-7 rounded-lg bg-[#2EE59D] flex items-center justify-center">
-              <span className="text-black font-black text-sm leading-none">v</span>
+              <span className="text-white font-black text-sm leading-none">v</span>
             </div>
             vaada
           </a>
@@ -279,7 +279,7 @@ export default function Home() {
           <button 
             onClick={handleGetStarted}
             className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-[#2EE59D] text-white font-bold rounded-xl 
-              hover:bg-white hover:shadow-xl hover:shadow-[#2EE59D]/25 hover:-translate-y-1
+              hover:bg-[#26c987] hover:shadow-xl hover:shadow-[#2EE59D]/25 hover:-translate-y-1
               active:translate-y-0
               transition-all duration-200 text-base sm:text-lg"
           >
@@ -296,7 +296,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 rounded-lg bg-[#2EE59D] flex items-center justify-center">
-              <span className="text-black font-black text-sm leading-none">v</span>
+              <span className="text-white font-black text-sm leading-none">v</span>
             </div>
             <span className="font-bold text-[#2EE59D] text-lg">vaada</span>
             <span className="text-sm text-[var(--text-secondary)]">The Commitment Market</span>
