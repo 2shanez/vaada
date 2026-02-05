@@ -241,7 +241,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
   }
 
   const filteredGoals = filter === 'Active' || filter === 'All' 
-    ? FEATURED_GOALS 
+    ? FEATURED_GOALS.filter(g => filter === 'All' || g.onChainId !== undefined)
     : FEATURED_GOALS.filter(g => g.category === filter)
 
   const showComingSoon = filter === 'Active' || filter === 'All'
