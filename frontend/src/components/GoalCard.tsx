@@ -398,16 +398,16 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-          <div className="relative">
-          <button 
-            onClick={(e) => { e.stopPropagation(); if (participants > 0) setShowPlayers(!showPlayers) }}
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#1a1a2e] py-1 px-3 hover:bg-[#252547] transition-colors"
-          >
-            <span className="text-[11px] font-medium text-white">
-              {participants === 0 ? '0' : participants.toLocaleString()} {participants === 1 ? 'player' : 'players'}
-            </span>
-            <span className={`text-white/50 text-xs transition-transform ${showPlayers ? 'rotate-90' : ''}`}>›</span>
-          </button>
+          <div className="relative flex items-center">
+            <button 
+              onClick={(e) => { e.stopPropagation(); if (participants > 0) setShowPlayers(!showPlayers) }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#1a1a2e] py-1 px-3 hover:bg-[#252547] transition-colors"
+            >
+              <span className="text-[11px] font-medium text-white">
+                {participants === 0 ? '0' : participants.toLocaleString()} {participants === 1 ? 'player' : 'players'}
+              </span>
+              <span className={`text-white/50 text-xs transition-transform ${showPlayers ? 'rotate-90' : ''}`}>›</span>
+            </button>
           
           {showPlayers && playerList.length > 0 && (
             <div className="absolute right-0 top-full mt-1 z-10 bg-[#1a1a2e] border border-[var(--border)] rounded-xl p-2 min-w-[200px] shadow-xl">
