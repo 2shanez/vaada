@@ -290,7 +290,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
 
   return (
-    <div className={`group bg-[var(--surface)] border rounded-2xl transition-all duration-200
+    <div className={`group bg-[var(--surface)] border rounded-2xl transition-all duration-200 relative
+      ${showPlayers ? 'z-40' : 'z-0'}
       ${expanded 
         ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10' 
         : 'border-[var(--border)] hover:border-[var(--text-secondary)]/30 hover:shadow-lg'
