@@ -7,7 +7,7 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'vaada | stake your word',
+  title: 'vaada | keep your promise',
   description: 'Stake money on your goals. Hit them, keep it. Miss them, lose it.',
 }
 
