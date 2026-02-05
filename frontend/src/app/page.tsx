@@ -264,7 +264,7 @@ export default function Home() {
       </section>
 
       {/* Footer CTA */}
-      <section ref={ctaView.ref} className={`py-12 sm:py-20 px-4 sm:px-6 bg-gradient-to-br from-[#0a1a14] to-[#0d0d0f] text-white relative overflow-hidden transition-all duration-700 ${ctaView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+      <section ref={ctaView.ref} className={`py-12 sm:py-20 px-4 sm:px-6 bg-[var(--background)] relative overflow-hidden transition-all duration-700 ${ctaView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Background decoration - hidden on mobile for performance */}
         <div className="hidden sm:block absolute inset-0 opacity-30">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#2EE59D]/20 rounded-full blur-3xl" />
@@ -275,7 +275,7 @@ export default function Home() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Ready to bet on yourself?
           </h2>
-          <p className="text-gray-400 mb-6 sm:mb-8 text-base sm:text-lg">
+          <p className="text-[var(--text-secondary)] mb-6 sm:mb-8 text-base sm:text-lg">
             Join the commitment market. Put money on your promises.
           </p>
           <button 
