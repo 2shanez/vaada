@@ -291,8 +291,7 @@ export default function Home() {
           </div>
           
           <div className="text-sm text-[var(--text-secondary)]">
-            <a href="https://vaada.io" className="text-[#2EE59D] hover:underline">vaada</a>
-            {' '}×{' '}
+            Built on{' '}
             <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
             {' '}×{' '}
             <a href="https://chain.link" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Chainlink</a>
