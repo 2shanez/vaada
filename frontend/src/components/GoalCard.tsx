@@ -297,7 +297,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       }`}
     >
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-[var(--background)] to-[var(--surface)] px-5 pt-6 pb-4">
+      <div className="relative bg-gradient-to-br from-[var(--background)] to-[var(--surface)] px-5 pt-6 pb-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2">
             <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${catStyle.bg} ${catStyle.text}`}>
@@ -312,15 +312,15 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         </div>
 
         {/* Large emoji hero */}
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2EE59D]/20 to-[#2EE59D]/5 flex items-center justify-center flex-shrink-0 border border-[#2EE59D]/10">
+        <div className="flex items-center gap-4 mb-5">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#2EE59D]/20 via-[#2EE59D]/10 to-transparent flex items-center justify-center flex-shrink-0 border border-[#2EE59D]/15 shadow-sm shadow-[#2EE59D]/5">
             <span className="text-3xl">{goal.emoji}</span>
           </div>
           <div className="min-w-0">
-            <h3 className="font-bold text-lg text-[var(--foreground)] leading-tight mb-0.5">
+            <h3 className="font-bold text-lg text-[var(--foreground)] leading-tight mb-1">
               {goal.title}
             </h3>
-            <p className="text-xs text-[var(--text-secondary)] line-clamp-2">{goal.description}</p>
+            <p className="text-[13px] text-[var(--text-secondary)] line-clamp-2 leading-relaxed">{goal.description}</p>
           </div>
         </div>
 
@@ -344,7 +344,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       <div className="px-5 pb-5">
         {/* Timeline */}
         {!isSettled && (
-          <div className="py-4 border-t border-[var(--border)]/50">
+          <div className="py-5 border-t border-[var(--border)]/50">
             <div className="flex items-start">
               {[
                 { 

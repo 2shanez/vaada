@@ -7,6 +7,7 @@ import { usePrivy } from '@privy-io/react-auth'
 import { FEATURED_GOALS } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { usePlatformStats } from '@/lib/hooks'
+import { useInView } from '@/lib/useInView'
 
 // Dynamic imports for heavy components - don't block first paint
 const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => ({ default: m.BrowseGoals })), {
@@ -27,6 +28,11 @@ export default function Home() {
   const { login } = usePrivy()
   const [activeCategory, setActiveCategory] = useState<Category>('Active')
   const [mounted, setMounted] = useState(false)
+
+  const statsView = useInView(0.2)
+  const howView = useInView(0.1)
+  const whyView = useInView(0.1)
+  const ctaView = useInView(0.2)
 
   useEffect(() => {
     setMounted(true)
@@ -70,8 +76,11 @@ export default function Home() {
           <a 
             href="/" 
             onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
-            className="text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer"
+            className="flex items-center gap-2 text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer"
           >
+            <div className="w-7 h-7 rounded-lg bg-[#2EE59D] flex items-center justify-center">
+              <span className="text-black font-black text-sm leading-none">v</span>
+            </div>
             vaada
           </a>
           <div className="flex items-center gap-6">
@@ -163,7 +172,7 @@ export default function Home() {
       </section>
 
       {/* Stats Bar - Full Width */}
-      <section className="border-t border-[var(--border)] py-8 sm:py-10 px-4 sm:px-6">
+      <section ref={statsView.ref} className={`border-t border-[var(--border)] py-8 sm:py-10 px-4 sm:px-6 transition-all duration-700 ${statsView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-center gap-6 sm:gap-12">
             <div className="text-center">
@@ -187,7 +196,7 @@ export default function Home() {
       </section>
 
       {/* How It Works - Compact horizontal */}
-      <section id="how-it-works" className="py-16 px-6 bg-[var(--surface)] border-t border-[var(--border)]">
+      <section ref={howView.ref} id="how-it-works" className={`py-16 px-6 bg-[var(--surface)] border-t border-[var(--border)] transition-all duration-700 ${howView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-xs font-semibold text-[#2EE59D] uppercase tracking-wider">Simple Process</span>
@@ -224,7 +233,7 @@ export default function Home() {
       </section>
 
       {/* Why It Works - Compact */}
-      <section className="py-16 px-6">
+      <section ref={whyView.ref} className={`py-16 px-6 transition-all duration-700 ${whyView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <span className="text-xs font-semibold text-[#2EE59D] uppercase tracking-wider">The Science</span>
@@ -253,7 +262,7 @@ export default function Home() {
       </section>
 
       {/* Footer CTA */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-gray-900 text-white relative overflow-hidden">
+      <section ref={ctaView.ref} className={`py-12 sm:py-20 px-4 sm:px-6 bg-gray-900 text-white relative overflow-hidden transition-all duration-700 ${ctaView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#2EE59D]/20 rounded-full blur-3xl" />
@@ -285,7 +294,10 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--background)]">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg bg-[#2EE59D] flex items-center justify-center">
+              <span className="text-black font-black text-sm leading-none">v</span>
+            </div>
             <span className="font-bold text-[#2EE59D] text-lg">vaada</span>
             <span className="text-sm text-[var(--text-secondary)]">The Commitment Market</span>
           </div>
