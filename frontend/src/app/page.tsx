@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { PrivyConnectButton } from '@/components/PrivyConnectButton'
 import { StravaConnect } from '@/components/StravaConnect'
 
-const categories = ['All', 'Test', 'Daily', 'Weekly', 'Monthly'] as const
+const categories = ['All', 'Daily', 'Weekly', 'Monthly'] as const
 type Category = typeof categories[number]
 
 export default function Home() {
@@ -140,7 +140,7 @@ export default function Home() {
           </div>
           <div className="text-xs sm:text-sm text-[var(--text-secondary)] hidden sm:flex items-center gap-2 flex-shrink-0">
             <span className="w-2 h-2 rounded-full bg-[#2EE59D] animate-pulse" />
-            7 promises live
+            6 promises live
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@ export default function Home() {
               <p className="text-[10px] sm:text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Total Participants</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-bold tabular-nums">7</p>
+              <p className="text-2xl sm:text-3xl font-bold tabular-nums">6</p>
               <p className="text-[10px] sm:text-xs text-[var(--text-secondary)] uppercase tracking-wider mt-1">Total Promises</p>
             </div>
           </div>
