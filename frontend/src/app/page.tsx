@@ -148,10 +148,11 @@ export default function Home() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 whitespace-nowrap active:scale-95
+                className={`px-3.5 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap select-none
+                  transition-[background-color,color,transform,box-shadow] duration-100 ease-out active:scale-[0.93]
                   ${activeCategory === cat 
                     ? 'bg-[#2EE59D] text-white shadow-md shadow-[#2EE59D]/20' 
-                    : 'text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)]/50 active:bg-[var(--background)]'}`}
+                    : 'text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)]/50 active:bg-[var(--surface)]'}`}
               >
                 {cat}
               </button>
