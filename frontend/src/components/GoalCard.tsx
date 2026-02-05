@@ -351,10 +351,14 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs">👥</span>
-            <span className="text-xs font-medium text-[var(--foreground)]">{participants === 0 ? 'Be the first' : `${participants} ${participants === 1 ? 'player' : 'players'}`}</span>
-          </div>
+        </div>
+
+        {/* Players bar */}
+        <div className="rounded-xl bg-[#1a1a2e] py-2.5 px-4 flex items-center justify-between mb-3">
+          <span className="text-sm font-medium text-white">
+            {participants === 0 ? 'Be the first to join' : `${participants.toLocaleString()} ${participants === 1 ? 'player' : 'players'}`}
+          </span>
+          <span className="text-white/60 text-sm">›</span>
         </div>
 
         {/* Action Button (collapsed) */}
