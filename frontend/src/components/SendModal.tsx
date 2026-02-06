@@ -107,49 +107,61 @@ export function SendModal({ onClose }: SendModalProps) {
           </div>
         ) : (
           <>
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-3">
-                <span className="text-2xl">💸</span>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-full bg-[#2EE59D]/10 flex items-center justify-center flex-shrink-0">
+                <span className="text-xl">💸</span>
               </div>
-              <h3 className="font-semibold text-lg">Send USDC</h3>
-              <p className="text-sm text-[var(--text-secondary)] mt-1">
-                Balance: <span className="text-[#2EE59D] font-medium">${balanceNum.toFixed(2)}</span>
-              </p>
+              <div>
+                <h3 className="font-semibold text-lg">Send USDC</h3>
+                <p className="text-sm text-[var(--text-secondary)]">
+                  Balance: <span className="text-[#2EE59D] font-medium">${balanceNum.toFixed(2)}</span>
+                </p>
+              </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
-                <label className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1 block">Recipient Address</label>
+                <label className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-2 block">Recipient Address</label>
                 <input
                   ref={inputRef}
                   type="text"
+                  inputMode="text"
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   value={recipient}
                   onChange={(e) => setRecipient(e.target.value)}
                   placeholder="0x..."
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] 
-                    focus:outline-none focus:border-[#2EE59D] focus:ring-1 focus:ring-[#2EE59D]/50
-                    placeholder:text-[var(--text-secondary)] transition-all text-sm font-mono"
+                  className="w-full px-4 py-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] 
+                    focus:outline-none focus:border-[#2EE59D] focus:ring-2 focus:ring-[#2EE59D]/30
+                    placeholder:text-[var(--text-secondary)] transition-all text-base font-mono"
                 />
               </div>
 
               <div>
-                <label className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-1 block">Amount (USDC)</label>
+                <label className="text-xs text-[var(--text-secondary)] uppercase tracking-wider mb-2 block">Amount (USDC)</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] text-lg">$</span>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
+                    autoComplete="off"
                     value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    onChange={(e) => {
+                      // Only allow numbers and decimal point
+                      const val = e.target.value.replace(/[^0-9.]/g, '')
+                      setAmount(val)
+                    }}
                     placeholder="0.00"
-                    step="0.01"
-                    min="0"
-                    className="w-full pl-8 pr-16 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] 
-                      focus:outline-none focus:border-[#2EE59D] focus:ring-1 focus:ring-[#2EE59D]/50
-                      placeholder:text-[var(--text-secondary)] transition-all text-sm"
+                    className="w-full pl-9 pr-16 py-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] 
+                      focus:outline-none focus:border-[#2EE59D] focus:ring-2 focus:ring-[#2EE59D]/30
+                      placeholder:text-[var(--text-secondary)] transition-all text-base"
                   />
                   <button
-                    onClick={() => setAmount(balanceNum.toString())}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#2EE59D] font-medium hover:underline"
+                    type="button"
+                    onClick={() => setAmount(balanceNum.toFixed(2))}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-1 text-xs text-[#2EE59D] font-semibold bg-[#2EE59D]/10 rounded-md active:scale-95"
                   >
                     MAX
                   </button>
@@ -163,19 +175,21 @@ export function SendModal({ onClose }: SendModalProps) {
               </p>
             )}
 
-            <div className="flex gap-3 mt-4">
+            <div className="flex gap-3 mt-5">
               <button
+                type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-3 bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-xl
-                  hover:bg-[var(--surface-hover)] active:scale-95 transition-all"
+                className="flex-1 min-h-[48px] px-4 py-3.5 bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-xl
+                  hover:bg-[var(--surface-hover)] active:scale-[0.98] transition-all"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleSend}
                 disabled={isPending || isConfirming}
-                className="flex-1 px-4 py-3 bg-[#2EE59D] text-white font-semibold rounded-xl
-                  hover:bg-[#26c987] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 min-h-[48px] px-4 py-3.5 bg-[#2EE59D] text-white font-semibold rounded-xl
+                  hover:bg-[#26c987] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isConfirming ? 'Confirming...' : isPending ? 'Confirm...' : 'Send'}
               </button>
