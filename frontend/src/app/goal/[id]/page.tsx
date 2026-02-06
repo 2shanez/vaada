@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import type { Metadata } from 'next'
 
 // Goal data for metadata
@@ -42,5 +41,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 
 export default async function GoalPage() {
-  redirect('/')
+  // Don't redirect server-side - let client handle it so crawlers can read meta tags
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `window.location.href = '/';`,
+      }}
+    />
+  )
 }
