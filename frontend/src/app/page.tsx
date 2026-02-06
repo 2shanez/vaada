@@ -66,7 +66,7 @@ export default function Home() {
     <>
       {/* Header - outside main to avoid overflow clipping on iOS */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)] border-b border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center gap-6 sm:gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3 sm:gap-4">
           <a 
             href="/" 
             onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
@@ -75,19 +75,21 @@ export default function Home() {
             <div className="w-7 h-7 rounded-lg bg-[#2EE59D] flex items-center justify-center">
               <span className="text-white font-black text-sm leading-none">v</span>
             </div>
-            vaada
+            <span className="hidden sm:inline">vaada</span>
           </a>
-          <div className="flex items-center gap-2 sm:gap-6">
-            <a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
-              How it works
-            </a>
-            <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
-              Promises
-            </a>
-            <StravaConnect />
-            <FundWalletButton />
-            <PrivyConnectButton />
-            <ThemeToggle />
+          <div className="flex-1 overflow-x-auto hide-scrollbar">
+            <div className="flex items-center gap-2 sm:gap-4 justify-end min-w-max">
+              <a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
+                How it works
+              </a>
+              <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
+                Promises
+              </a>
+              <StravaConnect />
+              <FundWalletButton />
+              <PrivyConnectButton />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>

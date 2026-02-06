@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useAccount } from 'wagmi'
 
 const FAUCETS = {
@@ -11,6 +12,11 @@ const FAUCETS = {
 export function FundWalletButton() {
   const { address } = useAccount()
   const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleToggle = useCallback(() => {
     setIsOpen(prev => !prev)
@@ -41,16 +47,16 @@ export function FundWalletButton() {
         <span className="hidden sm:inline">Fund</span>
       </button>
 
-      {isOpen && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 z-[100] flex flex-col justify-end sm:justify-center sm:items-center">
+      {isOpen && mounted && createPortal(
+        <div className="fixed inset-0 z-[9999] flex flex-col justify-end sm:justify-center sm:items-center">
           {/* Backdrop */}
           <div 
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/50"
             onClick={handleClose}
           />
           
           {/* Modal */}
-          <div className="relative bg-[var(--background)] rounded-t-2xl p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:max-w-sm sm:w-full sm:mx-4 sm:pb-4">
+          <div className="relative bg-[var(--background)] rounded-t-2xl p-4 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:max-w-sm sm:w-full sm:mx-4 sm:pb-4 animate-slide-up">
             <p className="text-base font-semibold mb-4 text-center">Get Testnet Tokens</p>
             
             <a
@@ -105,7 +111,8 @@ export function FundWalletButton() {
               Close
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   )
