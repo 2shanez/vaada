@@ -32,11 +32,11 @@ export function FundWalletButton() {
   const handleCopy = useCallback(() => {
     if (address) {
       navigator.clipboard.writeText(address)
-      setCopied(true)
+      setIsOpen(false)  // Close modal immediately
+      setCopied(true)   // Show toast
       setTimeout(() => {
-        setIsOpen(false)
         setCopied(false)
-      }, 1200)
+      }, 2000)
     }
   }, [address])
   
@@ -56,13 +56,22 @@ export function FundWalletButton() {
 
       {/* Toast notification */}
       {copied && mounted && createPortal(
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[10000] animate-fade-in">
-          <div className="flex items-center gap-2 px-4 py-3 bg-[#2EE59D] text-white font-medium rounded-full shadow-lg">
+        <div 
+          className="fixed top-24 left-0 right-0 flex justify-center z-[10000] pointer-events-none"
+          style={{ animation: 'fadeInDown 0.3s ease-out' }}
+        >
+          <div className="flex items-center gap-2 px-5 py-3 bg-[#2EE59D] text-white font-semibold rounded-full shadow-xl">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
             Address copied!
           </div>
+          <style>{`
+            @keyframes fadeInDown {
+              from { opacity: 0; transform: translateY(-10px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+          `}</style>
         </div>,
         document.body
       )}
