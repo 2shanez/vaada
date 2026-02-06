@@ -12,8 +12,9 @@ const GOALS: Record<string, { emoji: string; title: string; description: string;
   '6': { emoji: '🏅', title: 'Marathon Prep', description: 'Hit 100 miles in 30 days', targetMiles: 100, minStake: 20, maxStake: 200 },
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const goal = GOALS[params.id] || GOALS['1']
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const goal = GOALS[id] || GOALS['1']
   
   return {
     title: `${goal.emoji} ${goal.title} | vaada`,
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     openGraph: {
       title: `${goal.emoji} ${goal.title}`,
       description: `${goal.description}. Stake $${goal.minStake}-$${goal.maxStake} on your promise.`,
-      url: `https://vaada.io/goal/${params.id}`,
+      url: `https://vaada.io/goal/${id}`,
       siteName: 'vaada',
       type: 'website',
     },
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
 }
 
-export default function GoalPage({ params }: { params: { id: string } }) {
+export default async function GoalPage({ params }: { params: Promise<{ id: string }> }) {
   // Redirect to home page - the OG image is the main purpose of this route
   redirect('/')
 }

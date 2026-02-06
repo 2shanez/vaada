@@ -16,8 +16,9 @@ const GOALS: Record<string, { emoji: string; title: string; description: string;
   '6': { emoji: '🏅', title: 'Marathon Prep', description: 'Hit 100 miles in 30 days', targetMiles: 100, minStake: 20, maxStake: 200 },
 }
 
-export default async function Image({ params }: { params: { id: string } }) {
-  const goal = GOALS[params.id] || GOALS['1']
+export default async function Image({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const goal = GOALS[id] || GOALS['1']
   
   return new ImageResponse(
     (
@@ -29,8 +30,7 @@ export default async function Image({ params }: { params: { id: string } }) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)',
-          fontFamily: 'system-ui, sans-serif',
+          backgroundColor: '#0a0a0a',
         }}
       >
         {/* Card */}
@@ -39,29 +39,24 @@ export default async function Image({ params }: { params: { id: string } }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            padding: '60px 80px',
-            borderRadius: '32px',
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            padding: '48px 64px',
+            borderRadius: '24px',
+            backgroundColor: '#1a1a1a',
+            border: '1px solid #333',
           }}
         >
           {/* Emoji */}
-          <div
-            style={{
-              fontSize: 100,
-              marginBottom: 24,
-            }}
-          >
+          <div style={{ fontSize: 80, marginBottom: 16 }}>
             {goal.emoji}
           </div>
           
           {/* Title */}
           <div
             style={{
-              fontSize: 56,
+              fontSize: 48,
               fontWeight: 700,
               color: 'white',
-              marginBottom: 16,
+              marginBottom: 8,
             }}
           >
             {goal.title}
@@ -70,9 +65,9 @@ export default async function Image({ params }: { params: { id: string } }) {
           {/* Description */}
           <div
             style={{
-              fontSize: 28,
-              color: 'rgba(255,255,255,0.7)',
-              marginBottom: 32,
+              fontSize: 24,
+              color: '#888',
+              marginBottom: 24,
             }}
           >
             {goal.description}
@@ -82,21 +77,21 @@ export default async function Image({ params }: { params: { id: string } }) {
           <div
             style={{
               display: 'flex',
-              gap: 48,
-              marginBottom: 32,
+              gap: 32,
+              marginBottom: 24,
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ fontSize: 36, fontWeight: 700, color: '#2EE59D' }}>
+              <div style={{ fontSize: 32, fontWeight: 700, color: '#2EE59D' }}>
                 {goal.targetMiles} mi
               </div>
-              <div style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)' }}>Target</div>
+              <div style={{ fontSize: 14, color: '#666' }}>Target</div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{ fontSize: 36, fontWeight: 700, color: '#2EE59D' }}>
+              <div style={{ fontSize: 32, fontWeight: 700, color: '#2EE59D' }}>
                 ${goal.minStake}-${goal.maxStake}
               </div>
-              <div style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)' }}>Stake</div>
+              <div style={{ fontSize: 14, color: '#666' }}>Stake</div>
             </div>
           </div>
           
@@ -104,13 +99,11 @@ export default async function Image({ params }: { params: { id: string } }) {
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '16px 32px',
-              background: '#2EE59D',
-              borderRadius: 16,
+              padding: '12px 24px',
+              backgroundColor: '#2EE59D',
+              borderRadius: 12,
               color: 'white',
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: 600,
             }}
           >
@@ -123,29 +116,29 @@ export default async function Image({ params }: { params: { id: string } }) {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 12,
+            gap: 8,
             position: 'absolute',
-            bottom: 40,
-            left: 60,
+            bottom: 32,
+            left: 48,
           }}
         >
           <div
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: 10,
-              background: '#2EE59D',
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              backgroundColor: '#2EE59D',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'white',
               fontWeight: 800,
-              fontSize: 20,
+              fontSize: 16,
             }}
           >
             v
           </div>
-          <div style={{ color: '#2EE59D', fontSize: 28, fontWeight: 700 }}>vaada</div>
+          <div style={{ color: '#2EE59D', fontSize: 24, fontWeight: 700 }}>vaada</div>
         </div>
       </div>
     ),
