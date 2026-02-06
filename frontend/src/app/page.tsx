@@ -66,11 +66,11 @@ export default function Home() {
     <>
       {/* Header - outside main to avoid overflow clipping on iOS */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)] sm:bg-[var(--background)]/80 sm:backdrop-blur-md border-b border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center gap-4">
           <a 
             href="/" 
             onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
-            className="flex items-center gap-2 text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer"
+            className="flex items-center gap-2 text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer flex-shrink-0"
           >
             <div className="w-7 h-7 rounded-lg bg-[#2EE59D] flex items-center justify-center">
               <span className="text-white font-black text-sm leading-none">v</span>
