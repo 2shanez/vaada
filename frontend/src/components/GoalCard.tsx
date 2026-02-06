@@ -483,15 +483,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         {/* Timeline */}
         {!isSettled && (
           <div className="py-5 border-t border-[var(--border)]/50">
-            {/* Connecting line */}
-            <div className="relative mx-[12.5%] mb-[-6px]">
-              <div className="absolute top-1.5 left-0 right-0 h-0.5 bg-[var(--border)]" />
-              <div 
-                className="absolute top-1.5 left-0 h-0.5 bg-[#2EE59D]" 
-                style={{ width: `${Math.min(currentPhaseStep / 3 * 100, 100)}%` }}
-              />
-            </div>
-            <div className="flex">
+            <div className="flex items-start">
               {[
                 { 
                   label: 'Entry', 
@@ -514,11 +506,19 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   desc: 'Split the pool' 
                 },
               ].map((step, i) => (
-                <div key={i} className="flex-1 text-center">
-                  <div className={`w-3 h-3 rounded-full mx-auto ${
-                    i <= currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'
-                  }`} />
-                  <p className={`text-[10px] font-semibold mt-2 ${i <= currentPhaseStep ? 'text-[var(--foreground)]' : 'text-[var(--text-secondary)]'}`}>
+                <div key={i} className="flex-1 flex flex-col items-center">
+                  <div className="flex items-center w-full mb-2">
+                    {i > 0 && (
+                      <div className={`flex-1 h-0.5 ${i <= currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'}`} />
+                    )}
+                    <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                      i <= currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'
+                    }`} />
+                    {i < 3 && (
+                      <div className={`flex-1 h-0.5 ${i < currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'}`} />
+                    )}
+                  </div>
+                  <p className={`text-[10px] font-semibold ${i <= currentPhaseStep ? 'text-[var(--foreground)]' : 'text-[var(--text-secondary)]'}`}>
                     {step.label}
                   </p>
                   <p className="text-[9px] text-[var(--text-secondary)]">{step.desc}</p>
