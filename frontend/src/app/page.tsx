@@ -75,7 +75,7 @@ export default function Home() {
             <div className="w-7 h-7 rounded-lg bg-[#2EE59D] flex items-center justify-center">
               <span className="text-white font-black text-sm leading-none">v</span>
             </div>
-            <span className="hidden sm:inline">vaada</span>
+            vaada
           </a>
           <div className="flex-1 overflow-x-auto hide-scrollbar">
             <div className="flex items-center gap-2 sm:gap-4 justify-end min-w-max">
