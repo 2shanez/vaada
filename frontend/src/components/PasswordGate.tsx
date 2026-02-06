@@ -40,8 +40,8 @@ export function PasswordGate({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
-      <div className="max-w-sm w-full">
+    <div className="fixed inset-0 bg-[var(--background)] flex items-center justify-center px-6">
+      <div className="max-w-sm w-full -mt-16">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-[#2EE59D] mb-2">vaada</h1>
           <p className="text-[var(--text-secondary)] text-sm">Private beta access</p>
