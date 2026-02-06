@@ -13,6 +13,7 @@ export function FundWalletButton() {
   const { address } = useAccount()
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -20,16 +21,22 @@ export function FundWalletButton() {
 
   const handleToggle = useCallback(() => {
     setIsOpen(prev => !prev)
+    setCopied(false)
   }, [])
 
   const handleClose = useCallback(() => {
     setIsOpen(false)
+    setCopied(false)
   }, [])
 
   const handleCopy = useCallback(() => {
     if (address) {
       navigator.clipboard.writeText(address)
-      setIsOpen(false)
+      setCopied(true)
+      setTimeout(() => {
+        setIsOpen(false)
+        setCopied(false)
+      }, 800)
     }
   }, [address])
   
@@ -94,11 +101,17 @@ export function FundWalletButton() {
             <button
               type="button"
               onClick={handleCopy}
-              className="flex items-center gap-3 px-4 py-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] w-full active:scale-[0.98] transition-transform"
+              className={`flex items-center gap-3 px-4 py-4 rounded-xl border w-full active:scale-[0.98] transition-all ${
+                copied 
+                  ? 'bg-[#2EE59D]/10 border-[#2EE59D]' 
+                  : 'bg-[var(--surface)] border-[var(--border)]'
+              }`}
             >
-              <span className="text-2xl">📋</span>
+              <span className="text-2xl">{copied ? '✓' : '📋'}</span>
               <div className="text-left">
-                <p className="font-medium">Copy Wallet Address</p>
+                <p className={`font-medium ${copied ? 'text-[#2EE59D]' : ''}`}>
+                  {copied ? 'Copied!' : 'Copy Wallet Address'}
+                </p>
                 <p className="text-sm text-[var(--text-secondary)] font-mono">{address.slice(0, 10)}...{address.slice(-6)}</p>
               </div>
             </button>
