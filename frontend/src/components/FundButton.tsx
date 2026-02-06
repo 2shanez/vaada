@@ -13,7 +13,6 @@ export function FundWalletButton() {
   const { address } = useAccount()
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -21,22 +20,16 @@ export function FundWalletButton() {
 
   const handleToggle = useCallback(() => {
     setIsOpen(prev => !prev)
-    setCopied(false)
   }, [])
 
   const handleClose = useCallback(() => {
     setIsOpen(false)
-    setCopied(false)
   }, [])
 
   const handleCopy = useCallback(() => {
     if (address) {
       navigator.clipboard.writeText(address)
-      setIsOpen(false)  // Close modal immediately
-      setCopied(true)   // Show toast
-      setTimeout(() => {
-        setCopied(false)
-      }, 2000)
+      setIsOpen(false)
     }
   }, [address])
   
@@ -53,28 +46,6 @@ export function FundWalletButton() {
         <span className="text-lg">💰</span>
         <span className="hidden sm:inline">Fund</span>
       </button>
-
-      {/* Toast notification */}
-      {copied && mounted && createPortal(
-        <div 
-          className="fixed top-24 left-0 right-0 flex justify-center z-[10000] pointer-events-none"
-          style={{ animation: 'fadeInDown 0.3s ease-out' }}
-        >
-          <div className="flex items-center gap-2 px-5 py-3 bg-[#2EE59D] text-white font-semibold rounded-full shadow-xl">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-            </svg>
-            Address copied!
-          </div>
-          <style>{`
-            @keyframes fadeInDown {
-              from { opacity: 0; transform: translateY(-10px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-          `}</style>
-        </div>,
-        document.body
-      )}
 
       {isOpen && mounted && createPortal(
         <div className="fixed inset-0 z-[9999] flex flex-col justify-end sm:justify-center sm:items-center">
@@ -123,17 +94,11 @@ export function FundWalletButton() {
             <button
               type="button"
               onClick={handleCopy}
-              className={`flex items-center gap-3 px-4 py-4 rounded-xl border w-full active:scale-[0.98] transition-all ${
-                copied 
-                  ? 'bg-[#2EE59D]/10 border-[#2EE59D]' 
-                  : 'bg-[var(--surface)] border-[var(--border)]'
-              }`}
+              className="flex items-center gap-3 px-4 py-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] w-full active:scale-[0.98] transition-transform"
             >
-              <span className="text-2xl">{copied ? '✅' : '📋'}</span>
+              <span className="text-2xl">📋</span>
               <div className="text-left">
-                <p className={`font-medium ${copied ? 'text-[#2EE59D]' : ''}`}>
-                  {copied ? 'Copied!' : 'Copy Wallet Address'}
-                </p>
+                <p className="font-medium">Copy Wallet Address</p>
                 <p className="text-sm text-[var(--text-secondary)] font-mono">{address.slice(0, 10)}...{address.slice(-6)}</p>
               </div>
             </button>
