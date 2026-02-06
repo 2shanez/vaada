@@ -11,8 +11,6 @@ const FAUCETS = {
 export function FundWalletButton() {
   const { address } = useAccount()
   const [isOpen, setIsOpen] = useState(false)
-  
-  if (!address) return null
 
   const handleToggle = useCallback(() => {
     setIsOpen(prev => !prev)
@@ -23,9 +21,13 @@ export function FundWalletButton() {
   }, [])
 
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(address)
+    if (address) {
+      navigator.clipboard.writeText(address)
+    }
     setIsOpen(false)
   }, [address])
+  
+  if (!address) return null
 
   return (
     <>
