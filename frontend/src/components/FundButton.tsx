@@ -54,6 +54,19 @@ export function FundWalletButton() {
         <span className="hidden sm:inline">Fund</span>
       </button>
 
+      {/* Toast notification */}
+      {copied && mounted && createPortal(
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[10000] animate-fade-in">
+          <div className="flex items-center gap-2 px-4 py-3 bg-[#2EE59D] text-white font-medium rounded-full shadow-lg">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Address copied!
+          </div>
+        </div>,
+        document.body
+      )}
+
       {isOpen && mounted && createPortal(
         <div className="fixed inset-0 z-[9999] flex flex-col justify-end sm:justify-center sm:items-center">
           {/* Backdrop */}
