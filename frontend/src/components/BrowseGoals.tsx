@@ -391,13 +391,14 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
         <div className="flex flex-wrap justify-center gap-2">
           <button
             onClick={() => setSelectedDomain('All')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
               selectedDomain === 'All'
                 ? 'bg-[#2EE59D] text-white shadow-lg shadow-[#2EE59D]/25'
                 : 'bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] hover:border-[#2EE59D]/50'
             }`}
           >
-            🎯 All Goals
+            <span className="w-2 h-2 rounded-full bg-current animate-pulse" />
+            Active Goals
           </button>
           {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
             <button
