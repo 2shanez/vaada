@@ -379,8 +379,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     >
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-[var(--background)] to-[var(--surface)] px-5 pt-6 pb-5 rounded-t-2xl">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <div className="flex items-center gap-2 flex-wrap min-w-0">
             <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${catStyle.bg} ${catStyle.text}`}>
               {goal.category.toUpperCase()}
             </span>
@@ -408,8 +408,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               </span>
             )}
           </div>
-          {/* Share dropdown */}
-          <div className="relative">
+          {/* Share buttons */}
+          <div className="relative flex-shrink-0">
             <div className="flex items-center gap-1">
               {/* X/Twitter button */}
               <button
