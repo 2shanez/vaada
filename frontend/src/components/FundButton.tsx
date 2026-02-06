@@ -48,9 +48,9 @@ export function FundWalletButton() {
         type="button"
         onClick={handleToggle}
         style={{ touchAction: 'manipulation' }}
-        className="min-h-[44px] min-w-[44px] px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm hover:border-[#2EE59D]/50 active:scale-95 transition-all flex items-center justify-center gap-1.5"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[#2EE59D]/50 active:scale-95 transition-all text-sm"
       >
-        <span className="text-lg">💰</span>
+        <span>💰</span>
         <span>Fund</span>
       </button>
 
