@@ -400,15 +400,22 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           <button
             onClick={(e) => {
               e.stopPropagation()
-              const text = `I'm betting on myself 💪 ${goal.title} - stake $${goal.minStake}-$${goal.maxStake} on @vaaborz`
-              const url = `https://vaada.io`
-              window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank')
+              const goalId = goal.onChainId || goal.id
+              const shareUrl = `https://vaada.io/goal/${goalId}`
+              const text = `${goal.emoji} I'm betting on myself - ${goal.title}\n\nStake $${goal.minStake}-$${goal.maxStake} on your promise`
+              
+              // Try native share on mobile, fallback to Twitter
+              if (navigator.share) {
+                navigator.share({ title: goal.title, text, url: shareUrl }).catch(() => {})
+              } else {
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank')
+              }
             }}
-            className="p-1.5 rounded-lg hover:bg-[var(--surface)] transition-colors group/share"
-            title="Share to X"
+            className="p-2 -m-1 rounded-xl hover:bg-[var(--background)] active:scale-95 transition-all group/share"
+            title="Share"
           >
-            <svg className="w-4 h-4 text-[var(--text-secondary)] group-hover/share:text-[#2EE59D] transition-colors" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            <svg className="w-5 h-5 text-[var(--text-secondary)] group-hover/share:text-[#2EE59D] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
           </button>
         </div>
