@@ -28,8 +28,11 @@ export function SendModal({ onClose }: SendModalProps) {
     setMounted(true)
   }, [])
 
+  // Don't auto-focus on mobile to avoid keyboard popping up
   useEffect(() => {
-    if (mounted) inputRef.current?.focus()
+    if (mounted && window.innerWidth >= 640) {
+      inputRef.current?.focus()
+    }
   }, [mounted])
 
   useEffect(() => {
