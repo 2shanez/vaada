@@ -687,7 +687,9 @@ function StakeSelector({ goal, stakeAmount, setStakeAmount, balanceNum }: {
   setStakeAmount: (v: string) => void
   balanceNum: number
 }) {
-  const quickStakes = [goal.minStake, Math.round((goal.minStake + goal.maxStake) / 2), goal.maxStake]
+  // Round middle value to nearest 5 for cleaner UI
+  const midStake = Math.round((goal.minStake + goal.maxStake) / 2 / 5) * 5
+  const quickStakes = [goal.minStake, midStake, goal.maxStake]
   
   return (
     <>
