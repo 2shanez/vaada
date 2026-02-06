@@ -40,18 +40,18 @@ export function FundWalletButton() {
         {showFaucets && (
           <>
             <div className="fixed inset-0 z-40 bg-black/20" onClick={() => setShowFaucets(false)} />
-            <div className="fixed sm:absolute left-4 right-4 sm:left-auto sm:right-0 bottom-4 sm:bottom-auto sm:top-full sm:mt-2 z-50 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-xl p-3 sm:w-56 animate-in fade-in zoom-in-95 duration-150">
-              <p className="text-xs text-[var(--text-secondary)] mb-2 font-medium">Testnet Faucets</p>
+            <div className="fixed sm:absolute inset-x-4 sm:inset-x-auto sm:right-0 bottom-20 sm:bottom-auto sm:top-full sm:mt-2 z-50 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-xl p-4 sm:p-3 sm:w-56 animate-in slide-in-from-bottom-4 sm:animate-in sm:fade-in sm:zoom-in-95 duration-200">
+              <p className="text-sm sm:text-xs text-[var(--text-secondary)] mb-3 sm:mb-2 font-medium">Testnet Faucets</p>
               
               <a
                 href={FAUCETS.usdc}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[var(--surface)] transition-colors text-sm"
+                className="flex items-center gap-3 px-4 py-3 sm:px-3 sm:py-2 rounded-lg hover:bg-[var(--surface)] active:bg-[var(--surface)] transition-colors text-base sm:text-sm"
               >
-                <span className="text-[#2EE59D]">💵</span>
+                <span className="text-xl sm:text-base text-[#2EE59D]">💵</span>
                 Get USDC
-                <svg className="w-3 h-3 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-3 sm:h-3 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>
@@ -60,27 +60,34 @@ export function FundWalletButton() {
                 href={FAUCETS.eth}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[var(--surface)] transition-colors text-sm"
+                className="flex items-center gap-3 px-4 py-3 sm:px-3 sm:py-2 rounded-lg hover:bg-[var(--surface)] active:bg-[var(--surface)] transition-colors text-base sm:text-sm"
               >
-                <span className="text-blue-400">⛽</span>
+                <span className="text-xl sm:text-base text-blue-400">⛽</span>
                 Get ETH (gas)
-                <svg className="w-3 h-3 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-3 sm:h-3 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>
 
-              <div className="mt-2 pt-2 border-t border-[var(--border)]">
+              <div className="mt-3 sm:mt-2 pt-3 sm:pt-2 border-t border-[var(--border)]">
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(address)
                     setShowFaucets(false)
                   }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[var(--surface)] transition-colors text-sm w-full text-left"
+                  className="flex items-center gap-3 px-4 py-3 sm:px-3 sm:py-2 rounded-lg hover:bg-[var(--surface)] active:bg-[var(--surface)] transition-colors text-base sm:text-sm w-full text-left"
                 >
-                  <span>📋</span>
+                  <span className="text-xl sm:text-base">📋</span>
                   Copy wallet address
                 </button>
               </div>
+              
+              <button
+                onClick={() => setShowFaucets(false)}
+                className="sm:hidden w-full mt-3 px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-lg text-base font-medium"
+              >
+                Close
+              </button>
             </div>
           </>
         )}
