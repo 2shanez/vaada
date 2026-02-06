@@ -18,15 +18,11 @@ const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton
 const StravaConnect = dynamic(() => import('@/components/StravaConnect').then(m => ({ default: m.StravaConnect })), { ssr: false })
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
 
-const categories = ['Active', 'Daily', 'Weekly', 'Monthly'] as const
-type Category = typeof categories[number]
-
 export default function Home() {
   const { isConnected } = useAccount()
   const onChainIds = FEATURED_GOALS.filter(g => g.onChainId !== undefined).map(g => g.onChainId!)
   const platformStats = usePlatformStats(onChainIds, FEATURED_GOALS.length)
   const { login } = usePrivy()
-  const [activeCategory, setActiveCategory] = useState<Category>('Active')
   const [mounted, setMounted] = useState(false)
 
   const statsView = useInView(0.2)
@@ -141,37 +137,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Scroll anchor (outside sticky so offsetTop is correct) */}
+      {/* Scroll anchor */}
       <div id="promises" />
-      {/* Category Filter Pills - Sticky */}
-      <div className="sticky top-[57px] z-30 bg-[var(--background)] sm:bg-[var(--background)]/80 sm:backdrop-blur-md border-b border-[var(--border)] py-3">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3">
-          <div className="flex gap-1.5 sm:gap-2 p-1 bg-[var(--surface)] rounded-full overflow-x-auto hide-scrollbar">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap select-none
-                  transition-[background-color,color,transform,box-shadow] duration-100 ease-out active:scale-[0.93]
-                  ${activeCategory === cat 
-                    ? 'bg-[#2EE59D] text-white shadow-md shadow-[#2EE59D]/20' 
-                    : 'text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)]/50 active:bg-[var(--surface)]'}`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <div className="text-xs sm:text-sm text-[var(--text-secondary)] hidden sm:flex items-center gap-2 flex-shrink-0">
-            <span className="w-2 h-2 rounded-full bg-[#2EE59D] animate-pulse" />
-            {platformStats.activeGoals} {platformStats.activeGoals === 1 ? 'promise' : 'promises'} live
-          </div>
-        </div>
-      </div>
 
       {/* Promises Grid */}
       <section className="py-6 sm:py-8 px-4 sm:px-6 relative">
         <div className="max-w-6xl mx-auto">
-          <BrowseGoals filter={activeCategory} />
+          <BrowseGoals />
         </div>
       </section>
 
