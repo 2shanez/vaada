@@ -371,11 +371,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       <div className="relative bg-gradient-to-br from-[var(--background)] to-[var(--surface)] px-5 pt-6 pb-5 rounded-t-2xl">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-2">
-            <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${catStyle.bg} ${catStyle.text}`}>
+            <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${catStyle.bg} ${catStyle.text}`}>
               {goal.category.toUpperCase()}
             </span>
             {phaseInfo && (
-              <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5 ${phaseInfo.color}`}>
+              <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 ${phaseInfo.color}`}>
                 {phase === GoalPhase.AwaitingSettlement ? (
                   <svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
@@ -389,7 +389,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             )}
             {/* WIN/LOSE badge after verification */}
             {hasJoined && participantData?.verified && (
-              <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full ${
+              <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${
                 userWon 
                   ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
                   : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
