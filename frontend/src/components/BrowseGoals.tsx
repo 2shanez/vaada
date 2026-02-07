@@ -223,6 +223,80 @@ const FEATURED_GOALS: Goal[] = [
   },
 
   // ═══════════════════════════════════════════
+  // FITNESS - CYCLING (Strava)
+  // ═══════════════════════════════════════════
+  
+  // Daily Cycling
+  {
+    id: 'fitness-cycling-daily-1',
+    title: 'Daily Ride',
+    description: 'Ride 5 miles today',
+    emoji: '🚴',
+    targetMiles: 5,
+    targetUnit: 'miles',
+    durationDays: 1,
+    minStake: 5,
+    maxStake: 50,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Fitness',
+    subdomain: 'Cycling',
+  },
+  
+  // Weekly Cycling
+  {
+    id: 'fitness-cycling-weekly-1',
+    title: 'Weekend Warrior',
+    description: 'Ride 30 miles this weekend',
+    emoji: '🚵',
+    targetMiles: 30,
+    targetUnit: 'miles',
+    durationDays: 3,
+    minStake: 15,
+    maxStake: 100,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Fitness',
+    subdomain: 'Cycling',
+  },
+  {
+    id: 'fitness-cycling-weekly-2',
+    title: 'Weekly 50',
+    description: 'Ride 50 miles this week',
+    emoji: '⚡',
+    targetMiles: 50,
+    targetUnit: 'miles',
+    durationDays: 7,
+    minStake: 15,
+    maxStake: 100,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Fitness',
+    subdomain: 'Cycling',
+  },
+  
+  // Monthly Cycling
+  {
+    id: 'fitness-cycling-monthly-1',
+    title: 'Century Month',
+    description: 'Ride 200 miles this month',
+    emoji: '🏆',
+    targetMiles: 200,
+    targetUnit: 'miles',
+    durationDays: 30,
+    minStake: 25,
+    maxStake: 200,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Monthly',
+    domain: 'Fitness',
+    subdomain: 'Cycling',
+  },
+
+  // ═══════════════════════════════════════════
   // FITNESS - STEPS (Fitbit/Google Fit)
   // ═══════════════════════════════════════════
   
