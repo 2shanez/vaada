@@ -379,6 +379,154 @@ const FEATURED_GOALS: Goal[] = [
   },
 
   // ═══════════════════════════════════════════
+  // EDUCATIONAL - LEETCODE
+  // ═══════════════════════════════════════════
+  
+  // Daily LeetCode
+  {
+    id: 'edu-leetcode-daily-1',
+    title: 'Daily Problem',
+    description: 'Solve 1 LeetCode problem today',
+    emoji: '💻',
+    targetMiles: 1,
+    targetUnit: 'problems',
+    durationDays: 1,
+    minStake: 5,
+    maxStake: 25,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Educational',
+    subdomain: 'LeetCode',
+  },
+  
+  // Weekly LeetCode
+  {
+    id: 'edu-leetcode-weekly-1',
+    title: 'Weekly Grind',
+    description: 'Solve 7 LeetCode problems this week',
+    emoji: '⚡',
+    targetMiles: 7,
+    targetUnit: 'problems',
+    durationDays: 7,
+    minStake: 15,
+    maxStake: 75,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Educational',
+    subdomain: 'LeetCode',
+  },
+  {
+    id: 'edu-leetcode-weekly-2',
+    title: 'Hard Mode',
+    description: 'Solve 1 Hard problem this week',
+    emoji: '🔥',
+    targetMiles: 1,
+    targetUnit: 'hard problem',
+    durationDays: 7,
+    minStake: 25,
+    maxStake: 100,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Educational',
+    subdomain: 'LeetCode',
+  },
+  
+  // Monthly LeetCode
+  {
+    id: 'edu-leetcode-monthly-1',
+    title: 'LeetCode 30',
+    description: 'Solve 30 problems this month',
+    emoji: '🏆',
+    targetMiles: 30,
+    targetUnit: 'problems',
+    durationDays: 30,
+    minStake: 30,
+    maxStake: 150,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Monthly',
+    domain: 'Educational',
+    subdomain: 'LeetCode',
+  },
+
+  // ═══════════════════════════════════════════
+  // EDUCATIONAL - READING (Goodreads)
+  // ═══════════════════════════════════════════
+  
+  // Daily Reading
+  {
+    id: 'edu-reading-daily-1',
+    title: '30 Min Reading',
+    description: 'Read for 30 minutes today',
+    emoji: '📖',
+    targetMiles: 30,
+    targetUnit: 'minutes',
+    durationDays: 1,
+    minStake: 5,
+    maxStake: 25,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Educational',
+    subdomain: 'Reading',
+  },
+  
+  // Weekly Reading
+  {
+    id: 'edu-reading-weekly-1',
+    title: 'Finish a Book',
+    description: 'Complete 1 book this week',
+    emoji: '📚',
+    targetMiles: 1,
+    targetUnit: 'books',
+    durationDays: 7,
+    minStake: 15,
+    maxStake: 75,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Educational',
+    subdomain: 'Reading',
+  },
+  
+  // Monthly Reading
+  {
+    id: 'edu-reading-monthly-1',
+    title: 'Book Club',
+    description: 'Read 2 books this month',
+    emoji: '📕',
+    targetMiles: 2,
+    targetUnit: 'books',
+    durationDays: 30,
+    minStake: 20,
+    maxStake: 100,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Monthly',
+    domain: 'Educational',
+    subdomain: 'Reading',
+  },
+  {
+    id: 'edu-reading-monthly-2',
+    title: 'Bookworm',
+    description: 'Read 4 books this month',
+    emoji: '🐛',
+    targetMiles: 4,
+    targetUnit: 'books',
+    durationDays: 30,
+    minStake: 40,
+    maxStake: 200,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Monthly',
+    domain: 'Educational',
+    subdomain: 'Reading',
+  },
+
+  // ═══════════════════════════════════════════
   // HEALTH - WEIGHT (Smart Scale)
   // ═══════════════════════════════════════════
   

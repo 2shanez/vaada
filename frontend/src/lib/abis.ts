@@ -163,7 +163,7 @@ export const DOMAINS = {
   Fitness: { emoji: '🏃', subdomains: ['Running', 'Steps'] },
   Health: { emoji: '💪', subdomains: ['Weight', 'Nutrition', 'Wellness', 'Sleep', 'Screen Time'] },
   Creative: { emoji: '🎬', subdomains: ['YouTube'] },
-  Educational: { emoji: '📚', subdomains: ['Duolingo'] },
+  Educational: { emoji: '📚', subdomains: ['Duolingo', 'LeetCode', 'Reading'] },
   Startup: { emoji: '🚀', subdomains: ['Launch', 'Shipping'] },
 } as const
 
