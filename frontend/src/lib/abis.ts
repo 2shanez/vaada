@@ -160,7 +160,7 @@ export interface Goal {
 
 // Domain definitions for filtering
 export const DOMAINS = {
-  Fitness: { emoji: '🏃', subdomains: ['Running', 'Cycling', 'Steps'] },
+  Fitness: { emoji: '🏃', subdomains: ['Running', 'Cycling', 'Swimming', 'Steps'] },
   Health: { emoji: '💪', subdomains: ['Weight', 'Nutrition', 'Wellness', 'Sleep', 'Screen Time'] },
   Creative: { emoji: '🎬', subdomains: ['YouTube'] },
   Educational: { emoji: '📚', subdomains: ['Duolingo', 'LeetCode', 'Reading'] },

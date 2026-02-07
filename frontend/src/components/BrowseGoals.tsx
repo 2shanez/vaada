@@ -297,6 +297,64 @@ const FEATURED_GOALS: Goal[] = [
   },
 
   // ═══════════════════════════════════════════
+  // FITNESS - SWIMMING (Garmin/Apple Watch/Strava)
+  // ═══════════════════════════════════════════
+  
+  // Daily Swimming
+  {
+    id: 'fitness-swimming-daily-1',
+    title: 'Daily Swim',
+    description: 'Swim 1000m today',
+    emoji: '🏊',
+    targetMiles: 1000,
+    targetUnit: 'meters',
+    durationDays: 1,
+    minStake: 5,
+    maxStake: 50,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Fitness',
+    subdomain: 'Swimming',
+  },
+  
+  // Weekly Swimming
+  {
+    id: 'fitness-swimming-weekly-1',
+    title: 'Swim 5K',
+    description: 'Swim 5000m this week',
+    emoji: '🌊',
+    targetMiles: 5000,
+    targetUnit: 'meters',
+    durationDays: 7,
+    minStake: 15,
+    maxStake: 100,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Fitness',
+    subdomain: 'Swimming',
+  },
+  
+  // Monthly Swimming
+  {
+    id: 'fitness-swimming-monthly-1',
+    title: 'Swim 20K',
+    description: 'Swim 20,000m this month',
+    emoji: '🏅',
+    targetMiles: 20000,
+    targetUnit: 'meters',
+    durationDays: 30,
+    minStake: 25,
+    maxStake: 200,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Monthly',
+    domain: 'Fitness',
+    subdomain: 'Swimming',
+  },
+
+  // ═══════════════════════════════════════════
   // FITNESS - STEPS (Fitbit/Google Fit)
   // ═══════════════════════════════════════════
   
