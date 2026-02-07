@@ -61,8 +61,14 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               <span className="text-white font-black text-3xl leading-none">v</span>
             </div>
             <h2 className="text-xl font-bold mb-1">Welcome to vaada</h2>
-            <p className="text-sm text-[var(--text-secondary)]">
-              The commitment market where promises have stakes
+            <p className="text-sm text-[var(--text-secondary)] mb-2">
+              The commitment market
+            </p>
+            <p className="text-xs text-[var(--text-secondary)] inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--surface)] rounded-full border border-[var(--border)]">
+              <span className="font-semibold text-[#2EE59D]">vaada</span>
+              <span>=</span>
+              <span>promise</span>
+              <span className="text-[10px]">(Hindi)</span>
             </p>
           </div>
 
@@ -73,7 +79,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 💰
               </div>
               <div>
-                <p className="text-sm font-medium">Stake money on your goals</p>
+                <p className="text-sm font-medium">Stake money on your vaada</p>
                 <p className="text-xs text-[var(--text-secondary)]">Put $5-$50 on the line</p>
               </div>
             </div>
@@ -82,7 +88,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 ✅
               </div>
               <div>
-                <p className="text-sm font-medium">Keep your promise, keep your stake</p>
+                <p className="text-sm font-medium">Keep your vaada, keep your stake</p>
                 <p className="text-xs text-[var(--text-secondary)]">Auto-verified by oracles</p>
               </div>
             </div>
@@ -102,7 +108,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
             <span className="text-2xl">⏰</span>
             <div>
               <p className="text-sm font-bold">Your 24-Hour Challenge</p>
-              <p className="text-xs text-[var(--text-secondary)]">Join a promise in 24 hours.</p>
+              <p className="text-xs text-[var(--text-secondary)]">Join a vaada within 24 hours</p>
             </div>
           </div>
 
@@ -213,7 +219,7 @@ export function LiveChallengeCard() {
           </div>
           <div className="min-w-0">
             <h3 className="font-bold text-lg leading-tight">24-Hour Commitment</h3>
-            <p className="text-sm text-[var(--text-secondary)]">Join a promise within 24 hours</p>
+            <p className="text-sm text-[var(--text-secondary)]">Join a vaada within 24 hours</p>
           </div>
         </div>
         
