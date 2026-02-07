@@ -253,7 +253,7 @@ export function LiveChallengeCard() {
                 hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 hover:-translate-y-0.5
                 active:translate-y-0 transition-all"
             >
-              Browse Vaadas →
+              Browse vaadas →
             </button>
           )}
         </div>

@@ -1,4 +1,4 @@
-// Shared ABIs for Vaada contracts
+// Shared ABIs for vaada contracts
 
 export const USDC_ABI = [
   {
