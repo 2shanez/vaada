@@ -110,10 +110,10 @@ export default function Home() {
       {/* Hero - Compact with animation */}
       <section className={`pt-28 sm:pt-24 pb-8 px-6 relative transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div className="max-w-3xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--surface)] text-xs text-[var(--text-secondary)] mb-6 border border-[var(--border)]">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--surface)] text-xs text-[var(--text-secondary)] mb-6 border border-[var(--border)]">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2EE59D] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2EE59D]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0052FF] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0052FF]" />
             </span>
             Live on Base Sepolia
           </div>
