@@ -8,7 +8,7 @@ import { FEATURED_GOALS } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { usePlatformStats } from '@/lib/hooks'
 import { useInView } from '@/lib/useInView'
-import { LiveChallengeCard } from '@/components/OnboardingCommitment'
+import { LiveChallengeCard, OnboardingCommitment, isFirstTimeUser } from '@/components/OnboardingCommitment'
 
 // Dynamic imports for heavy components - don't block first paint
 const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => ({ default: m.BrowseGoals })), {
@@ -25,6 +25,7 @@ export default function Home() {
   const platformStats = usePlatformStats(onChainIds, FEATURED_GOALS.length)
   const { login, authenticated } = usePrivy()
   const [mounted, setMounted] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
 
   const statsView = useInView(0.2)
   const howView = useInView(0.1)
@@ -34,6 +35,15 @@ export default function Home() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Show onboarding modal for first-time users after they authenticate
+  useEffect(() => {
+    if (authenticated && mounted && isFirstTimeUser()) {
+      // Small delay to let the page render first
+      const timer = setTimeout(() => setShowOnboarding(true), 500)
+      return () => clearTimeout(timer)
+    }
+  }, [authenticated, mounted])
 
   const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
     e.preventDefault()
@@ -304,6 +314,10 @@ export default function Home() {
       </footer>
     </main>
 
+    {/* First-time user onboarding modal */}
+    {showOnboarding && (
+      <OnboardingCommitment onComplete={() => setShowOnboarding(false)} />
+    )}
     </>
   )
 }

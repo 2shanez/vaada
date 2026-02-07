@@ -3,6 +3,126 @@
 import { useState, useEffect } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
 
+// Check if this is a first-time user (never completed onboarding)
+export function isFirstTimeUser(): boolean {
+  if (typeof window === 'undefined') return false
+  return !localStorage.getItem('vaada_onboarded')
+}
+
+// Mark user as onboarded (completed first-time flow)
+export function markOnboarded() {
+  localStorage.setItem('vaada_onboarded', 'true')
+}
+
+interface OnboardingCommitmentProps {
+  onComplete: () => void
+}
+
+// Modal shown to first-time users after sign-in
+export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) {
+  const { user } = usePrivy()
+
+  const handleCommit = () => {
+    // Get today's date key for the 24h challenge
+    const today = new Date().toISOString().slice(0, 10)
+    const storageKey = `vaada_24h_challenge_${today}`
+    
+    // Get current count or start fresh
+    const stored = localStorage.getItem(storageKey)
+    const currentCount = stored ? JSON.parse(stored).count || 7 : 7
+    
+    // Store their commitment
+    localStorage.setItem(storageKey, JSON.stringify({
+      count: currentCount + 1,
+      joined: true,
+    }))
+    
+    // Mark as onboarded so modal never shows again
+    markOnboarded()
+    
+    onComplete()
+    
+    // Scroll to promises section
+    setTimeout(() => {
+      const element = document.getElementById('promises')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 100)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="p-5">
+          {/* Welcome header */}
+          <div className="text-center mb-4">
+            <div className="w-16 h-16 rounded-2xl bg-[#2EE59D]/10 flex items-center justify-center text-3xl mx-auto mb-3">
+              🤝
+            </div>
+            <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
+            <p className="text-sm text-[var(--text-secondary)]">
+              The commitment market where promises have stakes
+            </p>
+          </div>
+
+          {/* How it works - compact */}
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
+                💰
+              </div>
+              <div>
+                <p className="text-sm font-medium">Stake money on your goals</p>
+                <p className="text-xs text-[var(--text-secondary)]">Put $5-$50 on the line</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
+                ✅
+              </div>
+              <div>
+                <p className="text-sm font-medium">Keep your promise, keep your stake</p>
+                <p className="text-xs text-[var(--text-secondary)]">Auto-verified by oracles</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
+                🏆
+              </div>
+              <div>
+                <p className="text-sm font-medium">Earn from those who don't</p>
+                <p className="text-xs text-[var(--text-secondary)]">Winners split the losers' stakes</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 24-hour challenge intro */}
+          <div className="flex items-center gap-3 mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
+            <span className="text-2xl">⏰</span>
+            <div>
+              <p className="text-sm font-bold">Your 24-Hour Challenge</p>
+              <p className="text-xs text-[var(--text-secondary)]">Join a promise before midnight UTC</p>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={handleCommit}
+            className="w-full py-3 bg-[#2EE59D] text-black font-bold rounded-xl hover:bg-[#26c987] transition-colors"
+          >
+            I'm In — Show Me Promises
+          </button>
+          
+          <p className="text-center text-xs text-[var(--text-secondary)] mt-3">
+            No credit card needed. Start with as little as $5.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Live 24-hour challenge card that shows on the main page
 export function LiveChallengeCard() {
   const { login, authenticated } = usePrivy()
@@ -38,7 +158,7 @@ export function LiveChallengeCard() {
     const stored = localStorage.getItem(storageKey)
     if (stored) {
       const data = JSON.parse(stored)
-      setJoinCount(data.count || 0)
+      setJoinCount(data.count || 7)
       setHasJoined(data.joined || false)
     } else {
       // Start with some baseline (social proof)
