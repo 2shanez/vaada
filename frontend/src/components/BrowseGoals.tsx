@@ -230,7 +230,7 @@ const FEATURED_GOALS: Goal[] = [
   {
     id: 'creative-youtube-weekly-1',
     title: 'Weekly Upload',
-    description: 'Upload 1 video this week',
+    description: 'Upload 1 YouTube video this week',
     emoji: '🎬',
     targetMiles: 1,
     targetUnit: 'videos',
@@ -248,7 +248,7 @@ const FEATURED_GOALS: Goal[] = [
   {
     id: 'creative-youtube-monthly-1',
     title: 'Content Machine',
-    description: 'Upload 4 videos this month',
+    description: 'Upload 4 YouTube videos this month',
     emoji: '📹',
     targetMiles: 4,
     targetUnit: 'videos',
