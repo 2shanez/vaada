@@ -57,10 +57,10 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
         <div className="p-5">
           {/* Welcome header */}
           <div className="text-center mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-[#2EE59D]/10 flex items-center justify-center text-3xl mx-auto mb-3">
-              🤝
+            <div className="w-16 h-16 rounded-2xl bg-[#2EE59D] flex items-center justify-center mx-auto mb-3">
+              <span className="text-white font-black text-3xl leading-none">v</span>
             </div>
-            <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
+            <h2 className="text-xl font-bold mb-1">Welcome to vaada</h2>
             <p className="text-sm text-[var(--text-secondary)]">
               The commitment market where promises have stakes
             </p>
@@ -102,7 +102,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
             <span className="text-2xl">⏰</span>
             <div>
               <p className="text-sm font-bold">Your 24-Hour Challenge</p>
-              <p className="text-xs text-[var(--text-secondary)]">Join a promise before midnight UTC</p>
+              <p className="text-xs text-[var(--text-secondary)]">Join a promise in 24 hours.</p>
             </div>
           </div>
 
@@ -113,10 +113,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
           >
             I'm In — Show Me Promises
           </button>
-          
-          <p className="text-center text-xs text-[var(--text-secondary)] mt-3">
-            No credit card needed. Start with as little as $5.
-          </p>
         </div>
       </div>
     </div>
