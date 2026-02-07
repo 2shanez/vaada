@@ -541,17 +541,6 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
         ))}
       </div>
 
-      {/* Empty State */}
-      {filteredGoals.length === 0 && (
-        <div className="text-center py-16 animate-in fade-in duration-300">
-          <div className="w-16 h-16 rounded-full bg-[var(--surface)] flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">🏃</span>
-          </div>
-          <p className="text-[var(--text-secondary)] font-medium mb-2">No {filter.toLowerCase()} promises yet</p>
-          <p className="text-sm text-[var(--text-secondary)]">Check back soon or try a different category</p>
-        </div>
-      )}
-
       {/* Notify Modal */}
       {modalFeature && (
         <NotifyModal
