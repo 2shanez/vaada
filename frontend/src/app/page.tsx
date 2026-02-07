@@ -129,7 +129,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
-            Keep your vaada. Keep your stake. Earn from losers.
+            Keep your vaada. Keep your stake. Earn from those who don't.
           </p>
           
           <button 
@@ -213,7 +213,7 @@ export default function Home() {
               { step: '01', icon: '👤', title: 'Sign up', desc: 'Email, Google, or wallet.' },
               { step: '02', icon: '🤝', title: 'Make a vaada', desc: 'A vaada is a promise.' },
               { step: '03', icon: '💵', title: 'Stake money', desc: 'Put skin in the game.' },
-              { step: '04', icon: '🏆', title: 'Keep it', desc: 'Keep stake + earn from losers.' },
+              { step: '04', icon: '🏆', title: 'Keep it', desc: 'Keep stake + earn from those who don't.' },
             ].map((item, i) => (
               <div 
                 key={item.step} 

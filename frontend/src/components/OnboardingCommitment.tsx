@@ -98,7 +98,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               </div>
               <div>
                 <p className="text-sm font-medium">Earn from those who don't</p>
-                <p className="text-xs text-[var(--text-secondary)]">Winners split the losers' stakes</p>
+                <p className="text-xs text-[var(--text-secondary)]">Winners split the pool from those who don't</p>
               </div>
             </div>
           </div>
