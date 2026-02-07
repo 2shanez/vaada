@@ -1179,18 +1179,30 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
       <div className="mb-6">
         {/* Top row: Live toggle + Timeframes */}
         <div className="flex items-center justify-between gap-2 mb-3">
-          {/* Live/All Toggle */}
-          <button
-            onClick={() => setActiveOnly(!activeOnly)}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-              activeOnly
-                ? 'bg-[#2EE59D]/10 border-[#2EE59D]/30 text-[#2EE59D]'
-                : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)]'
-            }`}
-          >
-            <span className={`w-2 h-2 rounded-full ${activeOnly ? 'bg-[#2EE59D] animate-pulse' : 'bg-gray-400'}`} />
-            {activeOnly ? 'Live' : 'All'}
-          </button>
+          {/* Live/All Toggle - Two buttons */}
+          <div className="flex items-center gap-0.5 p-0.5 bg-[var(--surface)] rounded-xl border border-[var(--border)]">
+            <button
+              onClick={() => setActiveOnly(true)}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                activeOnly
+                  ? 'bg-[#2EE59D]/15 text-[#2EE59D]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${activeOnly ? 'bg-[#2EE59D] animate-pulse' : 'bg-gray-400'}`} />
+              Live
+            </button>
+            <button
+              onClick={() => setActiveOnly(false)}
+              className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                !activeOnly
+                  ? 'bg-[var(--foreground)] text-[var(--background)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
+              }`}
+            >
+              All
+            </button>
+          </div>
 
           {/* Timeframe Pills */}
           <div className="flex items-center gap-0.5 p-0.5 bg-[var(--surface)] rounded-xl border border-[var(--border)]">
