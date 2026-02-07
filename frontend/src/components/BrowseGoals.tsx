@@ -433,6 +433,80 @@ const FEATURED_GOALS: Goal[] = [
   },
 
   // ═══════════════════════════════════════════
+  // HEALTH - WELLNESS (Meditation/Mindfulness)
+  // ═══════════════════════════════════════════
+  
+  // Daily Wellness
+  {
+    id: 'health-wellness-daily-1',
+    title: 'Daily Meditation',
+    description: 'Meditate for 10+ minutes today',
+    emoji: '🧘',
+    targetMiles: 10,
+    targetUnit: 'minutes',
+    durationDays: 1,
+    minStake: 5,
+    maxStake: 25,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Health',
+    subdomain: 'Wellness',
+  },
+  
+  // Weekly Wellness
+  {
+    id: 'health-wellness-weekly-1',
+    title: 'Meditation Week',
+    description: 'Meditate 7 days straight (Headspace/Calm)',
+    emoji: '🧠',
+    targetMiles: 7,
+    targetUnit: 'sessions',
+    durationDays: 7,
+    minStake: 15,
+    maxStake: 75,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Health',
+    subdomain: 'Wellness',
+  },
+  {
+    id: 'health-wellness-weekly-2',
+    title: 'Journal Week',
+    description: 'Write in your journal 7 days straight',
+    emoji: '📓',
+    targetMiles: 7,
+    targetUnit: 'entries',
+    durationDays: 7,
+    minStake: 10,
+    maxStake: 50,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Weekly',
+    domain: 'Health',
+    subdomain: 'Wellness',
+  },
+  
+  // Monthly Wellness
+  {
+    id: 'health-wellness-monthly-1',
+    title: '30 Day Meditation',
+    description: 'Build a daily meditation habit',
+    emoji: '🕯️',
+    targetMiles: 30,
+    targetUnit: 'sessions',
+    durationDays: 30,
+    minStake: 25,
+    maxStake: 150,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Monthly',
+    domain: 'Health',
+    subdomain: 'Wellness',
+  },
+
+  // ═══════════════════════════════════════════
   // STARTUP - LAUNCH (Product Hunt)
   // ═══════════════════════════════════════════
   
