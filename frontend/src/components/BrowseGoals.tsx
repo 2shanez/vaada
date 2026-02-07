@@ -1178,27 +1178,27 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
       {/* Filter Section - Compact & Clean */}
       <div className="mb-6">
         {/* Top row: Live toggle + Timeframes */}
-        <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center justify-between gap-2 mb-3">
           {/* Live/All Toggle */}
           <button
             onClick={() => setActiveOnly(!activeOnly)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
               activeOnly
                 ? 'bg-[#2EE59D]/10 border-[#2EE59D]/30 text-[#2EE59D]'
                 : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)]'
             }`}
           >
-            <span className={`w-2 h-2 rounded-full ${activeOnly ? 'bg-[#2EE59D] animate-pulse' : 'bg-gray-400'}`} />
-            {activeOnly ? 'Live Only' : 'All Goals'}
+            <span className={`w-1.5 h-1.5 rounded-full ${activeOnly ? 'bg-[#2EE59D] animate-pulse' : 'bg-gray-400'}`} />
+            {activeOnly ? 'Live' : 'All'}
           </button>
 
           {/* Timeframe Pills */}
-          <div className="flex items-center gap-1 p-1 bg-[var(--surface)] rounded-xl border border-[var(--border)]">
+          <div className="flex items-center gap-0.5 p-0.5 bg-[var(--surface)] rounded-lg border border-[var(--border)]">
             {TIMEFRAMES.map((tf) => (
               <button
                 key={tf}
                 onClick={() => setSelectedTimeframe(tf)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
                   selectedTimeframe === tf
                     ? 'bg-[var(--foreground)] text-[var(--background)]'
                     : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
