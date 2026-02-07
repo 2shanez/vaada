@@ -210,24 +210,24 @@ export default function Home() {
             <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
-              { step: '01', icon: '👤', title: 'Sign up', desc: 'Email, Google, or your wallet.' },
+              { step: '01', icon: '👤', title: 'Sign up', desc: 'Email, Google, or wallet.' },
               { step: '02', icon: '🤝', title: 'Make a vaada', desc: 'A vaada is a promise.' },
-              { step: '03', icon: '💵', title: 'Stake money', desc: 'Put real money on the line.' },
-              { step: '04', icon: '🏆', title: 'Keep it', desc: 'Keep stake + earn from those who don\'t.' },
+              { step: '03', icon: '💵', title: 'Stake money', desc: 'Put skin in the game.' },
+              { step: '04', icon: '🏆', title: 'Keep it', desc: 'Win = stake + bonus.' },
             ].map((item, i) => (
               <div 
                 key={item.step} 
                 className="text-center group relative"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--background)] shadow-sm border border-[var(--border)] mb-4 group-hover:shadow-md group-hover:border-[#2EE59D]/30 group-hover:scale-110 transition-all duration-300">
+                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--background)] shadow-sm border border-[var(--border)] mb-3 group-hover:shadow-md group-hover:border-[#2EE59D]/30 group-hover:scale-105 transition-all duration-300">
                   <span className="text-2xl">{item.icon}</span>
                   <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#2EE59D] text-[10px] font-bold text-black flex items-center justify-center">
                     {item.step.slice(-1)}
                   </span>
                 </div>
-                <h3 className="font-semibold mb-1 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
-                <p className="text-sm text-[var(--text-secondary)]">{item.desc}</p>
+                <h3 className="font-semibold text-sm mb-1 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
