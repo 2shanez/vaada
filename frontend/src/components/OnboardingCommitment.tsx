@@ -198,7 +198,7 @@ export function LiveChallengeCard() {
         {/* Top row: Badge + Timer */}
         <div className="flex items-center justify-between mb-4">
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#2EE59D] text-black uppercase tracking-wide">
-            Start Here
+            New User Challenge
           </span>
           <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#2EE59D] animate-pulse" />
@@ -212,8 +212,8 @@ export function LiveChallengeCard() {
             🚀
           </div>
           <div className="min-w-0">
-            <h3 className="font-bold text-lg leading-tight">Your First Promise</h3>
-            <p className="text-sm text-[var(--text-secondary)]">Pick any daily challenge below</p>
+            <h3 className="font-bold text-lg leading-tight">24-Hour Commitment</h3>
+            <p className="text-sm text-[var(--text-secondary)]">Join a promise within 24 hours</p>
           </div>
         </div>
         
