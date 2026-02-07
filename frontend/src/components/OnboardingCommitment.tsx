@@ -9,100 +9,74 @@ interface OnboardingCommitmentProps {
 
 export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) {
   const { user } = usePrivy()
-  const [commitment, setCommitment] = useState('')
-  const [step, setStep] = useState<'intro' | 'write' | 'confirm'>('intro')
 
-  const handleSubmit = () => {
-    if (!commitment.trim()) return
-    
+  const handleStart = () => {
     // Store commitment with 48-hour deadline
     const deadline = Date.now() + (48 * 60 * 60 * 1000) // 48 hours from now
     localStorage.setItem('vaada_onboarding', JSON.stringify({
-      commitment: commitment.trim(),
       deadline,
       userId: user?.id,
       createdAt: Date.now(),
     }))
     
     onComplete()
+    
+    // Scroll to promises section
+    setTimeout(() => {
+      const element = document.getElementById('promises')
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 100)
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Header */}
-        <div className="bg-gradient-to-br from-[#2EE59D]/10 to-transparent p-6 border-b border-[var(--border)]">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-[#2EE59D]/20 flex items-center justify-center">
-              <span className="text-xl">🤝</span>
+      <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        {/* Preview Card */}
+        <div className="p-5">
+          {/* Mini goal card preview */}
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                DAILY
+              </span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                LIVE
+              </span>
             </div>
-            <h2 className="text-xl font-bold">Make Your First Promise</h2>
-          </div>
-          <p className="text-sm text-[var(--text-secondary)]">
-            The best way to start is to commit to starting.
-          </p>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          {step === 'intro' && (
-            <div className="space-y-4">
-              <div className="bg-[var(--surface)] rounded-xl p-4 border border-[var(--border)]">
-                <p className="text-sm leading-relaxed">
-                  You have <span className="font-bold text-[#2EE59D]">48 hours</span> to join your first promise.
-                </p>
-                <p className="text-sm text-[var(--text-secondary)] mt-2">
-                  This isn't a payment — it's a commitment to yourself. If you don't join a promise in time, you'll need to start over.
-                </p>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-xl bg-[#2EE59D]/10 flex items-center justify-center text-2xl">
+                🏃
               </div>
-              
-              <button
-                onClick={() => setStep('write')}
-                className="w-full py-3 bg-[#2EE59D] text-white font-semibold rounded-xl hover:bg-[#26c987] transition-colors"
-              >
-                I'm Ready to Commit
-              </button>
-            </div>
-          )}
-
-          {step === 'write' && (
-            <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  What promise will you make?
-                </label>
-                <textarea
-                  value={commitment}
-                  onChange={(e) => setCommitment(e.target.value)}
-                  placeholder="I'm going to stake on running 1 mile daily because I want to build a consistent habit..."
-                  className="w-full h-32 px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm resize-none focus:outline-none focus:border-[#2EE59D] transition-colors"
-                />
-              </div>
-              
-              <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
-                <svg className="w-4 h-4 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>48-hour countdown starts when you submit</span>
-              </div>
-
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setStep('intro')}
-                  className="flex-1 py-3 bg-[var(--surface)] border border-[var(--border)] font-medium rounded-xl hover:bg-[var(--background)] transition-colors"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  disabled={!commitment.trim()}
-                  className="flex-1 py-3 bg-[#2EE59D] text-white font-semibold rounded-xl hover:bg-[#26c987] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Start My 48 Hours
-                </button>
+                <p className="font-semibold">Daily Mile</p>
+                <p className="text-xs text-[var(--text-secondary)]">Run 1 mile today</p>
               </div>
             </div>
-          )}
+            <div className="flex items-center justify-between text-xs text-[var(--text-secondary)]">
+              <span>Stake $5-$50</span>
+              <span className="text-[#2EE59D] font-medium">Join now →</span>
+            </div>
+          </div>
+
+          {/* Timer info */}
+          <div className="flex items-center gap-3 mb-4 p-3 bg-[#2EE59D]/10 rounded-lg">
+            <span className="text-2xl">⏳</span>
+            <div>
+              <p className="text-sm font-medium">48 hours to join</p>
+              <p className="text-xs text-[var(--text-secondary)]">Your countdown starts now</p>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={handleStart}
+            className="w-full py-3 bg-[#2EE59D] text-white font-semibold rounded-xl hover:bg-[#26c987] transition-colors"
+          >
+            Start My 48 Hours
+          </button>
         </div>
       </div>
     </div>
@@ -112,7 +86,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 // Countdown banner component
 export function OnboardingCountdownBanner() {
   const [onboarding, setOnboarding] = useState<{
-    commitment: string
     deadline: number
     userId: string
   } | null>(null)
@@ -165,12 +138,12 @@ export function OnboardingCountdownBanner() {
   if (expired) {
     return (
       <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             <span className="text-2xl">⏰</span>
             <div>
               <p className="font-medium text-red-500">Time's up!</p>
-              <p className="text-sm text-[var(--text-secondary)]">Your 48-hour commitment window expired</p>
+              <p className="text-sm text-[var(--text-secondary)]">Your 48-hour window expired</p>
             </div>
           </div>
           <button
@@ -191,18 +164,13 @@ export function OnboardingCountdownBanner() {
           <div className="w-10 h-10 rounded-full bg-[#2EE59D]/20 flex items-center justify-center">
             <span className="text-xl">⏳</span>
           </div>
-          <div>
-            <p className="font-medium">
-              <span className="text-[#2EE59D]">{timeLeft}</span> to join your first promise
-            </p>
-            <p className="text-sm text-[var(--text-secondary)] truncate max-w-xs">
-              "{onboarding.commitment.slice(0, 50)}{onboarding.commitment.length > 50 ? '...' : ''}"
-            </p>
-          </div>
+          <p className="font-medium">
+            <span className="text-[#2EE59D]">{timeLeft}</span> to join your first promise
+          </p>
         </div>
         <a 
           href="#promises"
-          className="px-4 py-2 bg-[#2EE59D] text-white text-sm font-semibold rounded-lg hover:bg-[#26c987] transition-colors"
+          className="px-4 py-2 bg-[#2EE59D] text-white text-sm font-semibold rounded-lg hover:bg-[#26c987] transition-colors flex-shrink-0"
         >
           Browse Promises →
         </a>
