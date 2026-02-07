@@ -210,7 +210,7 @@ export default function Home() {
             <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
-              { step: '01', icon: '👤', title: 'Sign up', desc: 'Email or Google. No crypto needed.' },
+              { step: '01', icon: '👤', title: 'Sign up', desc: 'Email, Google, or your wallet.' },
               { step: '02', icon: '🤝', title: 'Make a vaada', desc: 'A vaada is a promise.' },
               { step: '03', icon: '💵', title: 'Stake money', desc: 'Put real money on the line.' },
               { step: '04', icon: '🏆', title: 'Keep it', desc: 'Keep stake + earn from those who don\'t.' },
