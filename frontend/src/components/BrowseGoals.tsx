@@ -458,7 +458,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
             </p>
             <button
               onClick={() => {
-                setSelectedDomain('All')
+                setSelectedDomain('Active')
                 setSelectedTimeframe('All')
               }}
               className="mt-4 px-4 py-2 text-sm font-medium text-[#2EE59D] hover:bg-[#2EE59D]/10 rounded-lg transition-colors"
