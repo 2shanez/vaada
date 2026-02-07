@@ -203,10 +203,10 @@ export function LiveChallengeCard() {
       <div className="relative">
         {/* Top row: Badge + Timer */}
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#2EE59D] text-black uppercase tracking-wide">
+          <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-[#2EE59D] text-black uppercase tracking-wide">
             New User Challenge
           </span>
-          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[var(--surface)] border border-[var(--border)] flex items-center gap-1.5">
+          <span className="text-xs font-medium px-3 py-1.5 rounded-xl bg-[var(--surface)] border border-[var(--border)] flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#2EE59D] animate-pulse" />
             {timeLeft} left
           </span>
@@ -227,7 +227,7 @@ export function LiveChallengeCard() {
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-xl font-bold text-[#2EE59D]">{joinCount}</span>
+              <span className="text-lg font-bold text-[#2EE59D]">{joinCount}</span>
               <span className="text-xs text-[var(--text-secondary)]">joined today</span>
             </div>
             {hasJoined && (
@@ -235,21 +235,21 @@ export function LiveChallengeCard() {
                 <span className="text-[var(--border)]">•</span>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs text-[var(--text-secondary)]">Staked</span>
-                  <span className="text-sm font-semibold text-[#2EE59D]">$5</span>
+                  <span className="text-xs font-bold text-[#2EE59D]">$5</span>
                 </div>
               </>
             )}
           </div>
           
           {hasJoined ? (
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-semibold text-sm border border-[#2EE59D]/30">
+            <div className="flex items-center gap-2 px-4 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-xs border border-[#2EE59D]/30">
               <span>✓</span>
               <span>You're in!</span>
             </div>
           ) : (
             <button
               onClick={handleJoin}
-              className="px-5 py-2.5 bg-[#2EE59D] text-black font-bold text-sm rounded-xl 
+              className="px-4 py-2 bg-[#2EE59D] text-black font-bold text-xs rounded-xl 
                 hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 hover:-translate-y-0.5
                 active:translate-y-0 transition-all"
             >
