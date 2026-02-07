@@ -388,76 +388,77 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
   return (
     <div>
       {/* Filter Section */}
-      <div className="mb-8 space-y-4">
-        {/* Active Promises Toggle */}
-        <div className="flex justify-center">
-          <button
-            onClick={() => setActiveOnly(!activeOnly)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2 ${
-              activeOnly
-                ? 'bg-[#2EE59D] text-white shadow-lg shadow-[#2EE59D]/25'
-                : 'bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] hover:border-[#2EE59D]/50'
-            }`}
-          >
-            <span className={`w-2 h-2 rounded-full ${activeOnly ? 'bg-white' : 'bg-[#2EE59D]'} animate-pulse`} />
-            Active Promises
-          </button>
-        </div>
-
-        {/* Domain Filter */}
-        <div className="flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => setSelectedDomain('All')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              selectedDomain === 'All'
-                ? 'bg-[var(--foreground)] text-[var(--background)]'
-                : 'bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--text-secondary)]/50'
-            }`}
-          >
-            All
-          </button>
-          {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
+      <div className="mb-8">
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-4 max-w-lg mx-auto space-y-3">
+          {/* Active Toggle Row */}
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-[var(--text-secondary)]">Show only live</span>
             <button
-              key={domain}
-              onClick={() => setSelectedDomain(domain)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                selectedDomain === domain
-                  ? `${domainColors[domain].bg} ${domainColors[domain].text} border ${domainColors[domain].border}`
-                  : 'bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--text-secondary)]/50'
+              onClick={() => setActiveOnly(!activeOnly)}
+              className={`relative w-12 h-6 rounded-full transition-colors ${
+                activeOnly ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'
               }`}
             >
-              {DOMAINS[domain].emoji} {domain}
+              <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                activeOnly ? 'left-7' : 'left-1'
+              }`} />
             </button>
-          ))}
-        </div>
-
-        {/* Timeframe Pills */}
-        <div className="flex justify-center gap-2">
-          {TIMEFRAMES.map((tf) => (
-            <button
-              key={tf}
-              onClick={() => setSelectedTimeframe(tf)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                selectedTimeframe === tf
-                  ? 'bg-[var(--foreground)] text-[var(--background)]'
-                  : 'bg-[var(--surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--foreground)]'
-              }`}
-            >
-              {tf}
-            </button>
-          ))}
-        </div>
-
-        {/* Active filter indicator */}
-        {(!activeOnly || selectedDomain !== 'All' || selectedTimeframe !== 'All') && (
-          <div className="flex justify-center">
-            <p className="text-sm text-[var(--text-secondary)]">
-              Showing {filteredGoals.length} {filteredGoals.length === 1 ? 'promise' : 'promises'}
-              {!activeOnly && ' (including coming soon)'}
-              {selectedDomain !== 'All' && ` in ${selectedDomain}`}
-              {selectedTimeframe !== 'All' && ` • ${selectedTimeframe}`}
-            </p>
           </div>
+
+          {/* Divider */}
+          <div className="h-px bg-[var(--border)]" />
+
+          {/* Domain Filter */}
+          <div className="flex justify-center gap-1.5">
+            <button
+              onClick={() => setSelectedDomain('All')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                selectedDomain === 'All'
+                  ? 'bg-[var(--foreground)] text-[var(--background)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)]'
+              }`}
+            >
+              All
+            </button>
+            {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
+              <button
+                key={domain}
+                onClick={() => setSelectedDomain(domain)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedDomain === domain
+                    ? `${domainColors[domain].bg} ${domainColors[domain].text}`
+                    : 'text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)]'
+                }`}
+              >
+                {DOMAINS[domain].emoji} {domain}
+              </button>
+            ))}
+          </div>
+
+          {/* Timeframe Filter */}
+          <div className="flex justify-center gap-1.5">
+            {TIMEFRAMES.map((tf) => (
+              <button
+                key={tf}
+                onClick={() => setSelectedTimeframe(tf)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedTimeframe === tf
+                    ? 'bg-[var(--foreground)] text-[var(--background)]'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:bg-[var(--background)]'
+                }`}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Filter indicator */}
+        {filteredGoals.length > 0 && (
+          <p className="text-center text-xs text-[var(--text-secondary)] mt-3">
+            {filteredGoals.length} {filteredGoals.length === 1 ? 'promise' : 'promises'}
+            {!activeOnly && ' (incl. coming soon)'}
+          </p>
         )}
       </div>
 
