@@ -153,7 +153,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Daily',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   
   // Weekly Running
@@ -172,7 +171,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   {
     id: 'fitness-running-weekly-2',
@@ -189,7 +187,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   
   // Monthly Running
@@ -208,7 +205,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   {
     id: 'fitness-running-monthly-2',
@@ -222,7 +218,6 @@ const FEATURED_GOALS: Goal[] = [
     maxStake: 200,
     participants: 0,
     totalStaked: 0,
-    live: true,
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Running',
@@ -380,7 +375,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Daily',
     domain: 'Fitness',
     subdomain: 'Steps',
-    live: true,
   },
   
   // Weekly Steps
@@ -399,7 +393,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Steps',
-    live: true,
   },
   
   // Monthly Steps
@@ -418,7 +411,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Steps',
-    live: true,
   },
 
   // ═══════════════════════════════════════════
