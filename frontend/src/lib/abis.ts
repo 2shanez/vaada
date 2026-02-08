@@ -199,3 +199,62 @@ export const DOMAIN_STYLES: Record<string, { bg: string; text: string }> = {
   Educational: { bg: 'bg-blue-50 dark:bg-blue-900/30', text: 'text-blue-600 dark:text-blue-400' },
   Startup: { bg: 'bg-emerald-50 dark:bg-emerald-900/30', text: 'text-emerald-600 dark:text-emerald-400' },
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// NEW USER CHALLENGE CONTRACT
+// ═══════════════════════════════════════════════════════════════════
+
+export const NEW_USER_CHALLENGE_ABI = [
+  {
+    name: 'join',
+    type: 'function',
+    inputs: [],
+    outputs: [],
+  },
+  {
+    name: 'hasJoinedChallenge',
+    type: 'function',
+    inputs: [{ name: 'user', type: 'address' }],
+    outputs: [{ type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    name: 'getChallenge',
+    type: 'function',
+    inputs: [{ name: 'user', type: 'address' }],
+    outputs: [
+      { name: 'amount', type: 'uint256' },
+      { name: 'deadline', type: 'uint256' },
+      { name: 'settled', type: 'bool' },
+      { name: 'won', type: 'bool' },
+      { name: 'canSettle', type: 'bool' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    name: 'getStats',
+    type: 'function',
+    inputs: [],
+    outputs: [
+      { name: '_totalChallenges', type: 'uint256' },
+      { name: '_totalWon', type: 'uint256' },
+      { name: '_totalForfeited', type: 'uint256' },
+      { name: '_pendingAmount', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    name: 'stakeAmount',
+    type: 'function',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    name: 'challengeDuration',
+    type: 'function',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+] as const
