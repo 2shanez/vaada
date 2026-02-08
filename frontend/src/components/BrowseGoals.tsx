@@ -153,6 +153,7 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Daily',
     domain: 'Fitness',
     subdomain: 'Running',
+    live: true,
   },
   
   // Weekly Running
@@ -171,6 +172,7 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Running',
+    live: true,
   },
   {
     id: 'fitness-running-weekly-2',
@@ -187,6 +189,7 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Running',
+    live: true,
   },
   
   // Monthly Running
@@ -205,6 +208,7 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Running',
+    live: true,
   },
   {
     id: 'fitness-running-monthly-2',
@@ -218,6 +222,7 @@ const FEATURED_GOALS: Goal[] = [
     maxStake: 200,
     participants: 0,
     totalStaked: 0,
+    live: true,
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Running',
@@ -375,6 +380,7 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Daily',
     domain: 'Fitness',
     subdomain: 'Steps',
+    live: true,
   },
   
   // Weekly Steps
@@ -393,6 +399,7 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Steps',
+    live: true,
   },
   
   // Monthly Steps
@@ -411,6 +418,7 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Steps',
+    live: true,
   },
 
   // ═══════════════════════════════════════════
@@ -1181,9 +1189,9 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
         {/* Row 1: Live toggle + Timeframes in single pill */}
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-0.5 p-1 bg-[var(--surface)] rounded-2xl border border-[var(--border)]">
-            {/* Live toggle */}
+            {/* Live / Coming Soon Toggle */}
             <button
-              onClick={() => { setShowLive(true); setSelectedDomain('All'); }}
+              onClick={() => setShowLive(true)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
                 showLive
                   ? 'bg-[#2EE59D] text-white'
@@ -1192,6 +1200,16 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
             >
               <span className={`w-1.5 h-1.5 rounded-full ${showLive ? 'bg-white animate-pulse' : 'bg-gray-400'}`} />
               Live
+            </button>
+            <button
+              onClick={() => setShowLive(false)}
+              className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                !showLive
+                  ? 'bg-[var(--foreground)] text-[var(--background)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
+              }`}
+            >
+              Coming Soon
             </button>
             
             {/* Divider */}
@@ -1214,16 +1232,16 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
           </div>
         </div>
 
-        {/* Row 2: Domain chips + Coming Soon */}
+        {/* Row 2: Domain chips */}
         <div className="relative">
           <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
             <div className="flex items-center justify-start sm:justify-center gap-2 min-w-max">
               {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
                 <button
                   key={domain}
-                  onClick={() => { setSelectedDomain(selectedDomain === domain ? 'All' : domain); setShowLive(true); }}
+                  onClick={() => setSelectedDomain(selectedDomain === domain ? 'All' : domain)}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                    selectedDomain === domain && showLive
+                    selectedDomain === domain
                       ? `${domainColors[domain]?.bg || 'bg-gray-100 dark:bg-gray-800'} ${domainColors[domain]?.text || 'text-gray-700'} ${domainColors[domain]?.border || 'border-transparent'}`
                       : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
                   }`}
@@ -1232,19 +1250,6 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
                   <span>{domain}</span>
                 </button>
               ))}
-              
-              {/* Coming Soon tab */}
-              <button
-                onClick={() => { setShowLive(false); setSelectedDomain('All'); }}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                  !showLive
-                    ? 'bg-[var(--foreground)] text-[var(--background)] border-transparent'
-                    : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
-                }`}
-              >
-                <span>✨</span>
-                <span>Coming Soon</span>
-              </button>
             </div>
           </div>
         </div>
