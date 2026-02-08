@@ -373,60 +373,44 @@ export function LiveChallengeCard() {
   const pendingCount = statsData ? totalChallenges - totalWon - Number(statsData[2]) : 0
 
   return (
-    <div className="bg-gradient-to-br from-[#2EE59D]/10 via-[#2EE59D]/5 to-transparent border border-[#2EE59D]/30 rounded-2xl p-5 relative overflow-hidden">
-      {/* Subtle glow */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-[#2EE59D]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-      
-      <div className="relative">
-        {/* Top row: Badge + Timer */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-bold px-3 py-2 rounded-xl bg-[#2EE59D] text-white uppercase tracking-wide">
-            New User Challenge
-          </span>
-          <span className="text-xs font-bold px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2EE59D] animate-pulse" />
-            {timeLeft} left
-          </span>
-        </div>
-        
-        {/* Main content row */}
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2EE59D]/20 to-[#2EE59D]/10 flex items-center justify-center text-2xl flex-shrink-0 border border-[#2EE59D]/20">
+    <div className="bg-gradient-to-br from-[#2EE59D]/10 via-[#2EE59D]/5 to-transparent border border-[#2EE59D]/30 rounded-xl p-3 relative overflow-hidden">
+      <div className="relative flex items-center justify-between gap-3">
+        {/* Left: Icon + Content */}
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#2EE59D]/20 to-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0 border border-[#2EE59D]/20">
             🚀
           </div>
           <div className="min-w-0">
-            <h3 className="font-bold text-base leading-tight">24-Hour Commitment</h3>
-            <p className="text-xs text-[var(--text-secondary)]">Stake $5 • Join a goal within 24h or lose it</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-bold text-sm leading-tight">24-Hour Commitment</h3>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#2EE59D] text-white uppercase">
+                New User
+              </span>
+            </div>
+            <p className="text-[11px] text-[var(--text-secondary)]">Stake $5 • Join a goal within 24h or lose it</p>
           </div>
         </div>
         
-        {/* Stats + CTA row */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-base font-bold text-[#2EE59D]">{pendingCount || totalChallenges}</span>
-              <span className="text-xs text-[var(--text-secondary)]">active</span>
-            </div>
-            <span className="text-[var(--border)]">•</span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs text-[var(--text-secondary)]">From</span>
-              <span className="text-xs font-bold text-[#2EE59D]">$5</span>
-            </div>
-          </div>
+        {/* Right: Timer + CTA */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-[var(--surface)] border border-[var(--border)] flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2EE59D] animate-pulse" />
+            {timeLeft}
+          </span>
           
           {hasJoined ? (
-            <div className="flex items-center gap-2 px-3 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-xs border border-[#2EE59D]/30">
+            <div className="flex items-center gap-1 px-2 py-1 bg-[#2EE59D]/15 rounded-lg text-[#2EE59D] font-bold text-[10px] border border-[#2EE59D]/30">
               <span>✓</span>
-              <span>You're in!</span>
+              <span>In!</span>
             </div>
           ) : (
             <button
               onClick={handleJoin}
-              className="px-3 py-2 bg-[#2EE59D] text-white font-bold text-xs rounded-xl 
-                hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 hover:-translate-y-0.5
-                active:translate-y-0 transition-all"
+              className="px-2.5 py-1.5 bg-[#2EE59D] text-white font-bold text-[11px] rounded-lg 
+                hover:bg-[#26c987] hover:shadow-md hover:shadow-[#2EE59D]/25
+                active:scale-95 transition-all"
             >
-              Take the challenge →
+              Join →
             </button>
           )}
         </div>
