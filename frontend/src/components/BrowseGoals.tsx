@@ -497,7 +497,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
       {/* Active filters indicator */}
       {(selectedDomain !== 'All' || selectedTimeframe !== 'All' || !activeOnly) && (
         <div className="mb-4 flex items-center justify-center gap-2 text-xs text-[var(--text-secondary)]">
-          <span>Showing {filteredGoals.length} {filteredGoals.length === 1 ? 'goal' : 'goals'}</span>
+          <span>Showing {filteredGoals.length} {filteredGoals.length === 1 ? 'vaada' : 'vaadas'}</span>
           <button 
             onClick={() => { setSelectedDomain('All'); setSelectedTimeframe('All'); setActiveOnly(true); }}
             className="text-[#2EE59D] hover:underline"
@@ -512,7 +512,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
         {filteredGoals.length === 0 ? (
           <div className="w-full text-center py-12">
             <div className="text-4xl mb-3">🔍</div>
-            <p className="text-[var(--text-secondary)] mb-2">No promises found</p>
+            <p className="text-[var(--text-secondary)] mb-2">No vaadas found</p>
             <p className="text-sm text-[var(--text-secondary)]">
               Try adjusting your filters or check back soon!
             </p>
