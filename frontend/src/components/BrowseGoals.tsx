@@ -303,65 +303,9 @@ const FEATURED_GOALS: Goal[] = [
   */
 
   // ═══════════════════════════════════════════
-  // HEALTH - SCREEN TIME (RescueTime)
+  // HEALTH - SCREEN TIME - Hidden (no free API)
   // ═══════════════════════════════════════════
-  
-  // Daily Screen Time
-  {
-    id: 'health-screentime-daily-1',
-    onChainId: 27,
-    title: 'Digital Detox',
-    description: 'Stay under 2hr screen time today',
-    emoji: '📵',
-    targetMiles: 2,
-    targetUnit: 'hours max',
-    durationDays: 1,
-    minStake: 5,
-    maxStake: 25,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Daily',
-    domain: 'Health',
-    subdomain: 'Screen Time',
-  },
-  
-  // Weekly Screen Time
-  {
-    id: 'health-screentime-weekly-1',
-    onChainId: 28,
-    title: 'Screen Diet',
-    description: 'Stay under 3hr screen time daily for 7 days',
-    emoji: '⏱️',
-    targetMiles: 3,
-    targetUnit: 'hours max/day',
-    durationDays: 7,
-    minStake: 15,
-    maxStake: 75,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Weekly',
-    domain: 'Health',
-    subdomain: 'Screen Time',
-  },
-  
-  // Monthly Screen Time
-  {
-    id: 'health-screentime-monthly-1',
-    onChainId: 29,
-    title: 'Screen Master',
-    description: 'Average under 4hr screen time for 30 days',
-    emoji: '🧘',
-    targetMiles: 4,
-    targetUnit: 'hours avg/day',
-    durationDays: 30,
-    minStake: 25,
-    maxStake: 150,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Monthly',
-    domain: 'Health',
-    subdomain: 'Screen Time',
-  },
+  // Goals 27-29 deployed on-chain but hidden until free verification available
 ]
 
 const COMING_SOON = [
