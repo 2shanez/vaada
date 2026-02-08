@@ -156,6 +156,7 @@ export interface Goal {
   category: string  // 'Daily' | 'Weekly' | 'Monthly'
   domain: string    // 'Fitness' | 'Creative' | 'Educational'
   subdomain: string // 'Running' | 'Substack' | 'Duolingo'
+  live?: boolean    // true = show in main list, false/undefined = Coming Soon
 }
 
 // Domain definitions for filtering
