@@ -10,6 +10,7 @@ import { useContracts, useNetworkCheck, useUSDC, useGoalState, useGoalDetails, u
 import { USDC_ABI, GOALSTAKE_ABI, AUTOMATION_ABI, PHASE_LABELS, CATEGORY_STYLES, GoalPhase, type Goal } from '@/lib/abis'
 import { DuolingoConnect, useDuolingoConnection } from './DuolingoConnect'
 import { WithingsConnect, useWithingsConnection } from './WithingsConnect'
+import { RescueTimeConnect, useRescueTimeConnection } from './RescueTimeConnect'
 // Re-export Goal type for other components
 export type { Goal }
 
@@ -757,6 +758,7 @@ function StatusIndicators({ stravaConnected, hasTokenOnChain, isConnected, subdo
 }) {
   const duolingo = useDuolingoConnection()
   const withings = useWithingsConnection()
+  const rescuetime = useRescueTimeConnection()
   
   if (!isConnected) return null
 
@@ -817,6 +819,31 @@ function StatusIndicators({ stravaConnected, hasTokenOnChain, isConnected, subdo
       <div className="mb-3 p-2.5 rounded-lg bg-[#2EE59D]/10 border border-[#2EE59D]/20 flex items-center gap-2">
         <span className="text-lg">👟</span>
         <p className="text-xs text-[#2EE59D] font-medium">Strava connected — tracking steps</p>
+      </div>
+    )
+  }
+
+  // Screen Time goals - show RescueTime connect
+  if (subdomain === 'Screen Time') {
+    if (rescuetime.isConnected) {
+      return (
+        <div className="mb-3 p-2.5 rounded-lg bg-[#4A90D9]/10 border border-[#4A90D9]/20 flex items-center gap-2">
+          <span className="text-lg">⏱️</span>
+          <div>
+            <p className="text-xs text-[#4A90D9] font-medium">RescueTime connected</p>
+            {rescuetime.todayHours !== null && (
+              <p className="text-[10px] text-[var(--text-secondary)]">Today: {rescuetime.todayHours.toFixed(1)}hr</p>
+            )}
+          </div>
+        </div>
+      )
+    }
+    return (
+      <div className="mb-3">
+        <RescueTimeConnect 
+          onConnect={() => {}} 
+          onDisconnect={() => {}}
+        />
       </div>
     )
   }
