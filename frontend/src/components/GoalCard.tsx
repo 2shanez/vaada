@@ -369,7 +369,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
 
   return (
-    <div className={`group bg-[var(--surface)] border rounded-2xl transition-all duration-200 relative
+    <div className={`group bg-[var(--surface)] border rounded-2xl transition-all duration-200 relative overflow-hidden
       ${showPlayers ? 'z-40' : 'z-0'}
       ${expanded 
         ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10' 
@@ -488,7 +488,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         </div>
       </div>
 
-      <div className="px-5 pb-5">
+      <div className="px-4 pb-4">
         {/* Timeline */}
         {!isSettled && (
           <div className="py-5 border-t border-[var(--border)]/50">
