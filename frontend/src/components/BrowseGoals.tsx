@@ -1249,7 +1249,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
                     : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
                 }`}
               >
-                <span>🚀</span>
+                <span>✨</span>
                 <span>Coming Soon</span>
               </button>
             </div>
