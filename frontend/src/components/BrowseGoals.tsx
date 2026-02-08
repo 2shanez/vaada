@@ -157,6 +157,7 @@ const FEATURED_GOALS: Goal[] = [
   // Weekly Running
   {
     id: 'fitness-running-weekly-1',
+    onChainId: 17,
     title: 'Weekend Warrior',
     description: 'Run 10 miles this weekend',
     emoji: '💪',
@@ -207,6 +208,7 @@ const FEATURED_GOALS: Goal[] = [
   },
   {
     id: 'fitness-running-monthly-2',
+    onChainId: 18,
     title: 'Marathon Prep',
     description: 'Hit 100 miles in 30 days',
     emoji: '🏅',
@@ -229,6 +231,7 @@ const FEATURED_GOALS: Goal[] = [
   // Daily Steps
   {
     id: 'fitness-steps-daily-1',
+    onChainId: 19,
     title: '10K Steps',
     description: 'Hit 10,000 steps today',
     emoji: '👟',
@@ -287,6 +290,7 @@ const FEATURED_GOALS: Goal[] = [
   // Daily Duolingo
   {
     id: 'edu-duolingo-daily-1',
+    onChainId: 21,
     title: 'Daily Streak',
     description: 'Complete 1 Duolingo lesson',
     emoji: '🦉',
@@ -305,6 +309,7 @@ const FEATURED_GOALS: Goal[] = [
   // Weekly Duolingo
   {
     id: 'edu-duolingo-weekly-1',
+    onChainId: 22,
     title: 'Language Learner',
     description: 'Complete 7 Duolingo lessons this week',
     emoji: '🌍',
@@ -323,6 +328,7 @@ const FEATURED_GOALS: Goal[] = [
   // Monthly Duolingo
   {
     id: 'edu-duolingo-monthly-1',
+    onChainId: 20,
     title: '30 Day Streak',
     description: 'Maintain 30-day Duolingo streak',
     emoji: '🔥',
@@ -345,6 +351,7 @@ const FEATURED_GOALS: Goal[] = [
   // Monthly Weight Loss (percentage-based like DietBet)
   {
     id: 'health-weight-monthly-1',
+    onChainId: 23,
     title: 'Lose 4%',
     description: 'Lose 4% of your body weight in 30 days',
     emoji: '📉',
@@ -361,6 +368,7 @@ const FEATURED_GOALS: Goal[] = [
   },
   {
     id: 'health-weight-monthly-2',
+    onChainId: 24,
     title: 'Lose 6%',
     description: 'Lose 6% of your body weight in 60 days',
     emoji: '💪',
@@ -377,6 +385,7 @@ const FEATURED_GOALS: Goal[] = [
   },
   {
     id: 'health-weight-monthly-3',
+    onChainId: 25,
     title: 'Lose 10%',
     description: 'Lose 10% of your body weight in 90 days',
     emoji: '🏆',
