@@ -309,6 +309,7 @@ const FEATURED_GOALS: Goal[] = [
   // Daily Screen Time
   {
     id: 'health-screentime-daily-1',
+    onChainId: 27,
     title: 'Digital Detox',
     description: 'Stay under 2hr screen time today',
     emoji: '📵',
@@ -327,10 +328,11 @@ const FEATURED_GOALS: Goal[] = [
   // Weekly Screen Time
   {
     id: 'health-screentime-weekly-1',
+    onChainId: 28,
     title: 'Screen Diet',
-    description: 'Stay under 4hr screen time daily for 7 days',
+    description: 'Stay under 3hr screen time daily for 7 days',
     emoji: '⏱️',
-    targetMiles: 4,
+    targetMiles: 3,
     targetUnit: 'hours max/day',
     durationDays: 7,
     minStake: 15,
@@ -345,10 +347,11 @@ const FEATURED_GOALS: Goal[] = [
   // Monthly Screen Time
   {
     id: 'health-screentime-monthly-1',
+    onChainId: 29,
     title: 'Screen Master',
-    description: 'Average under 3hr screen time for 30 days',
+    description: 'Average under 4hr screen time for 30 days',
     emoji: '🧘',
-    targetMiles: 3,
+    targetMiles: 4,
     targetUnit: 'hours avg/day',
     durationDays: 30,
     minStake: 25,
