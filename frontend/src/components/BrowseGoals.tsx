@@ -290,61 +290,17 @@ const FEATURED_GOALS: Goal[] = [
   // TODO: Add GitHub integration
 
   // ═══════════════════════════════════════════
-  // HEALTH - WEIGHT (Withings)
+  // HEALTH - WEIGHT (Withings) - Hidden for now
   // ═══════════════════════════════════════════
-  
-  // Monthly Weight Loss (percentage-based like DietBet)
+  // Weight goals hidden until Withings credentials set up
+  /*
   {
     id: 'health-weight-monthly-1',
     onChainId: 23,
     title: 'Lose 4%',
-    description: 'Lose 4% of your body weight in 30 days',
-    emoji: '📉',
-    targetMiles: 4,
-    targetUnit: '% body weight',
-    durationDays: 30,
-    minStake: 25,
-    maxStake: 150,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Monthly',
-    domain: 'Health',
-    subdomain: 'Weight',
+    ...
   },
-  {
-    id: 'health-weight-monthly-2',
-    onChainId: 24,
-    title: 'Lose 6%',
-    description: 'Lose 6% of your body weight in 60 days',
-    emoji: '💪',
-    targetMiles: 6,
-    targetUnit: '% body weight',
-    durationDays: 60,
-    minStake: 50,
-    maxStake: 300,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Monthly',
-    domain: 'Health',
-    subdomain: 'Weight',
-  },
-  {
-    id: 'health-weight-monthly-3',
-    onChainId: 25,
-    title: 'Lose 10%',
-    description: 'Lose 10% of your body weight in 90 days',
-    emoji: '🏆',
-    targetMiles: 10,
-    targetUnit: '% body weight',
-    durationDays: 90,
-    minStake: 100,
-    maxStake: 500,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Monthly',
-    domain: 'Health',
-    subdomain: 'Weight',
-  },
+  */
 
   // ═══════════════════════════════════════════
   // HEALTH - SCREEN TIME (RescueTime)
