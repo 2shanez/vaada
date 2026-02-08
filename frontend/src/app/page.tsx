@@ -19,6 +19,7 @@ const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => (
 const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton').then(m => ({ default: m.PrivyConnectButton })), { ssr: false })
 // StravaConnect removed from header - now shown contextually in GoalCard for Running goals
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
+const DevResetButton = dynamic(() => import('@/components/DevResetButton').then(m => ({ default: m.DevResetButton })), { ssr: false })
 
 // Stats card component with count-up animation
 function StatsCard({ 
@@ -140,6 +141,7 @@ export default function Home() {
               {authenticated && <FundWalletButton />}
               <PrivyConnectButton />
               <ThemeToggle />
+              <DevResetButton />
             </div>
           </div>
         </div>
