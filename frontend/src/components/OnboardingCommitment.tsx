@@ -191,7 +191,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                   <span className="font-semibold text-[#2EE59D]">vaada</span>
                   <span>=</span>
                   <span>promise</span>
-                  <span className="text-[10px]">(Hindi)</span>
                 </p>
               </div>
 
