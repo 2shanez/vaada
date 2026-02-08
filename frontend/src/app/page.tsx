@@ -195,6 +195,13 @@ export default function Home() {
       {/* Scroll anchor */}
       <div id="promises" />
 
+      {/* New User Challenge - above browse section */}
+      {authenticated && (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
+          <LiveChallengeCard />
+        </div>
+      )}
+
       {/* Section Divider */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="flex items-center gap-4">
@@ -207,13 +214,6 @@ export default function Home() {
       {/* Promises Grid */}
       <section className="pb-6 sm:pb-8 px-4 sm:px-6 relative">
         <div className="max-w-6xl mx-auto">
-          {/* Live 24-hour challenge card - only show when signed in */}
-          {authenticated && (
-            <div className="mb-6">
-              <LiveChallengeCard />
-            </div>
-          )}
-          
           <BrowseGoals />
         </div>
       </section>
