@@ -473,30 +473,23 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
           </div>
         </div>
 
-        {/* Row 2: Domain chips with scroll fade */}
-        <div className="relative">
-          {/* Left fade indicator */}
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
-          {/* Right fade indicator */}
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
-          
-          <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="flex items-center justify-start sm:justify-center gap-2 min-w-max">
-              {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
-                <button
-                  key={domain}
-                  onClick={() => setSelectedDomain(selectedDomain === domain ? 'All' : domain)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                    selectedDomain === domain
-                      ? `${domainColors[domain]?.bg || 'bg-gray-100 dark:bg-gray-800'} ${domainColors[domain]?.text || 'text-gray-700'} ${domainColors[domain]?.border || 'border-transparent'}`
-                      : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
-                  }`}
-                >
-                  <span>{DOMAINS[domain].emoji}</span>
-                  <span>{domain}</span>
-                </button>
-              ))}
-            </div>
+        {/* Row 2: Domain chips */}
+        <div className="flex justify-center">
+          <div className="flex items-center gap-2">
+            {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
+              <button
+                key={domain}
+                onClick={() => setSelectedDomain(selectedDomain === domain ? 'All' : domain)}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
+                  selectedDomain === domain
+                    ? `${domainColors[domain]?.bg || 'bg-gray-100 dark:bg-gray-800'} ${domainColors[domain]?.text || 'text-gray-700'} ${domainColors[domain]?.border || 'border-transparent'}`
+                    : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
+                }`}
+              >
+                <span>{DOMAINS[domain].emoji}</span>
+                <span>{domain}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
