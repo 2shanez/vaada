@@ -136,7 +136,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Daily',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   {
     id: 'fitness-running-daily-2',
@@ -153,7 +152,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Daily',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   
   // Weekly Running
@@ -172,7 +170,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   {
     id: 'fitness-running-weekly-2',
@@ -189,7 +186,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   
   // Monthly Running
@@ -208,7 +204,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Running',
-    live: true,
   },
   {
     id: 'fitness-running-monthly-2',
@@ -222,7 +217,6 @@ const FEATURED_GOALS: Goal[] = [
     maxStake: 200,
     participants: 0,
     totalStaked: 0,
-    live: true,
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Running',
@@ -380,7 +374,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Daily',
     domain: 'Fitness',
     subdomain: 'Steps',
-    live: true,
   },
   
   // Weekly Steps
@@ -399,7 +392,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Weekly',
     domain: 'Fitness',
     subdomain: 'Steps',
-    live: true,
   },
   
   // Monthly Steps
@@ -418,7 +410,6 @@ const FEATURED_GOALS: Goal[] = [
     category: 'Monthly',
     domain: 'Fitness',
     subdomain: 'Steps',
-    live: true,
   },
 
   // ═══════════════════════════════════════════
@@ -1134,7 +1125,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
   const [mounted, setMounted] = useState(false)
   const [notified, setNotified] = useState<string[]>([])
   const [modalFeature, setModalFeature] = useState<string | null>(null)
-  const [showLive, setShowLive] = useState(true)  // true = Live vaadas, false = Coming Soon
+  const [activeOnly, setActiveOnly] = useState(true)  // Toggle for on-chain goals only
   const [selectedDomain, setSelectedDomain] = useState<DomainKey | 'All'>('All')
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>('All')
   
@@ -1158,12 +1149,12 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
     setModalFeature(null)
   }
 
-  // Filter goals by live/coming soon + domain + timeframe
+  // Filter goals by active toggle + domain + timeframe
   const filteredGoals = FEATURED_GOALS.filter(g => {
-    const liveMatch = showLive ? g.live === true : g.live !== true
+    const activeMatch = !activeOnly || g.onChainId !== undefined
     const domainMatch = selectedDomain === 'All' || g.domain === selectedDomain
     const timeframeMatch = selectedTimeframe === 'All' || g.category === selectedTimeframe
-    return liveMatch && domainMatch && timeframeMatch
+    return activeMatch && domainMatch && timeframeMatch
   })
 
   const showComingSoon = false // Hidden for now
@@ -1189,27 +1180,17 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
         {/* Row 1: Live toggle + Timeframes in single pill */}
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-0.5 p-1 bg-[var(--surface)] rounded-2xl border border-[var(--border)]">
-            {/* Live / Coming Soon Toggle */}
+            {/* Live Toggle */}
             <button
-              onClick={() => setShowLive(true)}
+              onClick={() => setActiveOnly(!activeOnly)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                showLive
+                activeOnly
                   ? 'bg-[#2EE59D] text-white'
                   : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
               }`}
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${showLive ? 'bg-white animate-pulse' : 'bg-gray-400'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${activeOnly ? 'bg-white animate-pulse' : 'bg-gray-400'}`} />
               Live
-            </button>
-            <button
-              onClick={() => setShowLive(false)}
-              className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                !showLive
-                  ? 'bg-[var(--foreground)] text-[var(--background)]'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
-              }`}
-            >
-              Coming Soon
             </button>
             
             {/* Divider */}
@@ -1232,8 +1213,13 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
           </div>
         </div>
 
-        {/* Row 2: Domain chips */}
+        {/* Row 2: Domain chips with scroll fade */}
         <div className="relative">
+          {/* Left fade indicator */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
+          {/* Right fade indicator */}
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
+          
           <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
             <div className="flex items-center justify-start sm:justify-center gap-2 min-w-max">
               {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
@@ -1256,11 +1242,11 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
       </div>
 
       {/* Active filters indicator */}
-      {(selectedDomain !== 'All' || selectedTimeframe !== 'All' || !showLive) && (
+      {(selectedDomain !== 'All' || selectedTimeframe !== 'All' || !activeOnly) && (
         <div className="mb-4 flex items-center justify-center gap-2 text-xs text-[var(--text-secondary)]">
           <span>Showing {filteredGoals.length} {filteredGoals.length === 1 ? 'goal' : 'goals'}</span>
           <button 
-            onClick={() => { setSelectedDomain('All'); setSelectedTimeframe('All'); setShowLive(true); }}
+            onClick={() => { setSelectedDomain('All'); setSelectedTimeframe('All'); setActiveOnly(true); }}
             className="text-[#2EE59D] hover:underline"
           >
             Clear filters
@@ -1279,7 +1265,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
             </p>
             <button
               onClick={() => {
-                setShowLive(true)
+                setActiveOnly(true)
                 setSelectedDomain('All')
                 setSelectedTimeframe('All')
               }}
