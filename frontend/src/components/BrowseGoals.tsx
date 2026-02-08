@@ -1213,14 +1213,9 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
           </div>
         </div>
 
-        {/* Row 2: Domain chips with scroll fade */}
+        {/* Row 2: Domain chips */}
         <div className="relative">
-          {/* Left fade indicator */}
-          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
-          {/* Right fade indicator */}
-          <div className="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
-          
-          <div className="overflow-x-auto hide-scrollbar -mx-4 px-8 sm:mx-0 sm:px-0">
+          <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
             <div className="flex items-center justify-start sm:justify-center gap-2 min-w-max">
               {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
                 <button
