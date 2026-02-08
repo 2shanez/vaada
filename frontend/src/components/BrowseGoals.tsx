@@ -1175,37 +1175,28 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
 
   return (
     <div>
-      {/* Filter Section - Compact & Clean */}
-      <div className="mb-6">
-        {/* Top row: Live toggle + Timeframes */}
-        <div className="flex items-center justify-between gap-2 mb-3">
-          {/* Live/All Toggle - Two buttons */}
-          <div className="flex items-center gap-0.5 p-0.5 bg-[var(--surface)] rounded-xl border border-[var(--border)]">
+      {/* Filter Section - Clean 2-row layout */}
+      <div className="mb-6 space-y-3">
+        {/* Row 1: Live toggle + Timeframes in single pill */}
+        <div className="flex justify-center">
+          <div className="inline-flex items-center gap-0.5 p-1 bg-[var(--surface)] rounded-2xl border border-[var(--border)]">
+            {/* Live Toggle */}
             <button
-              onClick={() => setActiveOnly(true)}
+              onClick={() => setActiveOnly(!activeOnly)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
                 activeOnly
-                  ? 'bg-[#2EE59D]/15 text-[#2EE59D]'
+                  ? 'bg-[#2EE59D] text-white'
                   : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${activeOnly ? 'bg-[#2EE59D] animate-pulse' : 'bg-gray-400'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${activeOnly ? 'bg-white animate-pulse' : 'bg-gray-400'}`} />
               Live
             </button>
-            <button
-              onClick={() => setActiveOnly(false)}
-              className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                !activeOnly
-                  ? 'bg-[var(--foreground)] text-[var(--background)]'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
-              }`}
-            >
-              All
-            </button>
-          </div>
-
-          {/* Timeframe Pills */}
-          <div className="flex items-center gap-0.5 p-0.5 bg-[var(--surface)] rounded-xl border border-[var(--border)]">
+            
+            {/* Divider */}
+            <div className="w-px h-5 bg-[var(--border)] mx-1" />
+            
+            {/* Timeframes */}
             {TIMEFRAMES.map((tf) => (
               <button
                 key={tf}
@@ -1222,33 +1213,30 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
           </div>
         </div>
 
-        {/* Domain Filter - Horizontal scroll on mobile */}
-        <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex items-center gap-2 min-w-max sm:flex-wrap sm:justify-center">
-            <button
-              onClick={() => setSelectedDomain('All')}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                selectedDomain === 'All'
-                  ? 'bg-[var(--foreground)] text-[var(--background)] border-transparent'
-                  : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
-              }`}
-            >
-              All
-            </button>
-            {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
-              <button
-                key={domain}
-                onClick={() => setSelectedDomain(domain)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                  selectedDomain === domain
-                    ? `${domainColors[domain]?.bg || 'bg-gray-100 dark:bg-gray-800'} ${domainColors[domain]?.text || 'text-gray-700'} border-transparent`
-                    : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
-                }`}
-              >
-                <span>{DOMAINS[domain].emoji}</span>
-                <span>{domain}</span>
-              </button>
-            ))}
+        {/* Row 2: Domain chips with scroll fade */}
+        <div className="relative">
+          {/* Left fade indicator */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
+          {/* Right fade indicator */}
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[var(--background)] to-transparent z-10 pointer-events-none sm:hidden" />
+          
+          <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex items-center justify-start sm:justify-center gap-2 min-w-max">
+              {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
+                <button
+                  key={domain}
+                  onClick={() => setSelectedDomain(selectedDomain === domain ? 'All' : domain)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
+                    selectedDomain === domain
+                      ? `${domainColors[domain]?.bg || 'bg-gray-100 dark:bg-gray-800'} ${domainColors[domain]?.text || 'text-gray-700'} ${domainColors[domain]?.border || 'border-transparent'}`
+                      : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
+                  }`}
+                >
+                  <span>{DOMAINS[domain].emoji}</span>
+                  <span>{domain}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
