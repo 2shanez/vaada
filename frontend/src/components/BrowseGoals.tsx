@@ -1186,31 +1186,20 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
     <div>
       {/* Filter Section - Clean 2-row layout */}
       <div className="mb-6 space-y-3">
-        {/* Row 1: Live toggle + Timeframes in single pill */}
+        {/* Row 1: Live indicator + Timeframes in single pill */}
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-0.5 p-1 bg-[var(--surface)] rounded-2xl border border-[var(--border)]">
-            {/* Live / Coming Soon Toggle */}
-            <button
-              onClick={() => setShowLive(true)}
+            {/* Live indicator */}
+            <div
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
                 showLive
                   ? 'bg-[#2EE59D] text-white'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
+                  : 'text-[var(--text-secondary)]'
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-full ${showLive ? 'bg-white animate-pulse' : 'bg-gray-400'}`} />
               Live
-            </button>
-            <button
-              onClick={() => setShowLive(false)}
-              className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                !showLive
-                  ? 'bg-[var(--foreground)] text-[var(--background)]'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
-              }`}
-            >
-              Coming Soon
-            </button>
+            </div>
             
             {/* Divider */}
             <div className="w-px h-5 bg-[var(--border)] mx-1" />
@@ -1232,16 +1221,16 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
           </div>
         </div>
 
-        {/* Row 2: Domain chips */}
+        {/* Row 2: Domain chips + Coming Soon */}
         <div className="relative">
           <div className="overflow-x-auto hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
             <div className="flex items-center justify-start sm:justify-center gap-2 min-w-max">
               {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
                 <button
                   key={domain}
-                  onClick={() => setSelectedDomain(selectedDomain === domain ? 'All' : domain)}
+                  onClick={() => { setSelectedDomain(selectedDomain === domain ? 'All' : domain); setShowLive(true); }}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                    selectedDomain === domain
+                    selectedDomain === domain && showLive
                       ? `${domainColors[domain]?.bg || 'bg-gray-100 dark:bg-gray-800'} ${domainColors[domain]?.text || 'text-gray-700'} ${domainColors[domain]?.border || 'border-transparent'}`
                       : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
                   }`}
@@ -1250,6 +1239,19 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
                   <span>{domain}</span>
                 </button>
               ))}
+              
+              {/* Coming Soon tab */}
+              <button
+                onClick={() => { setShowLive(false); setSelectedDomain('All'); }}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
+                  !showLive
+                    ? 'bg-[var(--foreground)] text-[var(--background)] border-transparent'
+                    : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
+                }`}
+              >
+                <span>🚀</span>
+                <span>Coming Soon</span>
+              </button>
             </div>
           </div>
         </div>
