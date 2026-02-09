@@ -548,15 +548,16 @@ export function LiveChallengeCard() {
           </div>
           <div className="min-w-0">
             <h3 className="font-bold text-sm leading-tight">24-Hour Commitment</h3>
-            <p className="text-xs text-[var(--text-secondary)]">Stake $5 • Join a goal within 24h or lose it</p>
+            <p className="text-xs text-[var(--text-secondary)]">Join a vaada within 24h or lose your $5</p>
+            <p className="text-[10px] text-[var(--text-secondary)]/70">Your $5 returns after 24h verification</p>
           </div>
         </div>
         
         {/* CTA */}
         {hasJoined ? (
-          <div className="w-full flex items-center justify-center gap-2 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-sm border border-[#2EE59D]/30">
-            <span>✓</span>
-            <span>You're in!</span>
+          <div className="w-full py-2 bg-[#2EE59D]/15 rounded-xl text-center border border-[#2EE59D]/30">
+            <p className="text-[#2EE59D] font-bold text-sm">✓ You're in!</p>
+            <p className="text-[10px] text-[#2EE59D]/70">$5 returns after 24h verification</p>
           </div>
         ) : (
           <button
