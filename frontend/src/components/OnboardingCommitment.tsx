@@ -23,7 +23,7 @@ interface OnboardingCommitmentProps {
 }
 
 const FAUCETS = {
-  eth: 'https://www.alchemy.com/faucets/base-sepolia',
+  eth: 'https://portal.cdp.coinbase.com/products/faucet',
   usdc: 'https://faucet.circle.com',
 }
 
@@ -382,7 +382,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                       <span className="text-2xl">⛽</span>
                       <div>
                         <p className="font-medium">Get ETH (gas)</p>
-                        <p className="text-sm text-[var(--text-secondary)]">Alchemy Faucet</p>
+                        <p className="text-sm text-[var(--text-secondary)]">Coinbase Faucet</p>
                       </div>
                       <svg className="w-5 h-5 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
