@@ -173,7 +173,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               </div>
               <h2 className="text-xl font-bold mb-2">You're in!</h2>
               <p className="text-sm text-[var(--text-secondary)]">
-                Now pick a goal to complete within 24 hours
+                Now join a vaada within 24h to get your ${stakeAmountFormatted} back
               </p>
             </div>
           ) : (
@@ -231,7 +231,10 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    Stake ${stakeAmountFormatted} • Join a goal within 24h or lose it
+                    Stake ${stakeAmountFormatted} • Join a vaada within 24h → get it back
+                  </p>
+                  <p className="text-[10px] text-[var(--text-secondary)]/70 mt-0.5">
+                    Don't join? You lose it.
                   </p>
                 </div>
               </div>
