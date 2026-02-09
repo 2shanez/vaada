@@ -259,7 +259,7 @@ export default function Home() {
             delay={100}
           />
           <StatsCard
-            label="Active vaadas"
+            label="Active Vaadas"
             value={platformStats.activeGoals}
             icon={
               <svg className="w-6 h-6 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -270,7 +270,7 @@ export default function Home() {
             delay={200}
           />
           <StatsCard
-            label="Total vaadas"
+            label="Total Vaadas"
             value={platformStats.totalGoals}
             icon={
               <svg className="w-6 h-6 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
