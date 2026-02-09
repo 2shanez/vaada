@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useBalance, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { formatUnits } from 'viem'
 import { NEW_USER_CHALLENGE_ABI, USDC_ABI } from '@/lib/abis'
 import { useContracts } from '@/lib/hooks'
@@ -57,6 +57,12 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     query: { enabled: isContractDeployed },
   })
 
+  // Check ETH balance (for gas)
+  const { data: ethBalance } = useBalance({
+    address: address,
+  })
+  const hasEnoughGas = ethBalance && ethBalance.value > BigInt(0)
+
   // Check USDC balance
   const { data: usdcBalance } = useReadContract({
     address: contracts.usdc,
@@ -76,8 +82,9 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
   })
   
   // Derived state
-  const hasEnoughBalance = usdcBalance !== undefined && stakeAmount !== undefined && 
+  const hasEnoughUSDC = usdcBalance !== undefined && stakeAmount !== undefined && 
     (usdcBalance as bigint) >= (stakeAmount as bigint)
+  const canStake = hasEnoughUSDC && hasEnoughGas
 
   // Contract writes
   const { writeContract: approve, data: approveTxHash } = useWriteContract()
@@ -131,8 +138,12 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
       return
     }
 
-    // Check balance first
-    if (!hasEnoughBalance) {
+    // Check balances first
+    if (!hasEnoughGas) {
+      setError('No ETH for gas fees. Fund your wallet first.')
+      return
+    }
+    if (!hasEnoughUSDC) {
       setError(`Insufficient USDC balance. You need $${stakeAmountFormatted} USDC.`)
       return
     }
@@ -273,23 +284,40 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               )}
 
               {/* Balance display */}
-              {usdcBalance !== undefined && (
-                <div className={`mb-3 p-2.5 rounded-xl text-center text-sm ${
-                  hasEnoughBalance 
-                    ? 'bg-[#2EE59D]/10 border border-[#2EE59D]/30 text-[#2EE59D]' 
-                    : 'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-400'
-                }`}>
-                  Balance: ${formatUnits(usdcBalance as bigint, 6)} USDC
-                  {!hasEnoughBalance && <span className="block text-xs mt-0.5">Need ${stakeAmountFormatted}</span>}
+              <div className={`mb-3 p-3 rounded-xl text-sm ${
+                canStake 
+                  ? 'bg-[#2EE59D]/10 border border-[#2EE59D]/30' 
+                  : 'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800'
+              }`}>
+                <div className="flex justify-between items-center mb-1">
+                  <span className={hasEnoughGas ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}>
+                    {hasEnoughGas ? '✓' : '✗'} ETH (gas)
+                  </span>
+                  <span className={`font-mono text-xs ${hasEnoughGas ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}`}>
+                    {ethBalance ? parseFloat(formatUnits(ethBalance.value, 18)).toFixed(4) : '0'} ETH
+                  </span>
                 </div>
-              )}
+                <div className="flex justify-between items-center">
+                  <span className={hasEnoughUSDC ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}>
+                    {hasEnoughUSDC ? '✓' : '✗'} USDC (stake)
+                  </span>
+                  <span className={`font-mono text-xs ${hasEnoughUSDC ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}`}>
+                    ${usdcBalance ? formatUnits(usdcBalance as bigint, 6) : '0'} / ${stakeAmountFormatted}
+                  </span>
+                </div>
+                {!canStake && (
+                  <p className="text-xs text-center mt-2 text-orange-600 dark:text-orange-400">
+                    Fund your wallet below ↓
+                  </p>
+                )}
+              </div>
 
               {/* CTA */}
               <button
                 onClick={handleCommit}
-                disabled={isApproving || isJoining || !hasEnoughBalance}
+                disabled={isApproving || isJoining || !canStake}
                 className={`w-full py-3 font-bold rounded-xl transition-colors disabled:cursor-not-allowed ${
-                  hasEnoughBalance 
+                  canStake 
                     ? 'bg-[#2EE59D] text-white hover:bg-[#26c987] disabled:opacity-50' 
                     : 'bg-[var(--border)] text-[var(--text-secondary)]'
                 }`}
@@ -304,8 +332,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     Joining Challenge...
                   </span>
-                ) : !hasEnoughBalance ? (
-                  'Insufficient USDC'
+                ) : !canStake ? (
+                  !hasEnoughGas ? 'Need ETH for gas' : 'Need USDC to stake'
                 ) : (
                   `Stake $${stakeAmountFormatted} — I'm In`
                 )}
