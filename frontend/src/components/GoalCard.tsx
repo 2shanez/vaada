@@ -162,11 +162,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   useEffect(() => {
     if (step === 'done') {
       const timer = setTimeout(() => {
+        // Refetch participant data again to ensure hasJoined is updated
+        refetchParticipant()
         setStep('idle')
       }, 2000)
       return () => clearTimeout(timer)
     }
-  }, [step])
+  }, [step, refetchParticipant])
 
   // Handlers
   const handleStravaConnect = () => {
