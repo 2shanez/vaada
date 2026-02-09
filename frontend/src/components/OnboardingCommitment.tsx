@@ -183,7 +183,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div className="w-16 h-16 rounded-2xl bg-[#2EE59D] flex items-center justify-center mx-auto mb-3">
                   <span className="text-white font-black text-3xl leading-none">v</span>
                 </div>
-                <h2 className="text-xl font-bold mb-1">Welcome to vaada</h2>
+                <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
                 <p className="text-sm text-[var(--text-secondary)] mb-2">
                   The commitment market
                 </p>
