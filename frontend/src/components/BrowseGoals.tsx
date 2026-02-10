@@ -119,6 +119,23 @@ const FEATURED_GOALS: Goal[] = [
   // TEST GOAL - REMOVE AFTER E2E TEST
   // ═══════════════════════════════════════════
   {
+    id: 'test-daily-mile-36',
+    onChainId: 36,
+    title: 'Daily Mile',
+    description: 'Run 0.1 miles',
+    emoji: '🏃',
+    targetMiles: 0.1,
+    targetUnit: 'miles',
+    durationDays: 1,
+    minStake: 5,
+    maxStake: 50,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Fitness',
+    subdomain: 'Running',
+  },
+  {
     id: 'test-quick-2',
     onChainId: 35,
     title: 'Quick Test 2',
