@@ -123,7 +123,11 @@ export function FitbitConnect() {
 
   const handleConnectFitbit = () => {
     // Use the auth route which handles OAuth initiation
-    window.location.href = '/api/fitbit/auth'
+    // Pass wallet address to save token to database
+    const authUrl = address 
+      ? `/api/fitbit/auth?wallet=${address}`
+      : '/api/fitbit/auth'
+    window.location.href = authUrl
   }
 
   const handleReconnect = async () => {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createServerSupabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -10,9 +11,22 @@ export async function GET(request: NextRequest) {
   const protocol = request.headers.get('x-forwarded-proto') || 'http'
   const baseUrl = `${protocol}://${host}`
 
-  // Verify state to prevent CSRF
+  // Parse state to get CSRF token and wallet address
+  let walletAddress: string | null = null
+  let csrfToken: string | null = null
+  if (state) {
+    try {
+      const stateData = JSON.parse(decodeURIComponent(state))
+      csrfToken = stateData.csrf
+      walletAddress = stateData.wallet?.toLowerCase() || null
+    } catch (e) {
+      console.warn('Failed to parse state parameter:', e)
+    }
+  }
+
+  // Verify CSRF token
   const storedState = request.cookies.get('fitbit_oauth_state')?.value
-  if (state !== storedState) {
+  if (csrfToken !== storedState) {
     console.error('Fitbit OAuth state mismatch')
     return NextResponse.redirect(new URL('/?fitbit=error&reason=state_mismatch', baseUrl))
   }
@@ -82,6 +96,27 @@ export async function GET(request: NextRequest) {
     if (profileResponse.ok) {
       const profileData = await profileResponse.json()
       userName = profileData.user?.displayName || profileData.user?.fullName || 'Fitbit User'
+    }
+
+    // Save refresh token to Supabase if we have wallet address
+    if (walletAddress) {
+      try {
+        const supabase = createServerSupabase()
+        await supabase
+          .from('fitbit_tokens')
+          .upsert({
+            wallet_address: walletAddress,
+            user_id: tokenData.user_id,
+            refresh_token: tokenData.refresh_token,
+            updated_at: new Date().toISOString(),
+          }, {
+            onConflict: 'wallet_address'
+          })
+        console.log('Saved Fitbit token to database for wallet:', walletAddress)
+      } catch (dbError) {
+        console.error('Failed to save Fitbit token to database:', dbError)
+        // Continue anyway - cookies will still work
+      }
     }
 
     const redirectUrl = new URL('/', baseUrl)

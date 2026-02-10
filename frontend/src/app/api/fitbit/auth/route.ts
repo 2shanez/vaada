@@ -21,8 +21,16 @@ export async function GET(request: NextRequest) {
   // profile: basic profile info
   const scope = 'activity profile'
   
-  // Generate a random state for CSRF protection
-  const state = Math.random().toString(36).substring(2, 15)
+  // Get wallet address from query params (passed from frontend)
+  const walletAddress = request.nextUrl.searchParams.get('wallet')
+  
+  // Generate state with CSRF token + wallet address
+  const csrfToken = Math.random().toString(36).substring(2, 15)
+  const stateData = {
+    csrf: csrfToken,
+    wallet: walletAddress || null,
+  }
+  const state = encodeURIComponent(JSON.stringify(stateData))
   
   const authUrl = new URL('https://www.fitbit.com/oauth2/authorize')
   authUrl.searchParams.set('client_id', clientId)
@@ -31,9 +39,9 @@ export async function GET(request: NextRequest) {
   authUrl.searchParams.set('scope', scope)
   authUrl.searchParams.set('state', state)
   
-  // Store state in cookie for verification
+  // Store CSRF token in cookie for verification
   const response = NextResponse.redirect(authUrl.toString())
-  response.cookies.set('fitbit_oauth_state', state, {
+  response.cookies.set('fitbit_oauth_state', csrfToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

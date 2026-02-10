@@ -20,3 +20,11 @@ export interface StravaToken {
   created_at: string
   updated_at: string
 }
+
+export interface FitbitToken {
+  wallet_address: string
+  user_id: string
+  refresh_token: string
+  created_at: string
+  updated_at: string
+}
