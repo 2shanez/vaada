@@ -234,6 +234,30 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       handleStravaConnect()
       return
     }
+
+    // Auto-refresh Strava token before joining to ensure it's fresh
+    // This prevents "expired token" errors during verification
+    try {
+      const res = await fetch('/api/strava/update-onchain')
+      if (res.ok) {
+        const data = await res.json()
+        // If token was refreshed, update on-chain before joining
+        if (data.refreshed && data.token) {
+          console.log('Refreshing Strava token on-chain before join...')
+          writeStoreToken({
+            address: contracts.oracle,
+            abi: AUTOMATION_ABI,
+            functionName: 'storeToken',
+            args: [data.token],
+          })
+          // Wait a moment for the store transaction to start
+          await new Promise(resolve => setTimeout(resolve, 100))
+        }
+      }
+    } catch (err) {
+      console.warn('Could not check/refresh Strava token:', err)
+      // Continue with join anyway - token might still be valid
+    }
     
     const stakeNum = parseFloat(stakeAmount)
     if (stakeNum < goal.minStake || stakeNum > goal.maxStake) {

@@ -248,12 +248,15 @@ contract GoalStakeAutomationV3 is FunctionsClient, AutomationCompatibleInterface
         pendingVerification[goalId][user] = false;
         delete pendingRequests[requestId];
         
-        if (err.length > 0) {
-            emit VerificationFailed(goalId, user, err);
-            return;
-        }
+        uint256 actualMiles;
         
-        uint256 actualMiles = abi.decode(response, (uint256));
+        if (err.length > 0) {
+            // On error (e.g., expired token), verify with 0 miles so goal can settle
+            emit VerificationFailed(goalId, user, err);
+            actualMiles = 0;
+        } else {
+            actualMiles = abi.decode(response, (uint256));
+        }
         
         goalStake.verifyParticipant(goalId, user, actualMiles);
         
