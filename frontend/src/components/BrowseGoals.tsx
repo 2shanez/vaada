@@ -116,18 +116,18 @@ function NotifyModal({
 
 const FEATURED_GOALS: Goal[] = [
   // ═══════════════════════════════════════════
-  // ACTIVE GOAL - Daily Mile (Goal 40) - Fixed time window!
+  // ACTIVE GOAL - Daily Mile (Goal 41) - $1 min stake
   // ═══════════════════════════════════════════
   {
-    id: 'daily-mile-40',
-    onChainId: 40,
+    id: 'daily-mile-41',
+    onChainId: 41,
     title: 'Daily Mile',
     description: 'Run 0.1 miles',
     emoji: '🏃',
     targetMiles: 0.1,
     targetUnit: 'miles',
     durationDays: 1,
-    minStake: 5,
+    minStake: 1,
     maxStake: 50,
     participants: 0,
     totalStaked: 0,
