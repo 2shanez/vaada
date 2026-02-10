@@ -116,11 +116,11 @@ function NotifyModal({
 
 const FEATURED_GOALS: Goal[] = [
   // ═══════════════════════════════════════════
-  // ACTIVE GOAL - Daily Mile (Goal 37)
+  // ACTIVE GOAL - Daily Mile (Goal 38)
   // ═══════════════════════════════════════════
   {
-    id: 'daily-mile-37',
-    onChainId: 37,
+    id: 'daily-mile-38',
+    onChainId: 38,
     title: 'Daily Mile',
     description: 'Run 0.1 miles',
     emoji: '🏃',
