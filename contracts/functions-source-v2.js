@@ -33,7 +33,7 @@ if (data.error) {
   return Functions.encodeUint256(BigInt(0));
 }
 
-// API returns miles with 18 decimals
-const milesWei = BigInt(data.miles || "0");
+// API returns milesWei as string (already scaled to 18 decimals)
+const milesWei = BigInt(data.milesWei || "0");
 
 return Functions.encodeUint256(milesWei);
