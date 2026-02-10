@@ -32,7 +32,7 @@ export function StravaConnect() {
   const { address: wagmiAddress, isConnected } = useAccount()
   
   // Get address from wagmi OR Privy wallets (fallback for email/social login)
-  const address = wagmiAddress || wallets?.[0]?.address || user?.wallet?.address
+  const address = (wagmiAddress || wallets?.[0]?.address || user?.wallet?.address) as `0x${string}` | undefined
   const chainId = useChainId()
   const { switchChain, isPending: isSwitching } = useSwitchChain()
   const [stravaConnected, setStravaConnected] = useState(false)
