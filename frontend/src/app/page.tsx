@@ -362,7 +362,7 @@ export default function Home() {
             Ready to bet on yourself?
           </h2>
           <p className="text-[var(--text-secondary)] mb-6 sm:mb-8 text-base sm:text-lg">
-            Join the commitment market. Put money on your promises.
+            Join the commitment market.
           </p>
           <button 
             onClick={handleGetStarted}
