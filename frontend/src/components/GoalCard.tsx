@@ -43,8 +43,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   // Custom hooks for contract state
   const { balance, balanceNum, allowance, refetchAllowance } = useUSDC(contracts.goalStake)
   const { entryOpen, phase } = useGoalState(goal.onChainId)
-  const { participant: participantData, hasJoined, userStake, refetch: refetchParticipant } = useParticipant(goal.onChainId)
+  const { participant: participantData, hasJoined: hasJoinedOnChain, userStake, refetch: refetchParticipant } = useParticipant(goal.onChainId)
   const { hasTokenOnChain, refetch: refetchToken } = useStravaToken()
+  
+  // Combine on-chain state with local state for immediate UI feedback
+  const hasJoined = hasJoinedOnChain || justJoined
   const goalDetails = useGoalDetails(goal.onChainId)
   
   // Check if user has completed the new user challenge (required before joining any goal)
@@ -73,6 +76,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [step, setStep] = useState<Step>('idle')
   const [showClaimCelebration, setShowClaimCelebration] = useState(false)
+  const [justJoined, setJustJoined] = useState(false) // Local flag to show Joined state immediately
   const stravaConnected = isStravaConnected()
 
   // Contract writes with error tracking
@@ -154,6 +158,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   useEffect(() => {
     if (isJoinSuccess && step === 'joining') {
       setStep('done')
+      setJustJoined(true) // Immediately show Joined state
       refetchParticipant()
       onJoined?.()
     }
