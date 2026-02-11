@@ -581,9 +581,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   label: 'Verify', 
                   desc: currentPhaseStep === 2 
                     ? 'Verifying...' 
-                    : goal.subdomain === 'Running' 
-                      ? 'Via Strava' 
-                      : 'Coming soon'
+                    : goal.targetUnit === 'steps'
+                      ? 'Via Fitbit'
+                      : goal.subdomain === 'Running' 
+                        ? 'Via Strava' 
+                        : 'Coming soon'
                 },
                 { 
                   label: 'Payout', 
