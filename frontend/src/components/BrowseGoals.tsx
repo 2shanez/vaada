@@ -121,7 +121,7 @@ const FEATURED_GOALS: Goal[] = [
   // ═══════════════════════════════════════════
   {
     id: 'strava-3-miles',
-    onChainId: 2,
+    onChainId: 4,
     title: 'Daily 3 Miles',
     description: 'Run 3 miles today',
     emoji: '🏃',
@@ -143,7 +143,7 @@ const FEATURED_GOALS: Goal[] = [
   // ═══════════════════════════════════════════
   {
     id: 'fitbit-10k-steps',
-    onChainId: 3,
+    onChainId: 5,
     title: '10K Steps',
     description: 'Hit 10,000 steps today',
     emoji: '👟',
