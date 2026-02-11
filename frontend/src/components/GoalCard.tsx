@@ -1073,9 +1073,26 @@ function StatusIndicators({ stravaConnected, hasTokenOnChain, isConnected, subdo
   // Strava flow (existing logic)
   if (!stravaConnected) {
     return (
-      <div className="mb-3 p-3 rounded-xl bg-[#FC4C02]/10 border border-[#FC4C02]/20">
-        <p className="text-xs text-[var(--text-secondary)] mb-2">Connect Strava to verify miles</p>
-        <p className="text-xs text-orange-700 dark:text-orange-400">Connect Strava below</p>
+      <div className="mb-3 p-3 rounded-xl bg-[var(--surface)] border border-[var(--border)]">
+        <p className="text-xs text-[var(--text-secondary)] mb-2 text-center">Connect Strava to track miles</p>
+        <button
+          onClick={() => {
+            const callbackUrl = `${window.location.origin}/api/strava/callback`
+            window.location.href = `https://www.strava.com/oauth/authorize?client_id=199295&response_type=code&redirect_uri=${encodeURIComponent(callbackUrl)}&scope=activity:read_all&state=${address || ''}`
+          }}
+          className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-[#FC4C02]/10 border border-[#FC4C02]/30 hover:bg-[#FC4C02]/20 transition-colors"
+        >
+          <svg className="w-4 h-4 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7 13.828h4.169" />
+          </svg>
+          <span className="text-xs font-medium text-[#FC4C02]">Connect Strava</span>
+        </button>
+        <button
+          onClick={handleReconnectStrava}
+          className="w-full mt-2 text-[10px] text-[var(--text-secondary)] hover:text-[#FC4C02] transition-colors"
+        >
+          🔄 Reconnect Strava
+        </button>
       </div>
     )
   }
