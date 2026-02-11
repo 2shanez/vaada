@@ -119,29 +119,48 @@ async function fetchFitbitDailySummary(accessToken: string, date: string) {
   return await response.json()
 }
 
-// Fetch steps for a date range from Fitbit
+// Fetch steps for a date range from Fitbit using daily summaries
 async function fetchFitbitStepsRange(accessToken: string, startDate: string, endDate: string) {
-  // Time series endpoint for steps
-  const url = `https://api.fitbit.com/1/user/-/activities/steps/date/${startDate}/${endDate}.json`
-
-  const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  })
-
-  if (!response.ok) {
-    throw new Error(`Fitbit steps API error: ${response.status}`)
+  // Generate array of dates between start and end (inclusive)
+  const dates: string[] = []
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    dates.push(d.toISOString().split('T')[0])
   }
-
-  return await response.json()
+  
+  // Fetch daily summary for each date
+  const summaries = await Promise.all(
+    dates.map(async (date) => {
+      try {
+        const url = `https://api.fitbit.com/1/user/-/activities/date/${date}.json`
+        const response = await fetch(url, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        if (!response.ok) {
+          console.warn(`Fitbit daily summary failed for ${date}: ${response.status}`)
+          return { date, steps: 0 }
+        }
+        const data = await response.json()
+        return { date, steps: data.summary?.steps || 0 }
+      } catch (error) {
+        console.warn(`Fitbit fetch error for ${date}:`, error)
+        return { date, steps: 0 }
+      }
+    })
+  )
+  
+  return { summaries }
 }
 
-// Calculate total steps from Fitbit time series data
+// Calculate total steps from Fitbit daily summaries
 function calculateFitbitSteps(stepsData: any): number {
-  const series = stepsData['activities-steps'] || []
+  const summaries = stepsData.summaries || []
   let totalSteps = 0
 
-  for (const day of series) {
-    totalSteps += parseInt(day.value) || 0
+  for (const day of summaries) {
+    totalSteps += day.steps || 0
   }
 
   return totalSteps
@@ -268,7 +287,7 @@ export async function GET(request: NextRequest) {
         // Also return as miles/milesWei for contract compatibility
         miles: steps,
         milesWei: stepsWei,
-        daysCount: stepsData['activities-steps']?.length || 0,
+        daysCount: stepsData.summaries?.length || 0,
         userId: fitbitToken.user_id,
         source: 'fitbit',
         type: 'steps',
