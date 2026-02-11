@@ -158,6 +158,9 @@ contract GoalStakeAutomationV3 is FunctionsClient, AutomationCompatibleInterface
             address[] memory participants = goalStake.getGoalParticipants(goalId);
             bool allVerified = true;
             
+            // Get goal type to determine token requirements
+            IGoalStakeV3.GoalType goalType = goalStake.goalTypes(goalId);
+            
             for (uint256 j = 0; j < participants.length; j++) {
                 address user = participants[j];
                 IGoalStakeV3.Participant memory p = goalStake.getParticipant(goalId, user);
@@ -166,10 +169,12 @@ contract GoalStakeAutomationV3 is FunctionsClient, AutomationCompatibleInterface
                     allVerified = false;
                     
                     // Check if we can verify this participant
-                    if (
-                        !pendingVerification[goalId][user] &&
-                        bytes(stravaTokens[user]).length > 0
-                    ) {
+                    // Fitbit tokens are stored off-chain (Supabase), so skip on-chain token check
+                    // Strava tokens are stored on-chain, so require them
+                    bool hasRequiredToken = (goalType == IGoalStakeV3.GoalType.FITBIT_STEPS) 
+                        || bytes(stravaTokens[user]).length > 0;
+                    
+                    if (!pendingVerification[goalId][user] && hasRequiredToken) {
                         // Return data to verify this participant
                         return (true, abi.encode(goalId, user, false));
                     }
