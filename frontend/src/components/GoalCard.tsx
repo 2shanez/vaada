@@ -78,6 +78,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   // Combine on-chain state with local state for immediate UI feedback
   const hasJoined = hasJoinedOnChain || justJoined
   const stravaConnected = isStravaConnected()
+  const { isConnected: fitbitConnected } = useFitbitConnection()
+  
+  // Determine which tracker is needed based on goal type
+  const isStepsGoal = goal.targetUnit === 'steps'
+  const trackerConnected = isStepsGoal ? fitbitConnected : stravaConnected
 
   // Contract writes with error tracking
   const { writeContract: writeApprove, data: approveHash, isPending: isApprovePending, error: approveError } = useWriteContract()
@@ -755,6 +760,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             </button>
             <ActionButton
               stravaConnected={stravaConnected}
+              fitbitConnected={fitbitConnected}
+              trackerConnected={trackerConnected}
+              isStepsGoal={isStepsGoal}
               hasTokenOnChain={hasTokenOnChain}
               hasBalance={hasBalance}
               isLoading={isLoading}
@@ -1100,8 +1108,11 @@ function LoadingIndicator({ isApprovePending, isApproveConfirming, isJoinPending
   )
 }
 
-function ActionButton({ stravaConnected, hasTokenOnChain, hasBalance, isLoading, isWrongNetwork, isStorePending, isStoreConfirming, stakeAmount, onClick }: {
+function ActionButton({ stravaConnected, fitbitConnected, trackerConnected, isStepsGoal, hasTokenOnChain, hasBalance, isLoading, isWrongNetwork, isStorePending, isStoreConfirming, stakeAmount, onClick }: {
   stravaConnected: boolean
+  fitbitConnected: boolean
+  trackerConnected: boolean
+  isStepsGoal: boolean
   hasTokenOnChain: boolean | undefined
   hasBalance: boolean
   isLoading: boolean
@@ -1111,9 +1122,18 @@ function ActionButton({ stravaConnected, hasTokenOnChain, hasBalance, isLoading,
   stakeAmount: string
   onClick: () => void
 }) {
-  const disabled = isLoading || (stravaConnected && hasTokenOnChain && !hasBalance)
+  // For steps goals, use Fitbit connection; for miles goals, use Strava
+  const disabled = isLoading || (trackerConnected && (isStepsGoal || hasTokenOnChain) && !hasBalance)
   
   const getLabel = () => {
+    // Steps goal - check Fitbit
+    if (isStepsGoal) {
+      if (!fitbitConnected) return '👟 Connect Fitbit'
+      if (!hasBalance) return 'Insufficient USDC'
+      if (isLoading) return 'Processing...'
+      return `Stake $${stakeAmount}`
+    }
+    // Miles goal - check Strava
     if (!stravaConnected) return '🏃 Connect Strava'
     if (!hasTokenOnChain) {
       if (isWrongNetwork) return '⚠️ Switch to Base Sepolia'
@@ -1127,6 +1147,12 @@ function ActionButton({ stravaConnected, hasTokenOnChain, hasBalance, isLoading,
 
   const getStyle = () => {
     if (disabled) return 'bg-gray-100 text-[var(--text-secondary)] cursor-not-allowed'
+    // Steps goal styling
+    if (isStepsGoal) {
+      if (!fitbitConnected) return 'bg-[#00B0B9] text-white hover:bg-[#00B0B9]/90 active:scale-[0.98] shadow-sm hover:shadow-md'
+      return 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
+    }
+    // Miles goal styling
     if (!stravaConnected || !hasTokenOnChain) return 'bg-[#FC4C02] text-white hover:bg-[#FC4C02]/90 active:scale-[0.98] shadow-sm hover:shadow-md'
     return 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
   }
