@@ -159,27 +159,18 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     }
   }, [isApproveSuccess, step, goal.onChainId, contracts.goalStake, stakeAmountWei, refetchAllowance, writeJoin])
 
-  // Handle join success
+  // Handle join success - immediately show Joined state in same card (no separate success screen)
   useEffect(() => {
     if (isJoinSuccess && step === 'joining') {
-      setStep('done')
       setJustJoined(true) // Immediately show Joined state
+      setExpanded(false) // Collapse the stake panel
+      setStep('idle') // Go back to idle (skip 'done' screen)
       refetchParticipant()
       onJoined?.()
     }
   }, [isJoinSuccess, step, refetchParticipant, onJoined])
 
-  // Auto-dismiss success screen after 2 seconds
-  useEffect(() => {
-    if (step === 'done') {
-      const timer = setTimeout(async () => {
-        // Refetch participant data and wait for it before dismissing
-        await refetchParticipant()
-        setStep('idle')
-      }, 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [step, refetchParticipant])
+  // Note: Success screen removed - we now go straight to 'idle' with Joined state visible
 
   // Handlers
   const handleStravaConnect = () => {
@@ -392,28 +383,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
   const currentPhaseStep = getPhaseStep()
 
-  // Success state
-  if (step === 'done') {
-    return (
-      <div className="bg-[var(--surface)] border border-[#2EE59D]/30 rounded-2xl overflow-hidden">
-        <div className="bg-gradient-to-br from-[#2EE59D]/10 to-[#2EE59D]/5 p-6">
-          <div className="text-center">
-            <div className="w-16 h-16 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <p className="font-bold text-xl mb-1">You're in! 🎉</p>
-            <p className="text-sm text-[var(--text-secondary)]">Time to move.</p>
-            <div className="mt-4 pt-4 border-t border-[#2EE59D]/20 inline-flex items-center gap-2">
-              <span className="text-sm text-[var(--text-secondary)]">Staked</span>
-              <span className="text-sm font-bold text-[#2EE59D]">${stakeAmount} USDC</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Note: Success state card removed - we now show "Joined ✓" in the main card immediately
 
   // New User Challenge onboarding modal
   const handleOnboardingComplete = () => {
