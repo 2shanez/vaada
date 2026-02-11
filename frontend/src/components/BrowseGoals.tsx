@@ -116,20 +116,20 @@ function NotifyModal({
 
 const FEATURED_GOALS: Goal[] = [
   // ═══════════════════════════════════════════
-  // ACTIVE GOAL - Daily Mile (Goal 44) - $1 min stake
-  // Entry: 10 min, Compete: 10 min
+  // GOAL 0 - Daily 3 Miles (Strava)
+  // Entry: 10 min, Compete: 15 min
   // ═══════════════════════════════════════════
   {
-    id: 'daily-mile-44',
-    onChainId: 44,
-    title: 'Daily Mile',
-    description: 'Run 0.1 miles',
+    id: 'strava-3-miles',
+    onChainId: 0,
+    title: 'Daily 3 Miles',
+    description: 'Run 3 miles today',
     emoji: '🏃',
-    targetMiles: 0.1,
+    targetMiles: 3,
     targetUnit: 'miles',
-    durationDays: 0.03125, // ~45 min total
+    durationDays: 0.017, // ~25 min total
     minStake: 1,
-    maxStake: 50,
+    maxStake: 100,
     participants: 0,
     totalStaked: 0,
     category: 'Daily',
@@ -138,106 +138,26 @@ const FEATURED_GOALS: Goal[] = [
   },
   
   // ═══════════════════════════════════════════
-  // MORE GOALS (coming soon)
+  // GOAL 1 - 10K Steps (Fitbit)
+  // Entry: 10 min, Compete: 15 min
   // ═══════════════════════════════════════════
-  
-  // Weekly Running
   {
-    id: 'fitness-running-weekly-1',
-    title: 'Weekend Warrior',
-    description: 'Run 10 miles this weekend',
-    emoji: '💪',
-    targetMiles: 10,
-    targetUnit: 'miles',
-    durationDays: 3,
-    minStake: 10,
+    id: 'fitbit-10k-steps',
+    onChainId: 1,
+    title: '10K Steps',
+    description: 'Hit 10,000 steps today',
+    emoji: '👟',
+    targetMiles: 10000,
+    targetUnit: 'steps',
+    durationDays: 0.017, // ~25 min total
+    minStake: 1,
     maxStake: 100,
     participants: 0,
     totalStaked: 0,
-    category: 'Weekly',
+    category: 'Daily',
     domain: 'Fitness',
-    subdomain: 'Running',
+    subdomain: 'Steps',
   },
-  {
-    id: 'fitness-running-weekly-2',
-    title: 'Weekly 15',
-    description: 'Run 15 miles this week',
-    emoji: '⚡',
-    targetMiles: 15,
-    targetUnit: 'miles',
-    durationDays: 7,
-    minStake: 10,
-    maxStake: 100,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Weekly',
-    domain: 'Fitness',
-    subdomain: 'Running',
-  },
-  
-  // Monthly Running
-  {
-    id: 'fitness-running-monthly-1',
-    title: 'February 50',
-    description: 'Run 50 miles this month',
-    emoji: '🏃',
-    targetMiles: 50,
-    targetUnit: 'miles',
-    durationDays: 28,
-    minStake: 20,
-    maxStake: 200,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Monthly',
-    domain: 'Fitness',
-    subdomain: 'Running',
-  },
-  {
-    id: 'fitness-running-monthly-2',
-    onChainId: 18,
-    title: 'Marathon Prep',
-    description: 'Hit 100 miles in 30 days',
-    emoji: '🏅',
-    targetMiles: 100,
-    targetUnit: 'miles',
-    durationDays: 30,
-    minStake: 20,
-    maxStake: 200,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Monthly',
-    domain: 'Fitness',
-    subdomain: 'Running',
-  },
-
-  // ═══════════════════════════════════════════
-  // FITNESS - STEPS - Hidden (no web API for Apple Health)
-  // ═══════════════════════════════════════════
-  // Goal 19 deployed on-chain but hidden until native app built
-
-  // ═══════════════════════════════════════════
-  // EDUCATIONAL - Coming soon (GitHub, LeetCode)
-  // ═══════════════════════════════════════════
-  // Duolingo removed - API locked down
-  // TODO: Add GitHub integration
-
-  // ═══════════════════════════════════════════
-  // HEALTH - WEIGHT (Withings) - Hidden for now
-  // ═══════════════════════════════════════════
-  // Weight goals hidden until Withings credentials set up
-  /*
-  {
-    id: 'health-weight-monthly-1',
-    onChainId: 23,
-    title: 'Lose 4%',
-    ...
-  },
-  */
-
-  // ═══════════════════════════════════════════
-  // HEALTH - SCREEN TIME - Hidden (no free API)
-  // ═══════════════════════════════════════════
-  // Goals 27-29 deployed on-chain but hidden until free verification available
 ]
 
 const COMING_SOON = [
