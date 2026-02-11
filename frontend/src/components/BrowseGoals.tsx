@@ -116,12 +116,12 @@ function NotifyModal({
 
 const FEATURED_GOALS: Goal[] = [
   // ═══════════════════════════════════════════
-  // GOAL 0 - Daily 3 Miles (Strava)
+  // GOAL 14 - Daily 3 Miles (Strava)
   // Entry: 10 min, Compete: 15 min
   // ═══════════════════════════════════════════
   {
     id: 'strava-3-miles',
-    onChainId: 8,
+    onChainId: 14,
     title: 'Daily 3 Miles',
     description: 'Run 3 miles today',
     emoji: '🏃',
@@ -138,12 +138,12 @@ const FEATURED_GOALS: Goal[] = [
   },
   
   // ═══════════════════════════════════════════
-  // GOAL 1 - 10K Steps (Fitbit)
+  // GOAL 15 - 10K Steps (Fitbit)
   // Entry: 10 min, Compete: 15 min
   // ═══════════════════════════════════════════
   {
     id: 'fitbit-10k-steps',
-    onChainId: 9,
+    onChainId: 15,
     title: '10K Steps',
     description: 'Hit 10,000 steps today',
     emoji: '👟',
