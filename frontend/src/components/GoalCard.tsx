@@ -1099,14 +1099,13 @@ function StatusIndicators({ stravaConnected, hasTokenOnChain, isConnected, subdo
 
   if (!hasTokenOnChain) {
     return (
-      <div className="mb-3 p-3 rounded-xl bg-[#FC4C02]/10 border border-[#FC4C02]/20">
-        <div className="flex items-center gap-2 mb-1.5">
-          <svg className="w-4 h-4 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
+      <div className="mb-3 p-3 rounded-xl bg-[#2EE59D]/10 border border-[#2EE59D]/20">
+        <div className="flex items-center gap-2">
+          <svg className="w-4 h-4 text-[#2EE59D]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.599h4.172L10.463 0l-7 13.828h4.169" />
           </svg>
-          <p className="text-sm font-medium text-[#FC4C02]">✓ Strava Connected</p>
+          <p className="text-xs text-[#2EE59D] font-medium">✓ Strava Connected - Ready to stake</p>
         </div>
-        <p className="text-xs text-[var(--text-secondary)] ml-6">Tap below to let us verify your runs automatically</p>
       </div>
     )
   }
