@@ -6,10 +6,13 @@ import {FunctionsRequest} from "chainlink/contracts/src/v0.8/functions/v1_0_0/li
 import {AutomationCompatibleInterface} from "chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 
 interface IGoalStakeV3 {
+    // Goal types: 0 = STRAVA_MILES, 1 = FITBIT_STEPS
+    enum GoalType { STRAVA_MILES, FITBIT_STEPS }
+    
     struct Goal {
         uint256 id;
         string name;
-        uint256 targetMiles;
+        uint256 target;           // Miles (1e18=1mi) or steps (1e18=1step)
         uint256 minStake;
         uint256 maxStake;
         uint256 startTime;        // When goal starts
@@ -33,6 +36,7 @@ interface IGoalStakeV3 {
     function verifyParticipant(uint256 goalId, address user, uint256 actualMiles) external;
     function settleGoal(uint256 goalId) external;
     function getGoal(uint256 goalId) external view returns (Goal memory);
+    function goalTypes(uint256 goalId) external view returns (GoalType);
     function getGoalParticipants(uint256 goalId) external view returns (address[] memory);
     function getParticipant(uint256 goalId, address user) external view returns (Participant memory);
     function goalCount() external view returns (uint256);
@@ -206,16 +210,21 @@ contract GoalStakeAutomationV3 is FunctionsClient, AutomationCompatibleInterface
         
         pendingVerification[goalId][user] = true;
         
+        // Get goal type to determine verification method
+        IGoalStakeV3.GoalType goalType = goalStake.goalTypes(goalId);
+        string memory typeStr = goalType == IGoalStakeV3.GoalType.STRAVA_MILES ? "miles" : "steps";
+        
         // Build Chainlink Functions request
         FunctionsRequest.Request memory req;
         req.initializeRequestForInlineJavaScript(string(functionsSource));
         
-        // Arguments: user wallet, start time (entry deadline), end time (deadline), api url
-        string[] memory args = new string[](4);
+        // Arguments: user wallet, start time, end time, goal type, api url
+        string[] memory args = new string[](5);
         args[0] = _addressToString(user);
         args[1] = _uint2str(goal.startTime); // Activities count from goal start
         args[2] = _uint2str(goal.deadline);
-        args[3] = apiBaseUrl; // Our verification API
+        args[3] = typeStr; // "miles" or "steps"
+        args[4] = apiBaseUrl; // Our verification API
         req.setArgs(args);
         
         bytes32 requestId = _sendRequest(

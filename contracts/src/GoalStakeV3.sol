@@ -12,16 +12,23 @@ import {IERC20} from "forge-std/interfaces/IERC20.sol";
  *      - Settlement: verify results, distribute payouts
  */
 contract GoalStakeV3 {
+    // ============ Enums ============
+    
+    // Goal types determine which tracker and metric to use
+    // STRAVA_MILES: Requires Strava, target is miles (1e18 = 1 mile)
+    // FITBIT_STEPS: Requires Fitbit, target is steps (1e18 = 1 step)
+    enum GoalType { STRAVA_MILES, FITBIT_STEPS }
+    
     // ============ Structs ============
     
     struct Goal {
         uint256 id;
-        string name;              // e.g., "Daily Mile"
-        uint256 targetMiles;      // Target in wei (1e18 = 1 mile)
+        string name;              // e.g., "Daily Mile" or "10K Steps"
+        uint256 target;           // Target in wei (1e18 = 1 mile or 1 step depending on goalType)
         uint256 minStake;         // Minimum stake to join
         uint256 maxStake;         // Maximum stake to join
         uint256 startTime;        // When goal starts (activities before don't count)
-        uint256 entryDeadline;    // NEW: Can't join after this time
+        uint256 entryDeadline;    // Can't join after this time
         uint256 deadline;         // When competition ends
         bool active;              // Is goal accepting entries?
         bool settled;             // Has this goal been settled?
@@ -49,6 +56,9 @@ contract GoalStakeV3 {
     // Goal ID => Goal
     mapping(uint256 => Goal) public goals;
     
+    // Goal ID => GoalType (stored separately to avoid stack-too-deep)
+    mapping(uint256 => GoalType) public goalTypes;
+    
     // Goal ID => participant address => Participant
     mapping(uint256 => mapping(address => Participant)) public participants;
     
@@ -67,7 +77,8 @@ contract GoalStakeV3 {
     event GoalCreated(
         uint256 indexed goalId,
         string name,
-        uint256 targetMiles,
+        GoalType goalType,
+        uint256 target,
         uint256 minStake,
         uint256 maxStake,
         uint256 startTime,
@@ -229,7 +240,7 @@ contract GoalStakeV3 {
         
         p.verified = true;
         p.actualMiles = actualMiles;
-        p.succeeded = actualMiles >= goal.targetMiles;
+        p.succeeded = actualMiles >= goal.target;
         
         emit ParticipantVerified(goalId, user, actualMiles, p.succeeded);
     }
@@ -277,7 +288,8 @@ contract GoalStakeV3 {
     /**
      * @notice Create a new goal with entry window
      * @param name Goal name
-     * @param targetMiles Target miles in wei (1e18 = 1 mile)
+     * @param goalType Type of goal (STRAVA_MILES or FITBIT_STEPS)
+     * @param target Target value in wei (1e18 = 1 mile or 1 step depending on goalType)
      * @param minStake Minimum USDC stake
      * @param maxStake Maximum USDC stake
      * @param startTime When activities start counting
@@ -286,7 +298,8 @@ contract GoalStakeV3 {
      */
     function createGoal(
         string calldata name,
-        uint256 targetMiles,
+        GoalType goalType,
+        uint256 target,
         uint256 minStake,
         uint256 maxStake,
         uint256 startTime,
@@ -303,7 +316,7 @@ contract GoalStakeV3 {
         goals[goalId] = Goal({
             id: goalId,
             name: name,
-            targetMiles: targetMiles,
+            target: target,
             minStake: minStake,
             maxStake: maxStake,
             startTime: startTime,
@@ -315,7 +328,9 @@ contract GoalStakeV3 {
             participantCount: 0
         });
         
-        emit GoalCreated(goalId, name, targetMiles, minStake, maxStake, startTime, entryDeadline, deadline);
+        goalTypes[goalId] = goalType;
+        
+        emit GoalCreated(goalId, name, goalType, target, minStake, maxStake, startTime, entryDeadline, deadline);
     }
     
     /**
