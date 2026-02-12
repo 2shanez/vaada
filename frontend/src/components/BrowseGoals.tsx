@@ -116,15 +116,16 @@ function NotifyModal({
 
 const FEATURED_GOALS: Goal[] = [
   // ═══════════════════════════════════════════
-  // GOAL 15 - 10K Steps (Fitbit)
+  // GOAL 16 - 1500 Steps Test (Fitbit)
+  // Entry: 10 min, Competition: 15 min
   // ═══════════════════════════════════════════
   {
-    id: 'fitbit-10k-steps',
-    onChainId: 15,
-    title: '10K Steps',
-    description: 'Hit 10,000 steps today',
+    id: 'fitbit-1500-steps',
+    onChainId: 16,
+    title: '1500 Steps',
+    description: 'Hit 1,500 steps in 25 minutes',
     emoji: '👟',
-    targetMiles: 10000,
+    targetMiles: 1500,
     targetUnit: 'steps',
     durationDays: 0.017, // ~25 min total
     minStake: 1,
