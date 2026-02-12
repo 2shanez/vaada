@@ -137,6 +137,26 @@ const FEATURED_GOALS: Goal[] = [
     domain: 'Fitness',
     subdomain: 'Steps',
   },
+  // ═══════════════════════════════════════════
+  // STRAVA GOAL - For screenshots
+  // ═══════════════════════════════════════════
+  {
+    id: 'strava-3-miles',
+    onChainId: 4,
+    title: 'Daily 3 Miles',
+    description: 'Run or walk 3 miles today on Strava',
+    emoji: '🏃',
+    targetMiles: 3,
+    targetUnit: 'miles',
+    durationDays: 1,
+    minStake: 5,
+    maxStake: 50,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Fitness',
+    subdomain: 'Running',
+  },
 ]
 
 const COMING_SOON = [
