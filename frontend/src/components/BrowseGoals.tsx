@@ -316,7 +316,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
           filteredGoals.map((goal, index) => (
             <div
               key={goal.id}
-              className={`w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)] transition-all duration-500 ${
+              className={`w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.67rem)] max-w-md transition-all duration-500 ${
                 mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
               style={{ transitionDelay: `${index * 50}ms` }}
