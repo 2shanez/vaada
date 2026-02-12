@@ -138,10 +138,18 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   useEffect(() => {
     if (isClaimSuccess) {
       setShowClaimCelebration(true)
-      refetchParticipant()
-      // Auto-hide after 5 seconds
-      const timeout = setTimeout(() => setShowClaimCelebration(false), 5000)
-      return () => clearTimeout(timeout)
+      // Refetch participant data and wait for it before hiding celebration
+      const hideAfterRefetch = async () => {
+        await refetchParticipant()
+        // Small extra delay to ensure UI state is updated
+        await new Promise(resolve => setTimeout(resolve, 500))
+        setShowClaimCelebration(false)
+      }
+      // Start hide timer but ensure minimum 3s celebration
+      const minDelay = setTimeout(() => {
+        hideAfterRefetch()
+      }, 3000)
+      return () => clearTimeout(minDelay)
     }
   }, [isClaimSuccess, refetchParticipant])
 
