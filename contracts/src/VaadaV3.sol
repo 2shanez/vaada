@@ -4,12 +4,26 @@ pragma solidity ^0.8.20;
 import {IERC20} from "forge-std/interfaces/IERC20.sol";
 
 /**
+ * @title IERC4626 - Minimal interface for ERC4626 vaults (Morpho MetaMorpho)
+ */
+interface IERC4626 {
+    function deposit(uint256 assets, address receiver) external returns (uint256 shares);
+    function withdraw(uint256 assets, address receiver, address owner) external returns (uint256 shares);
+    function redeem(uint256 shares, address receiver, address owner) external returns (uint256 assets);
+    function maxWithdraw(address owner) external view returns (uint256);
+    function convertToAssets(uint256 shares) external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function asset() external view returns (address);
+}
+
+/**
  * @title VaadaV3
  * @notice Shared goal pools with entry windows and stake-weighted payouts
  * @dev Entry Phase → Competition Phase → Settlement
  *      - Entry phase: users can join (and start competing)
  *      - Competition phase: no new entries, just complete the goal
  *      - Settlement: verify results, distribute payouts
+ *      - Yield: Stakes earn yield via Morpho (Gauntlet USDC Prime vault)
  */
 contract VaadaV3 {
     // ============ Reentrancy Guard ============
@@ -38,6 +52,7 @@ contract VaadaV3 {
     function paused() public view returns (bool) {
         return _paused;
     }
+    
     // ============ Enums ============
     
     // Goal types determine which tracker and metric to use
@@ -74,12 +89,16 @@ contract VaadaV3 {
     // ============ State ============
     
     IERC20 public immutable usdc;
+    IERC4626 public immutable vault;  // Morpho vault (Gauntlet USDC Prime)
     address public oracle;
     address public owner;
     address public treasury;
     
     uint256 public goalCount;
     uint256 public constant CLAIM_WINDOW = 30 days;
+    
+    // Track total USDC owed to participants (principal only, no yield)
+    uint256 public totalActiveStakes;
     
     // Goal ID => Goal
     mapping(uint256 => Goal) public goals;
@@ -165,13 +184,19 @@ contract VaadaV3 {
         uint256 deadline
     );
     
+    event YieldClaimed(uint256 amount, address treasury);
+    
+    event DepositedToVault(uint256 assets, uint256 shares);
+    
+    event WithdrawnFromVault(uint256 assets, uint256 shares);
+    
     // ============ Errors ============
     
     error NotOwner();
     error NotOracle();
     error GoalNotActive();
     error GoalNotSettled();
-    error EntryClosed();           // NEW: Entry phase has ended
+    error EntryClosed();           // Entry phase has ended
     error AlreadyJoined();
     error StakeTooLow();
     error StakeTooHigh();
@@ -183,6 +208,8 @@ contract VaadaV3 {
     error DidNotSucceed();
     error ClaimWindowOpen();
     error AlreadySwept();
+    error NoYieldAvailable();
+    error WithdrawFailed();
     
     // ============ Modifiers ============
     
@@ -198,11 +225,15 @@ contract VaadaV3 {
     
     // ============ Constructor ============
     
-    constructor(address _usdc, address _oracle, address _treasury) {
+    constructor(address _usdc, address _vault, address _oracle, address _treasury) {
         usdc = IERC20(_usdc);
+        vault = IERC4626(_vault);
         oracle = _oracle;
         treasury = _treasury;
         owner = msg.sender;
+        
+        // Approve vault to spend USDC (max approval for gas efficiency)
+        IERC20(_usdc).approve(_vault, type(uint256).max);
     }
     
     // ============ User Functions ============
@@ -221,8 +252,15 @@ contract VaadaV3 {
         if (stake < goal.minStake) revert StakeTooLow();
         if (stake > goal.maxStake) revert StakeTooHigh();
         
-        // Transfer USDC
+        // Transfer USDC from user to this contract
         require(usdc.transferFrom(msg.sender, address(this), stake), "Transfer failed");
+        
+        // Deposit USDC to Morpho vault for yield
+        uint256 shares = vault.deposit(stake, address(this));
+        emit DepositedToVault(stake, shares);
+        
+        // Track active stakes
+        totalActiveStakes += stake;
         
         // Record participation
         participants[goalId][msg.sender] = Participant({
@@ -267,7 +305,12 @@ contract VaadaV3 {
         uint256 totalPayout = p.stake + bonus;
         totalClaimed[goalId] += totalPayout;
         
-        require(usdc.transfer(msg.sender, totalPayout), "Payout failed");
+        // Reduce active stakes tracking
+        totalActiveStakes -= totalPayout;
+        
+        // Withdraw from Morpho vault
+        uint256 shares = vault.withdraw(totalPayout, msg.sender, address(this));
+        emit WithdrawnFromVault(totalPayout, shares);
         
         emit PayoutClaimed(goalId, msg.sender, p.stake, bonus, totalPayout);
     }
@@ -411,7 +454,11 @@ contract VaadaV3 {
             Participant storage p = participants[goalId][addrs[i]];
             if (p.stake > 0 && !p.claimed) {
                 p.claimed = true;
-                usdc.transfer(p.user, p.stake);
+                totalActiveStakes -= p.stake;
+                
+                // Withdraw from vault and send to user
+                uint256 shares = vault.withdraw(p.stake, p.user, address(this));
+                emit WithdrawnFromVault(p.stake, shares);
             }
         }
         
@@ -495,9 +542,6 @@ contract VaadaV3 {
         swept[goalId] = true;
         
         // Calculate unclaimed amount
-        // Total pool = totalStaked = winnerStakes + loserPool
-        // Expected claims = totalWinnerStakes + loserPool (if winners exist)
-        // If no winners: entire pool is unclaimed
         uint256 unclaimed;
         if (totalWinnerStakes[goalId] == 0) {
             // No winners - sweep entire pool
@@ -509,9 +553,34 @@ contract VaadaV3 {
         }
         
         if (unclaimed > 0) {
-            require(usdc.transfer(treasury, unclaimed), "Sweep failed");
+            totalActiveStakes -= unclaimed;
+            
+            // Withdraw from vault to treasury
+            uint256 shares = vault.withdraw(unclaimed, treasury, address(this));
+            emit WithdrawnFromVault(unclaimed, shares);
             emit UnclaimedSwept(goalId, unclaimed, treasury);
         }
+    }
+    
+    /**
+     * @notice Claim accrued yield from Morpho vault
+     * @dev Yield = vault balance (in assets) - totalActiveStakes
+     *      Can be called anytime by owner to harvest yield
+     */
+    function claimYield() external onlyOwner {
+        // Get total value of our vault shares in USDC
+        uint256 shares = vault.balanceOf(address(this));
+        uint256 totalValue = vault.convertToAssets(shares);
+        
+        // Yield = total value - what we owe participants
+        if (totalValue <= totalActiveStakes) revert NoYieldAvailable();
+        
+        uint256 yieldAmount = totalValue - totalActiveStakes;
+        
+        // Withdraw yield to treasury
+        uint256 withdrawnShares = vault.withdraw(yieldAmount, treasury, address(this));
+        emit WithdrawnFromVault(yieldAmount, withdrawnShares);
+        emit YieldClaimed(yieldAmount, treasury);
     }
     
     // ============ View Functions ============
@@ -575,5 +644,24 @@ contract VaadaV3 {
         if (block.timestamp > goal.deadline) return 2;  // Awaiting settlement
         if (block.timestamp > goal.entryDeadline) return 1;  // Competition (entry closed)
         return 0;  // Entry open
+    }
+    
+    /**
+     * @notice Get current yield available to claim
+     */
+    function getAvailableYield() external view returns (uint256) {
+        uint256 shares = vault.balanceOf(address(this));
+        uint256 totalValue = vault.convertToAssets(shares);
+        
+        if (totalValue <= totalActiveStakes) return 0;
+        return totalValue - totalActiveStakes;
+    }
+    
+    /**
+     * @notice Get total value in vault (principal + yield)
+     */
+    function getTotalVaultValue() external view returns (uint256) {
+        uint256 shares = vault.balanceOf(address(this));
+        return vault.convertToAssets(shares);
     }
 }
