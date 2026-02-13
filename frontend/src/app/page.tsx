@@ -209,7 +209,7 @@ export default function Home() {
           </div>
           
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
-            The Commitment{' '}
+            The Promise{' '}
             <span className="text-[#2EE59D] relative">
               Market
               <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#2EE59D]/20" viewBox="0 0 200 12" preserveAspectRatio="none">

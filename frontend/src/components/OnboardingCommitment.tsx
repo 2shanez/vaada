@@ -645,7 +645,7 @@ export function LiveChallengeCard() {
             🚀
           </div>
           <div className="min-w-0">
-            <h3 className="font-bold text-sm leading-tight">24-Hour Commitment</h3>
+            <h3 className="font-bold text-sm leading-tight">24-Hour Promise</h3>
             <p className="text-xs text-[var(--text-secondary)]">Join a vaada within 24h or lose your $5</p>
             <p className="text-[10px] text-[var(--text-secondary)]/70">Your $5 returns after 24h verification</p>
           </div>
