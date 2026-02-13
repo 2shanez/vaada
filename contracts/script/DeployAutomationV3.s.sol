@@ -7,7 +7,7 @@ import "../src/GoalStakeAutomationV3.sol";
 contract DeployAutomationV3 is Script {
     function run() external {
         // Base Mainnet Chainlink config
-        address router = 0xf9b8fc078197181c841c296c876945aaa425b278; // Functions Router (Base mainnet)
+        address router = 0xf9B8fc078197181C841c296C876945aaa425B278; // Functions Router (Base mainnet)
         address vaadaV3 = 0x38D638CA7DC8905177507CfC74Aedc96f7A9e3f0; // VaadaV3 (just deployed)
         bytes32 donId = 0x66756e2d626173652d6d61696e6e65742d310000000000000000000000000000; // fun-base-mainnet-1
         uint64 subscriptionId = 132; // Chainlink Functions subscription
