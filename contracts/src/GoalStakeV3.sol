@@ -127,6 +127,18 @@ contract GoalStakeV3 {
     
     event TreasuryUpdated(address oldTreasury, address newTreasury);
     
+    event GoalCancelled(uint256 indexed goalId, uint256 participantsRefunded);
+    
+    event GoalUpdated(
+        uint256 indexed goalId,
+        string name,
+        uint256 target,
+        uint256 minStake,
+        uint256 maxStake,
+        uint256 entryDeadline,
+        uint256 deadline
+    );
+    
     // ============ Errors ============
     
     error NotOwner();
@@ -354,6 +366,63 @@ contract GoalStakeV3 {
      */
     function deactivateGoal(uint256 goalId) external onlyOwner {
         goals[goalId].active = false;
+    }
+    
+    /**
+     * @notice Cancel a goal and refund all participants
+     * @dev Can only cancel goals that haven't been settled
+     */
+    function cancelGoalWithRefund(uint256 goalId) external onlyOwner {
+        Goal storage goal = goals[goalId];
+        require(!goal.settled, "Already settled");
+        
+        goal.active = false;
+        goal.settled = true;  // Mark as settled to prevent future actions
+        
+        // Refund all participants
+        address[] storage addrs = goalParticipants[goalId];
+        for (uint256 i = 0; i < addrs.length; i++) {
+            Participant storage p = participants[goalId][addrs[i]];
+            if (p.stake > 0 && !p.claimed) {
+                p.claimed = true;
+                usdc.transfer(p.user, p.stake);
+            }
+        }
+        
+        emit GoalCancelled(goalId, addrs.length);
+    }
+    
+    /**
+     * @notice Update goal parameters (only if no one has joined yet)
+     * @dev Cannot change goalType after creation
+     */
+    function updateGoal(
+        uint256 goalId,
+        string calldata name,
+        uint256 target,
+        uint256 minStake,
+        uint256 maxStake,
+        uint256 startTime,
+        uint256 entryDeadline,
+        uint256 deadline
+    ) external onlyOwner {
+        Goal storage goal = goals[goalId];
+        require(goal.participantCount == 0, "Has participants");
+        require(!goal.settled, "Already settled");
+        require(deadline > startTime, "Invalid: deadline <= startTime");
+        require(entryDeadline >= startTime, "Invalid: entryDeadline < startTime");
+        require(entryDeadline <= deadline, "Invalid: entryDeadline > deadline");
+        require(maxStake >= minStake, "Invalid: maxStake < minStake");
+        
+        goal.name = name;
+        goal.target = target;
+        goal.minStake = minStake;
+        goal.maxStake = maxStake;
+        goal.startTime = startTime;
+        goal.entryDeadline = entryDeadline;
+        goal.deadline = deadline;
+        
+        emit GoalUpdated(goalId, name, target, minStake, maxStake, entryDeadline, deadline);
     }
     
     function setOracle(address _oracle) external onlyOwner {
