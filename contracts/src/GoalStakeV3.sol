@@ -50,8 +50,10 @@ contract GoalStakeV3 {
     IERC20 public immutable usdc;
     address public oracle;
     address public owner;
+    address public treasury;
     
     uint256 public goalCount;
+    uint256 public constant CLAIM_WINDOW = 30 days;
     
     // Goal ID => Goal
     mapping(uint256 => Goal) public goals;
@@ -71,6 +73,8 @@ contract GoalStakeV3 {
     // Goal ID => settlement data (calculated once during settle)
     mapping(uint256 => uint256) public totalWinnerStakes;
     mapping(uint256 => uint256) public loserPool;
+    mapping(uint256 => uint256) public totalClaimed;  // Track claimed amounts per goal
+    mapping(uint256 => bool) public swept;  // Has unclaimed funds been swept?
     
     // ============ Events ============
     
@@ -115,6 +119,14 @@ contract GoalStakeV3 {
         uint256 totalPayout
     );
     
+    event UnclaimedSwept(
+        uint256 indexed goalId,
+        uint256 amount,
+        address treasury
+    );
+    
+    event TreasuryUpdated(address oldTreasury, address newTreasury);
+    
     // ============ Errors ============
     
     error NotOwner();
@@ -131,6 +143,8 @@ contract GoalStakeV3 {
     error NotParticipant();
     error NotAllVerified();
     error DidNotSucceed();
+    error ClaimWindowOpen();
+    error AlreadySwept();
     
     // ============ Modifiers ============
     
@@ -146,9 +160,10 @@ contract GoalStakeV3 {
     
     // ============ Constructor ============
     
-    constructor(address _usdc, address _oracle) {
+    constructor(address _usdc, address _oracle, address _treasury) {
         usdc = IERC20(_usdc);
         oracle = _oracle;
+        treasury = _treasury;
         owner = msg.sender;
     }
     
@@ -212,6 +227,7 @@ contract GoalStakeV3 {
         }
         
         uint256 totalPayout = p.stake + bonus;
+        totalClaimed[goalId] += totalPayout;
         
         require(usdc.transfer(msg.sender, totalPayout), "Payout failed");
         
@@ -344,8 +360,47 @@ contract GoalStakeV3 {
         oracle = _oracle;
     }
     
+    function setTreasury(address _treasury) external onlyOwner {
+        emit TreasuryUpdated(treasury, _treasury);
+        treasury = _treasury;
+    }
+    
     function transferOwnership(address newOwner) external onlyOwner {
         owner = newOwner;
+    }
+    
+    /**
+     * @notice Sweep unclaimed funds after claim window expires
+     * @dev Can only be called 30 days after goal deadline
+     *      Sweeps: unclaimed winner payouts + entire loser pool if no winners
+     */
+    function sweepUnclaimedFunds(uint256 goalId) external onlyOwner {
+        Goal storage goal = goals[goalId];
+        
+        if (!goal.settled) revert GoalNotSettled();
+        if (block.timestamp < goal.deadline + CLAIM_WINDOW) revert ClaimWindowOpen();
+        if (swept[goalId]) revert AlreadySwept();
+        
+        swept[goalId] = true;
+        
+        // Calculate unclaimed amount
+        // Total pool = totalStaked = winnerStakes + loserPool
+        // Expected claims = totalWinnerStakes + loserPool (if winners exist)
+        // If no winners: entire pool is unclaimed
+        uint256 unclaimed;
+        if (totalWinnerStakes[goalId] == 0) {
+            // No winners - sweep entire pool
+            unclaimed = goal.totalStaked;
+        } else {
+            // Some winners - sweep unclaimed portion
+            uint256 expectedTotal = totalWinnerStakes[goalId] + loserPool[goalId];
+            unclaimed = expectedTotal - totalClaimed[goalId];
+        }
+        
+        if (unclaimed > 0) {
+            require(usdc.transfer(treasury, unclaimed), "Sweep failed");
+            emit UnclaimedSwept(goalId, unclaimed, treasury);
+        }
     }
     
     // ============ View Functions ============
