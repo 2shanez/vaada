@@ -487,6 +487,7 @@ export function LiveChallengeCard() {
   const { address } = useAccount()
   const contracts = useContracts()
   const [timeLeft, setTimeLeft] = useState('')
+  const [dismissed, setDismissed] = useState(false)
 
   // Check if contract is deployed
   const isContractDeployed = contracts.newUserChallenge !== '0x0000000000000000000000000000000000000000'
@@ -517,6 +518,38 @@ export function LiveChallengeCard() {
     query: { enabled: !!address && !!hasJoined && isContractDeployed },
   })
 
+  // Parse challenge data
+  // Structure: [joinTime, deadline, hasJoinedVaada, claimed, forfeited]
+  const challengeData = challenge as [bigint, bigint, boolean, boolean, boolean] | undefined
+  const deadline = challengeData ? Number(challengeData[1]) * 1000 : 0
+  const hasJoinedVaada = challengeData ? challengeData[2] : false
+  const claimed = challengeData ? challengeData[3] : false
+  const forfeited = challengeData ? challengeData[4] : false
+  const isExpired = deadline > 0 && Date.now() > deadline
+  const isCompleted = hasJoinedVaada || claimed
+  const isFailed = isExpired && !isCompleted && !forfeited
+
+  // Check localStorage for dismissed state
+  useEffect(() => {
+    if (typeof window !== 'undefined' && address) {
+      const dismissKey = `vaada_challenge_dismissed_${address}`
+      if (localStorage.getItem(dismissKey)) {
+        setDismissed(true)
+      }
+    }
+  }, [address])
+
+  // Auto-dismiss after showing result for 5 seconds
+  useEffect(() => {
+    if (isExpired && hasJoined && address && !dismissed) {
+      const timer = setTimeout(() => {
+        localStorage.setItem(`vaada_challenge_dismissed_${address}`, 'true')
+        setDismissed(true)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [isExpired, hasJoined, address, dismissed])
+
   // Calculate time left for user's challenge
   useEffect(() => {
     if (!challenge) {
@@ -535,13 +568,11 @@ export function LiveChallengeCard() {
       return () => clearInterval(interval)
     } else {
       // User has a challenge, show their deadline
-      const challengeData = challenge as [bigint, bigint, boolean, boolean, boolean]
-      const deadline = Number(challengeData[1]) * 1000 // Convert to ms
       const updateTime = () => {
         const now = Date.now()
         const diff = deadline - now
         if (diff <= 0) {
-          setTimeLeft('Expired')
+          setTimeLeft('Ended')
           return
         }
         const hours = Math.floor(diff / (1000 * 60 * 60))
@@ -552,7 +583,7 @@ export function LiveChallengeCard() {
       const interval = setInterval(updateTime, 60000)
       return () => clearInterval(interval)
     }
-  }, [challenge])
+  }, [challenge, deadline])
 
   const handleJoin = () => {
     if (!authenticated) {
@@ -563,11 +594,59 @@ export function LiveChallengeCard() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const handleDismiss = () => {
+    if (address) {
+      localStorage.setItem(`vaada_challenge_dismissed_${address}`, 'true')
+    }
+    setDismissed(true)
+  }
+
   // Stats from contract or defaults
   const statsData = stats as [bigint, bigint, bigint, bigint] | undefined
   const totalChallenges = statsData ? Number(statsData[0]) : 0
   const totalWon = statsData ? Number(statsData[1]) : 0
   const pendingCount = statsData ? totalChallenges - totalWon - Number(statsData[2]) : 0
+
+  // Don't show if dismissed
+  if (dismissed) return null
+
+  // Show result state (expired challenge)
+  if (isExpired && hasJoined) {
+    return (
+      <div className={`rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto border ${
+        isCompleted 
+          ? 'bg-gradient-to-br from-[#2EE59D]/20 via-[#2EE59D]/10 to-transparent border-[#2EE59D]/50' 
+          : 'bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent border-red-500/30'
+      }`}>
+        <button
+          onClick={handleDismiss}
+          className="absolute top-2 right-2 p-1.5 text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
+          aria-label="Dismiss"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
+        <div className="text-center py-2">
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 ${
+            isCompleted ? 'bg-[#2EE59D]/20' : 'bg-red-500/20'
+          }`}>
+            <span className="text-2xl">{isCompleted ? '🎉' : '😢'}</span>
+          </div>
+          <h3 className="font-bold text-base mb-1">
+            {isCompleted ? 'Challenge Complete!' : 'Challenge Failed'}
+          </h3>
+          <p className="text-sm text-[var(--text-secondary)]">
+            {isCompleted 
+              ? 'You joined a vaada in time. Your $5 will be returned!' 
+              : 'You didn\'t join a vaada within 24h. $5 forfeited.'
+            }
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-gradient-to-br from-[#2EE59D]/10 via-[#2EE59D]/5 to-transparent border border-[#2EE59D]/30 rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto">
