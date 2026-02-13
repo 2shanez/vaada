@@ -4,14 +4,14 @@ pragma solidity ^0.8.20;
 import {IERC20} from "forge-std/interfaces/IERC20.sol";
 
 /**
- * @title GoalStakeV3
+ * @title VaadaV3
  * @notice Shared goal pools with entry windows and stake-weighted payouts
  * @dev Entry Phase → Competition Phase → Settlement
  *      - Entry phase: users can join (and start competing)
  *      - Competition phase: no new entries, just complete the goal
  *      - Settlement: verify results, distribute payouts
  */
-contract GoalStakeV3 {
+contract VaadaV3 {
     // ============ Enums ============
     
     // Goal types determine which tracker and metric to use
