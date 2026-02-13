@@ -27,13 +27,13 @@ interface IGoalStakeV3 {
     struct Participant {
         address user;
         uint256 stake;
-        uint256 actualMiles;
+        uint256 actualValue;
         bool verified;
         bool succeeded;
         bool claimed;
     }
     
-    function verifyParticipant(uint256 goalId, address user, uint256 actualMiles) external;
+    function verifyParticipant(uint256 goalId, address user, uint256 actualValue) external;
     function settleGoal(uint256 goalId) external;
     function getGoal(uint256 goalId) external view returns (Goal memory);
     function goalTypes(uint256 goalId) external view returns (GoalType);
@@ -80,7 +80,7 @@ contract GoalStakeAutomationV3 is FunctionsClient, AutomationCompatibleInterface
     
     event TokenStored(address indexed user);
     event VerificationRequested(uint256 indexed goalId, address indexed user, bytes32 requestId);
-    event VerificationFulfilled(uint256 indexed goalId, address indexed user, uint256 miles, bool success);
+    event VerificationFulfilled(uint256 indexed goalId, address indexed user, uint256 value, bool success);
     event VerificationFailed(uint256 indexed goalId, address indexed user, bytes error);
     event GoalSettled(uint256 indexed goalId);
     
@@ -264,21 +264,21 @@ contract GoalStakeAutomationV3 is FunctionsClient, AutomationCompatibleInterface
         pendingVerification[goalId][user] = false;
         delete pendingRequests[requestId];
         
-        uint256 actualMiles;
+        uint256 actualValue;
         
         if (err.length > 0) {
             // On error (e.g., expired token), verify with 0 miles so goal can settle
             emit VerificationFailed(goalId, user, err);
-            actualMiles = 0;
+            actualValue = 0;
         } else {
-            actualMiles = abi.decode(response, (uint256));
+            actualValue = abi.decode(response, (uint256));
         }
         
-        goalStake.verifyParticipant(goalId, user, actualMiles);
+        goalStake.verifyParticipant(goalId, user, actualValue);
         
         IGoalStakeV3.Participant memory p = goalStake.getParticipant(goalId, user);
         
-        emit VerificationFulfilled(goalId, user, actualMiles, p.succeeded);
+        emit VerificationFulfilled(goalId, user, actualValue, p.succeeded);
     }
     
     // ============ Admin Functions ============
@@ -309,10 +309,10 @@ contract GoalStakeAutomationV3 is FunctionsClient, AutomationCompatibleInterface
     
     // ============ Manual Functions (for testing) ============
     
-    function manualVerify(uint256 goalId, address user, uint256 actualMiles) external onlyOwner {
-        goalStake.verifyParticipant(goalId, user, actualMiles);
+    function manualVerify(uint256 goalId, address user, uint256 actualValue) external onlyOwner {
+        goalStake.verifyParticipant(goalId, user, actualValue);
         IGoalStakeV3.Participant memory p = goalStake.getParticipant(goalId, user);
-        emit VerificationFulfilled(goalId, user, actualMiles, p.succeeded);
+        emit VerificationFulfilled(goalId, user, actualValue, p.succeeded);
     }
     
     function manualSettle(uint256 goalId) external onlyOwner {

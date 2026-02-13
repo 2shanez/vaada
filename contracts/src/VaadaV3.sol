@@ -12,6 +12,32 @@ import {IERC20} from "forge-std/interfaces/IERC20.sol";
  *      - Settlement: verify results, distribute payouts
  */
 contract VaadaV3 {
+    // ============ Reentrancy Guard ============
+    uint256 private constant NOT_ENTERED = 1;
+    uint256 private constant ENTERED = 2;
+    uint256 private _reentrancyStatus = NOT_ENTERED;
+    
+    modifier nonReentrant() {
+        require(_reentrancyStatus != ENTERED, "ReentrancyGuard: reentrant call");
+        _reentrancyStatus = ENTERED;
+        _;
+        _reentrancyStatus = NOT_ENTERED;
+    }
+    
+    // ============ Pausable ============
+    bool private _paused;
+    
+    event Paused(address account);
+    event Unpaused(address account);
+    
+    modifier whenNotPaused() {
+        require(!_paused, "Pausable: paused");
+        _;
+    }
+    
+    function paused() public view returns (bool) {
+        return _paused;
+    }
     // ============ Enums ============
     
     // Goal types determine which tracker and metric to use
@@ -39,7 +65,7 @@ contract VaadaV3 {
     struct Participant {
         address user;
         uint256 stake;
-        uint256 actualMiles;      // Verified miles from oracle
+        uint256 actualValue;      // Verified value from oracle (miles or steps depending on goalType)
         bool verified;            // Has oracle reported?
         bool succeeded;           // Did they hit target?
         bool claimed;             // Have they claimed payout?
@@ -99,7 +125,7 @@ contract VaadaV3 {
     event ParticipantVerified(
         uint256 indexed goalId,
         address indexed user,
-        uint256 actualMiles,
+        uint256 actualValue,
         bool succeeded
     );
     
@@ -186,7 +212,7 @@ contract VaadaV3 {
      * @param goalId The goal to join
      * @param stake Amount of USDC to stake
      */
-    function joinGoal(uint256 goalId, uint256 stake) external {
+    function joinGoal(uint256 goalId, uint256 stake) external nonReentrant whenNotPaused {
         Goal storage goal = goals[goalId];
         
         if (!goal.active) revert GoalNotActive();
@@ -202,7 +228,7 @@ contract VaadaV3 {
         participants[goalId][msg.sender] = Participant({
             user: msg.sender,
             stake: stake,
-            actualMiles: 0,
+            actualValue: 0,
             verified: false,
             succeeded: false,
             claimed: false
@@ -221,7 +247,7 @@ contract VaadaV3 {
      * @notice Claim payout after goal is settled (winners only)
      * @param goalId The goal to claim from
      */
-    function claimPayout(uint256 goalId) external {
+    function claimPayout(uint256 goalId) external nonReentrant {
         Goal storage goal = goals[goalId];
         Participant storage p = participants[goalId][msg.sender];
         
@@ -249,15 +275,15 @@ contract VaadaV3 {
     // ============ Oracle Functions ============
     
     /**
-     * @notice Verify a participant's miles (called by oracle)
+     * @notice Verify a participant's result (called by oracle)
      * @param goalId The goal
      * @param user The participant
-     * @param actualMiles Miles verified from Strava
+     * @param actualValue Value verified from tracker (miles or steps depending on goalType)
      */
     function verifyParticipant(
         uint256 goalId,
         address user,
-        uint256 actualMiles
+        uint256 actualValue
     ) external onlyOracle {
         Goal storage goal = goals[goalId];
         Participant storage p = participants[goalId][user];
@@ -267,10 +293,10 @@ contract VaadaV3 {
         if (p.verified) revert AlreadyVerified();
         
         p.verified = true;
-        p.actualMiles = actualMiles;
-        p.succeeded = actualMiles >= goal.target;
+        p.actualValue = actualValue;
+        p.succeeded = actualValue >= goal.target;
         
-        emit ParticipantVerified(goalId, user, actualMiles, p.succeeded);
+        emit ParticipantVerified(goalId, user, actualValue, p.succeeded);
     }
     
     /**
@@ -436,6 +462,22 @@ contract VaadaV3 {
     
     function transferOwnership(address newOwner) external onlyOwner {
         owner = newOwner;
+    }
+    
+    /**
+     * @notice Pause the contract (emergency stop)
+     */
+    function pause() external onlyOwner {
+        _paused = true;
+        emit Paused(msg.sender);
+    }
+    
+    /**
+     * @notice Unpause the contract
+     */
+    function unpause() external onlyOwner {
+        _paused = false;
+        emit Unpaused(msg.sender);
     }
     
     /**
