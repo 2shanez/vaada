@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useReadContracts, useReadContract } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { parseUnits, formatUnits } from 'viem'
-import { baseSepolia } from 'wagmi/chains'
+import { base, baseSepolia } from 'wagmi/chains'
 import { isStravaConnected, getStravaAuthUrl } from '@/lib/strava'
 import { useContracts, useNetworkCheck, useUSDC, useGoalState, useGoalDetails, useParticipant, useStravaToken } from '@/lib/hooks'
 import { USDC_ABI, GOALSTAKE_ABI, AUTOMATION_ABI, NEW_USER_CHALLENGE_ABI, PHASE_LABELS, CATEGORY_STYLES, GoalPhase, type Goal } from '@/lib/abis'
@@ -192,9 +192,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const handleStoreToken = async () => {
     if (isWrongNetwork) {
       try {
-        await switchChain({ chainId: baseSepolia.id })
+        await switchChain({ chainId: base.id })
       } catch {
-        alert('Please switch to Base Sepolia network in your wallet')
+        alert('Please switch to Base network in your wallet')
       }
       return
     }

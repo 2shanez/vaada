@@ -33,8 +33,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
               createOnLogin: 'users-without-wallets',
             },
           },
-          defaultChain: baseSepolia,
-          supportedChains: [baseSepolia, base],
+          defaultChain: base,
+          supportedChains: [base, baseSepolia],
         }}
       >
         <QueryClientProvider client={queryClient}>

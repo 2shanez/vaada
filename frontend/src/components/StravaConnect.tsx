@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain, useChainId } from 'wagmi'
-import { baseSepolia } from 'wagmi/chains'
+import { base, baseSepolia } from 'wagmi/chains'
 import { CONTRACTS } from '@/lib/wagmi'
 
 const STRAVA_CLIENT_ID = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
@@ -40,14 +40,14 @@ export function StravaConnect() {
   const [isStoring, setIsStoring] = useState(false)
   const [tokenNeedsRefresh, setTokenNeedsRefresh] = useState(false)
 
-  const isWrongNetwork = chainId !== baseSepolia.id
+  const isWrongNetwork = chainId !== base.id
 
   const { writeContract, data: hash, error: writeError } = useWriteContract()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   // Check if user already has token stored on-chain
   const { data: hasTokenOnChain, refetch: refetchHasToken } = useReadContract({
-    address: CONTRACTS[baseSepolia.id].oracle,
+    address: CONTRACTS[base.id].oracle,
     abi: automationAbi,
     functionName: 'hasToken',
     args: address ? [address] : undefined,
@@ -150,7 +150,7 @@ export function StravaConnect() {
 
       // Store on-chain
       writeContract({
-        address: CONTRACTS[baseSepolia.id].oracle,
+        address: CONTRACTS[base.id].oracle,
         abi: automationAbi,
         functionName: 'storeToken',
         args: [token],
@@ -171,7 +171,7 @@ export function StravaConnect() {
 
       // Update on-chain
       writeContract({
-        address: CONTRACTS[baseSepolia.id].oracle,
+        address: CONTRACTS[base.id].oracle,
         abi: automationAbi,
         functionName: 'storeToken',
         args: [token],
@@ -194,13 +194,13 @@ export function StravaConnect() {
       if (isWrongNetwork) {
         return (
           <button
-            onClick={() => switchChain({ chainId: baseSepolia.id })}
+            onClick={() => switchChain({ chainId: base.id })}
             disabled={isSwitching}
             className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-sm font-medium hover:bg-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            title="Switch to Base Sepolia to refresh token"
+            title="Switch to Base to refresh token"
           >
             <span className="text-yellow-600">
-              {isSwitching ? 'Switching...' : '⚠️ Switch to Base Sepolia'}
+              {isSwitching ? 'Switching...' : '⚠️ Switch to Base'}
             </span>
           </button>
         )
@@ -247,13 +247,13 @@ export function StravaConnect() {
     if (isWrongNetwork) {
       return (
         <button
-          onClick={() => switchChain({ chainId: baseSepolia.id })}
+          onClick={() => switchChain({ chainId: base.id })}
           disabled={isSwitching}
           className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-sm font-medium hover:bg-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          title="Switch to Base Sepolia to continue"
+          title="Switch to Base to continue"
         >
           <span className="text-yellow-600">
-            {isSwitching ? 'Switching...' : '⚠️ Switch to Base Sepolia'}
+            {isSwitching ? 'Switching...' : '⚠️ Switch to Base'}
           </span>
         </button>
       )
