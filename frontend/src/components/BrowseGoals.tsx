@@ -137,28 +137,7 @@ const FEATURED_GOALS: Goal[] = [
     domain: 'Fitness',
     subdomain: 'Steps',
   },
-  // ═══════════════════════════════════════════
-  // GOAL 19 - Daily 3 Miles (Strava)
-  // Entry: 1 hour, Competition ends: ~10pm UTC Feb 13
-  // Created: 2026-02-12 22:03 UTC
-  // ═══════════════════════════════════════════
-  {
-    id: 'strava-3-miles',
-    onChainId: 19,
-    title: 'Daily 3 Miles',
-    description: 'Run or walk 3 miles today on Strava',
-    emoji: '🏃',
-    targetMiles: 3,
-    targetUnit: 'miles',
-    durationDays: 1,
-    minStake: 5,
-    maxStake: 50,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Daily',
-    domain: 'Fitness',
-    subdomain: 'Running',
-  },
+  // Goal 19 (Strava) removed - settle after deadline passes (~10pm UTC Feb 13)
 ]
 
 const COMING_SOON = [
