@@ -3,7 +3,7 @@
 import { useAccount, useReadContract, useChainId } from 'wagmi'
 import { formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
-import { baseSepolia } from 'wagmi/chains'
+import { base } from 'wagmi/chains'
 
 // ABI for reading challenges
 const GOALSTAKE_ABI = [
@@ -56,7 +56,7 @@ interface Challenge {
 export function MyChallenges() {
   const { address } = useAccount()
   const chainId = useChainId()
-  const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
+  const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[base.id]
 
   // Get user's challenge IDs
   const { data: challengeIds, isLoading: isLoadingIds } = useReadContract({
@@ -137,7 +137,7 @@ function ChallengeCardWrapper({
   contracts 
 }: { 
   challengeId: bigint
-  contracts: typeof CONTRACTS[typeof baseSepolia.id]
+  contracts: typeof CONTRACTS[typeof base.id]
 }) {
   const { data: challenge, isLoading } = useReadContract({
     address: contracts.goalStake,

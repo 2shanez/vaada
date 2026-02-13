@@ -5,7 +5,7 @@ import { PrivyProvider } from '@privy-io/react-auth'
 import { WagmiProvider } from '@privy-io/wagmi'
 import { privyConfig } from '@/lib/wagmi'
 import { useState, useEffect } from 'react'
-import { baseSepolia, base } from 'viem/chains'
+import { base } from 'viem/chains'
 import { PasswordGate } from '@/components/PasswordGate'
 import { initAnalytics } from '@/lib/analytics'
 
@@ -34,7 +34,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             },
           },
           defaultChain: base,
-          supportedChains: [base, baseSepolia],
+          supportedChains: [base],
         }}
       >
         <QueryClientProvider client={queryClient}>

@@ -5,7 +5,7 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadCont
 import { parseUnits, formatUnits } from 'viem'
 import { getStravaAuthUrl, isStravaConnected, getStravaAthleteId } from '@/lib/strava'
 import { CONTRACTS } from '@/lib/wagmi'
-import { baseSepolia } from 'wagmi/chains'
+import { base } from 'wagmi/chains'
 
 // ABIs (minimal)
 const USDC_ABI = [
@@ -53,7 +53,7 @@ const GOALSTAKE_ABI = [
 export function CreateChallenge() {
   const { address } = useAccount()
   const chainId = useChainId()
-  const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
+  const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[base.id]
   
   const [targetMiles, setTargetMiles] = useState('20')
   const [stakeAmount, setStakeAmount] = useState('10')

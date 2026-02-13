@@ -3,7 +3,7 @@
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useChainId } from 'wagmi'
 import { formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
-import { baseSepolia } from 'wagmi/chains'
+import { base } from 'wagmi/chains'
 import Link from 'next/link'
 
 // V2 ABI
@@ -101,7 +101,7 @@ interface Participant {
 export function MyGoals() {
   const { address } = useAccount()
   const chainId = useChainId()
-  const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
+  const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[base.id]
 
   const { data: goalIds, isLoading } = useReadContract({
     address: contracts.goalStake,
@@ -163,7 +163,7 @@ function GoalCard({
   userAddress,
 }: { 
   goalId: bigint
-  contracts: typeof CONTRACTS[typeof baseSepolia.id]
+  contracts: typeof CONTRACTS[typeof base.id]
   userAddress: `0x${string}`
 }) {
   const { data: goal, isLoading: isLoadingGoal } = useReadContract({

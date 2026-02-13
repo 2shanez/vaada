@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
 import { useAccount, useBalance, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi'
-import { baseSepolia } from 'wagmi/chains'
+import { base } from 'wagmi/chains'
 import { formatUnits } from 'viem'
 import { NEW_USER_CHALLENGE_ABI, USDC_ABI } from '@/lib/abis'
 import { useContracts } from '@/lib/hooks'
-import { FaucetButton } from './FaucetButton'
+// Faucet removed - mainnet only
 
 // Check if this is a first-time user (never completed onboarding)
 export function isFirstTimeUser(): boolean {
@@ -24,9 +24,11 @@ interface OnboardingCommitmentProps {
   onComplete: () => void
 }
 
-const FAUCETS = {
-  eth: 'https://portal.cdp.coinbase.com/products/faucet',
-  usdc: 'https://faucet.circle.com',
+// Links to get mainnet USDC/ETH
+const FUND_LINKS = {
+  eth: 'https://www.coinbase.com/price/ethereum', // Buy ETH on Coinbase
+  usdc: 'https://www.coinbase.com/price/usdc', // Buy USDC on Coinbase
+  bridge: 'https://superbridge.app/base', // Bridge to Base
 }
 
 // Modal shown to first-time users after sign-in
@@ -41,7 +43,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
   const [showFundModal, setShowFundModal] = useState(false)
   const [copied, setCopied] = useState(false)
   
-  const isWrongNetwork = chainId !== baseSepolia.id
+  const isWrongNetwork = chainId !== base.id
 
   // Check if contract is deployed (address is not zero)
   const isContractDeployed = contracts.newUserChallenge !== '0x0000000000000000000000000000000000000000'
@@ -327,7 +329,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               {/* Wrong Network Warning */}
               {isWrongNetwork && (
                 <button
-                  onClick={() => switchChain({ chainId: baseSepolia.id })}
+                  onClick={() => switchChain({ chainId: base.id })}
                   disabled={isSwitching}
                   className="w-full py-3 mb-3 font-bold rounded-xl bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50 transition-colors"
                 >
@@ -337,7 +339,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                       Switching...
                     </span>
                   ) : (
-                    '⚠️ Switch to Base Sepolia'
+                    '⚠️ Switch to Base'
                   )}
                 </button>
               )}
@@ -387,35 +389,21 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     onClick={() => setShowFundModal(false)}
                   />
                   <div className="relative bg-[var(--background)] rounded-t-2xl p-4 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:max-w-sm sm:w-full sm:mx-4 sm:pb-4 animate-in slide-in-from-bottom duration-200">
-                    <p className="text-base font-semibold mb-4 text-center">Get Testnet Tokens</p>
+                    <p className="text-base font-semibold mb-4 text-center">Get USDC on Base</p>
                     
-                    {/* Auto-faucet button */}
-                    <FaucetButton 
-                      onSuccess={() => {
-                        // Close modal after short delay so user sees success
-                        setTimeout(() => setShowFundModal(false), 2000)
-                      }}
-                      className="mb-4"
-                    />
-                    
-                    <div className="relative my-4">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-[var(--border)]" />
-                      </div>
-                      <div className="relative flex justify-center text-xs">
-                        <span className="px-2 bg-[var(--background)] text-[var(--text-secondary)]">or use external faucets</span>
-                      </div>
-                    </div>
+                    <p className="text-sm text-[var(--text-secondary)] mb-4 text-center">
+                      You need USDC on Base to stake. Here are some ways to get it:
+                    </p>
                     
                     <a
-                      href={FAUCETS.usdc}
+                      href={FUND_LINKS.usdc}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-2 active:scale-[0.98] transition-transform text-sm"
                     >
                       <span className="text-xl">💵</span>
                       <div>
-                        <p className="font-medium">Circle USDC Faucet</p>
+                        <p className="font-medium">Buy USDC on Coinbase</p>
                       </div>
                       <svg className="w-4 h-4 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -423,14 +411,14 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     </a>
                     
                     <a
-                      href={FAUCETS.eth}
+                      href={FUND_LINKS.eth}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-2 active:scale-[0.98] transition-transform text-sm"
                     >
                       <span className="text-xl">⛽</span>
                       <div>
-                        <p className="font-medium">Coinbase ETH Faucet</p>
+                        <p className="font-medium">Buy ETH on Coinbase</p>
                       </div>
                       <svg className="w-4 h-4 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

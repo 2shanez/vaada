@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain, useChainId } from 'wagmi'
-import { base, baseSepolia } from 'wagmi/chains'
+import { base } from 'wagmi/chains'
 import { CONTRACTS } from '@/lib/wagmi'
 
 const STRAVA_CLIENT_ID = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID

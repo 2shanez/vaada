@@ -35,13 +35,12 @@ export function DevResetButton() {
     }
   }
 
-  // Show in dev mode, with ?dev=1 param, or on testnet (vaada.io while on Sepolia)
-  // Hide in production mainnet by checking for mainnet chain or explicit prod flag
+  // Show only in dev mode, with ?dev=1 param, or on localhost
+  // Hidden in production (vaada.io is now mainnet)
   const showDevTools = process.env.NODE_ENV === 'development' || 
     (typeof window !== 'undefined' && (
       window.location.search.includes('dev=1') ||
-      window.location.hostname === 'localhost' ||
-      window.location.hostname.includes('vaada.io') // Show on testnet deployment
+      window.location.hostname === 'localhost'
     ))
 
   if (!showDevTools) return null

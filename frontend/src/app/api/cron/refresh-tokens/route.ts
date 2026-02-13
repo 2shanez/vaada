@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createPublicClient, createWalletClient, http } from 'viem'
-import { baseSepolia } from 'viem/chains'
+import { base } from 'viem/chains'
 import { privateKeyToAccount } from 'viem/accounts'
 
 // This endpoint is called by a cron job (e.g., Vercel Cron) to refresh expiring tokens
 // It requires a server-side private key to sign storeToken transactions
 
-const AUTOMATION_ADDRESS = '0xB10fCE97fc6eE84ff7772Bc44A651Dd076F7180D' as const
+const AUTOMATION_ADDRESS = '0xA6BcEcA41fCF743324a864F47dd03F0D3806341D' as const // Mainnet AutomationV3
 
 const automationAbi = [
   {

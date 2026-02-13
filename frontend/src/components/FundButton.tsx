@@ -4,9 +4,10 @@ import { useState, useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useAccount } from 'wagmi'
 
-const FAUCETS = {
-  eth: 'https://portal.cdp.coinbase.com/products/faucet',
-  usdc: 'https://faucet.circle.com',
+// Links to get mainnet USDC/ETH
+const FUND_LINKS = {
+  eth: 'https://www.coinbase.com/price/ethereum',
+  usdc: 'https://www.coinbase.com/price/usdc',
 }
 
 export function FundWalletButton() {
@@ -64,10 +65,10 @@ export function FundWalletButton() {
           
           {/* Modal */}
           <div className="relative bg-[var(--background)] rounded-t-2xl p-4 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:max-w-sm sm:w-full sm:mx-4 sm:pb-4 animate-slide-up">
-            <p className="text-base font-semibold mb-4 text-center">Get Testnet Tokens</p>
+            <p className="text-base font-semibold mb-4 text-center">Get USDC on Base</p>
             
             <a
-              href={FAUCETS.usdc}
+              href={FUND_LINKS.usdc}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 px-4 py-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-2 active:scale-[0.98] transition-transform"
@@ -75,7 +76,7 @@ export function FundWalletButton() {
               <span className="text-2xl">💵</span>
               <div>
                 <p className="font-medium">Get USDC</p>
-                <p className="text-sm text-[var(--text-secondary)]">Circle Faucet</p>
+                <p className="text-sm text-[var(--text-secondary)]">Buy on Coinbase</p>
               </div>
               <svg className="w-5 h-5 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -83,7 +84,7 @@ export function FundWalletButton() {
             </a>
             
             <a
-              href={FAUCETS.eth}
+              href={FUND_LINKS.eth}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 px-4 py-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-2 active:scale-[0.98] transition-transform"
@@ -91,7 +92,7 @@ export function FundWalletButton() {
               <span className="text-2xl">⛽</span>
               <div>
                 <p className="font-medium">Get ETH (gas)</p>
-                <p className="text-sm text-[var(--text-secondary)]">Coinbase Faucet</p>
+                <p className="text-sm text-[var(--text-secondary)]">Buy on Coinbase</p>
               </div>
               <svg className="w-5 h-5 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

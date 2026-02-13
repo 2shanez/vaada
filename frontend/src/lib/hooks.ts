@@ -3,14 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useAccount, useReadContract, useReadContracts, useChainId } from 'wagmi'
 import { formatUnits } from 'viem'
-import { baseSepolia } from 'wagmi/chains'
+import { base } from 'wagmi/chains'
 import { CONTRACTS } from '@/lib/wagmi'
 import { USDC_ABI, GOALSTAKE_ABI, AUTOMATION_ABI, type Participant } from '@/lib/abis'
 
 // Get current contracts based on chain
 export function useContracts() {
   const chainId = useChainId()
-  return CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[baseSepolia.id]
+  return CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[base.id]
 }
 
 // Check if on wrong network
@@ -18,8 +18,8 @@ export function useNetworkCheck() {
   const chainId = useChainId()
   return {
     chainId,
-    isWrongNetwork: chainId !== baseSepolia.id,
-    targetChainId: baseSepolia.id,
+    isWrongNetwork: chainId !== base.id,
+    targetChainId: base.id,
   }
 }
 
