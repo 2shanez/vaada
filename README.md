@@ -4,7 +4,7 @@
 
 The promise market. Stake money on your goals, keep your promise → keep your stake + earn from those who don't.
 
-🔗 **Live:** [vaada.io](https://vaada.io) (Base Sepolia testnet)  
+🔗 **Live:** [vaada.io](https://vaada.io) (Base)  
 📖 **Docs:** [docs/ONBOARDING.md](docs/ONBOARDING.md)
 
 ---
