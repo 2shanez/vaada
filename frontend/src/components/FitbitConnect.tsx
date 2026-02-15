@@ -230,23 +230,66 @@ export function useFitbitConnection() {
   return { isConnected, isLoading }
 }
 
-// Header button for Fitbit - simple direct link
+// Header button for integrations with dropdown
 export function FitbitHeaderButton() {
   const { address } = useAccount()
   const { isConnected: fitbitConnected } = useFitbitConnection()
+  const [open, setOpen] = useState(false)
 
-  const authUrl = address 
+  const fitbitUrl = address 
     ? `/api/fitbit/auth?wallet=${address}`
     : '/api/fitbit/auth'
 
   return (
-    <a
-      href={authUrl}
-      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#00B0B9]/50 transition-all cursor-pointer"
-    >
-      <span>⌚</span>
-      <span className="hidden sm:inline">{fitbitConnected ? 'Fitbit ✓' : 'Connect Fitbit'}</span>
-      <span className="sm:hidden">{fitbitConnected ? '✓' : ''}</span>
-    </a>
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(prev => !prev)}
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all"
+      >
+        <span>🔗</span>
+        <span className="hidden sm:inline">Integrations</span>
+        <svg className={`w-3 h-3 ml-1 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-48 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-50 overflow-hidden">
+          {/* Fitbit */}
+          <a
+            href={fitbitUrl}
+            className="flex items-center justify-between px-4 py-3 hover:bg-[var(--surface)] transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <span>⌚</span>
+              <span className="text-sm">Fitbit</span>
+            </div>
+            {fitbitConnected ? (
+              <span className="text-xs text-[#00B0B9] font-medium">✓ Reconnect</span>
+            ) : (
+              <span className="text-xs text-[var(--text-secondary)]">Connect</span>
+            )}
+          </a>
+          
+          {/* Strava - coming soon */}
+          <div className="flex items-center justify-between px-4 py-3 text-[var(--text-secondary)] opacity-50 cursor-not-allowed">
+            <div className="flex items-center gap-2">
+              <span>🏃</span>
+              <span className="text-sm">Strava</span>
+            </div>
+            <span className="text-xs">Soon</span>
+          </div>
+        </div>
+      )}
+      
+      {/* Click outside to close */}
+      {open && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setOpen(false)}
+        />
+      )}
+    </div>
   )
 }
