@@ -982,14 +982,14 @@ function StakeSelector({ goal, stakeAmount, setStakeAmount, balanceNum }: {
   if (isFixedStake) {
     return (
       <div className="mb-4">
-        <div className="flex items-center justify-between bg-[var(--background)] border border-[#2EE59D]/30 rounded-xl px-4 py-3">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-[#2EE59D]">${goal.minStake}</span>
+        <div className="flex items-center justify-between bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-lg font-semibold text-[#2EE59D]">${goal.minStake}</span>
             <span className="text-sm text-[var(--text-secondary)]">stake</span>
           </div>
-          <div className="text-right">
-            <div className="text-xs text-[var(--text-secondary)]">Your balance</div>
-            <div className="text-sm font-medium">${balanceNum.toFixed(2)}</div>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-sm text-[var(--text-secondary)]">Balance:</span>
+            <span className="text-lg font-semibold">${balanceNum.toFixed(2)}</span>
           </div>
         </div>
       </div>
