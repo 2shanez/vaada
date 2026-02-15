@@ -303,13 +303,14 @@ export default function Home() {
                 Vaadas
               </a>
               {authenticated && <IntegrationsDropdown />}
-              {/* TEST: Form submission - harder to intercept */}
+              {/* TEST: External URL to rule out domain-specific issue */}
               {authenticated && (
-                <form action="https://www.vaada.io/api/fitbit/auth" method="GET" style={{ display: 'inline' }}>
-                  <button type="submit" className="px-2 py-1 bg-red-500 text-white text-xs rounded">
-                    TEST
-                  </button>
-                </form>
+                <a 
+                  href="https://www.google.com" 
+                  className="px-2 py-1 bg-red-500 text-white text-xs rounded"
+                >
+                  GOOGLE
+                </a>
               )}
               {authenticated && <ProfileNameButton />}
               {authenticated && <FundWalletButton />}
