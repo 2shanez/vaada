@@ -82,7 +82,7 @@ function IntegrationsDropdown() {
       
       {open && (
         <>
-          {/* Backdrop removed for testing - was blocking clicks */}
+          <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
           <div 
             className="fixed w-64 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
             style={{ top: menuPos.top, left: menuPos.left }}
@@ -96,13 +96,11 @@ function IntegrationsDropdown() {
                   <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full">Connected</span>
                 )}
               </div>
-              {/* Debug: show URL */}
-              <div className="text-[8px] text-gray-400 mb-1 break-all">{fitbitUrl}</div>
               {fitbitConnected ? (
-                <div className="flex gap-2 relative z-[200]" style={{ pointerEvents: 'auto' }}>
+                <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => { console.log('NAVIGATING TO:', fitbitUrl); window.location.href = fitbitUrl; }}
+                    onClick={() => { window.location.href = fitbitUrl; }}
                     className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
                   >
                     Reconnect
@@ -118,8 +116,8 @@ function IntegrationsDropdown() {
               ) : (
                 <button
                   type="button"
-                  onClick={() => { console.log('NAVIGATING TO:', fitbitUrl); window.location.href = fitbitUrl; }}
-                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer relative z-[200]"
+                  onClick={() => { window.location.href = fitbitUrl; }}
+                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
                 >
                   Connect Fitbit
                 </button>
@@ -303,15 +301,6 @@ export default function Home() {
                 Vaadas
               </a>
               {authenticated && <IntegrationsDropdown />}
-              {/* TEST: Try with trailing slash to bypass Next.js router */}
-              {authenticated && (
-                <a 
-                  href="/api/fitbit/auth/" 
-                  className="px-2 py-1 bg-red-500 text-white text-xs rounded"
-                >
-                  FITBIT
-                </a>
-              )}
               {authenticated && <ProfileNameButton />}
               {authenticated && <FundWalletButton />}
               <PrivyConnectButton />
