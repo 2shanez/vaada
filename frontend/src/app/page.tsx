@@ -46,8 +46,9 @@ function IntegrationsDropdown() {
   const handleToggle = () => {
     if (!open && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
-      const menuWidth = 256
+      const menuWidth = 224 // w-56
       let left = rect.left
+      // Ensure menu stays within viewport with padding
       if (left + menuWidth > window.innerWidth - 16) {
         left = window.innerWidth - menuWidth - 16
       }
@@ -84,27 +85,33 @@ function IntegrationsDropdown() {
         <>
           <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
           <div 
-            className="fixed w-64 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
-            style={{ top: menuPos.top, left: menuPos.left }}
+            className="fixed w-56 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101]"
+            style={{ top: menuPos.top, left: menuPos.left, maxWidth: 'calc(100vw - 32px)' }}
           >
             {/* Fitbit Section */}
             <div className="px-4 py-3 border-b border-[var(--border)]">
-              <div className="flex items-center gap-2 mb-2">
-                <span>⌚</span>
-                <span className="text-sm font-medium">Fitbit</span>
-                {fitbitConnected && (
-                  <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full">Connected</span>
-                )}
-              </div>
               {fitbitConnected ? (
-                <button
-                  type="button"
-                  onClick={() => handleDisconnect()}
-                  className="w-full text-center px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-red-500 transition-colors"
-                >
-                  Disconnect
-                </button>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span>⌚</span>
+                    <span className="text-sm font-medium">Fitbit</span>
+                    <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full">Connected</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDisconnect()}
+                    className="text-xs text-[var(--text-secondary)] hover:text-red-500 transition-colors"
+                  >
+                    Disconnect
+                  </button>
+                </div>
               ) : (
+                <div className="flex items-center gap-2 mb-2">
+                  <span>⌚</span>
+                  <span className="text-sm font-medium">Fitbit</span>
+                </div>
+              )}
+              {!fitbitConnected && (
                 <button
                   type="button"
                   onClick={() => { window.location.href = fitbitUrl; }}
