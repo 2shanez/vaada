@@ -1184,7 +1184,21 @@ function StatusIndicators({ stravaConnected, hasTokenOnChain, isConnected, subdo
   // Auto-select data source based on goal type if not already selected
   if (!dataSource) {
     if (isStepsGoal) {
-      // Steps goal - show Fitbit only
+      // Steps goal - check if already connected
+      if (fitbitConnected) {
+        // Already connected - show connected state
+        return (
+          <div className="mb-3 p-3 rounded-xl bg-[var(--surface)] border border-[var(--border)]">
+            <div className="p-2.5 rounded-xl bg-[#00B0B9]/10 border border-[#00B0B9]/20 flex items-center justify-center">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">⌚</span>
+                <p className="text-xs text-[#00B0B9] font-medium">✓ Fitbit Connected</p>
+              </div>
+            </div>
+          </div>
+        )
+      }
+      // Not connected - show connect button
       return (
         <div className="mb-3 p-3 rounded-xl bg-[var(--surface)] border border-[var(--border)]">
           <p className="text-xs text-[var(--text-secondary)] mb-2 text-center">Connect Fitbit to track steps</p>
