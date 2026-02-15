@@ -390,7 +390,7 @@ export default function Home() {
         
         <div className="max-w-3xl mx-auto text-center relative">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            Ready to bet on yourself?
+            Ready to become someone who keeps their promise?
           </h2>
           <p className="text-[var(--text-secondary)] mb-6 sm:mb-8 text-base sm:text-lg">
             Join the promise market.
