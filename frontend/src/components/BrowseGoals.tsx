@@ -119,9 +119,12 @@ const FEATURED_GOALS: Goal[] = [
     id: 'quick-test-2k-steps',
     onChainId: 2,
     title: 'Quick Test 2K Steps',
+    description: 'Walk 2,000 steps to win',
+    emoji: '👟',
+    category: 'Test',
     targetMiles: 2000,
     targetUnit: 'steps',
-    durationDays: 0, // Less than a day
+    durationDays: 0,
     minStake: 0.5,
     maxStake: 0.5,
     participants: 0,
