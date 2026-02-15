@@ -5,6 +5,7 @@ import { useReadContract } from 'wagmi'
 import { formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
 import { base } from 'wagmi/chains'
+import { OnboardingPreview } from '@/components/OnboardingCommitment'
 
 const ADMIN_PASSWORD = 'ripplepigdetect098'
 
@@ -118,6 +119,7 @@ export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [showPreview, setShowPreview] = useState(false)
   const contracts = CONTRACTS[base.id]
 
   // VaadaV3 hooks
@@ -447,10 +449,7 @@ export default function AdminPage() {
           <h2 className="text-lg font-semibold mb-4">🛠️ Dev Tools</h2>
           <div className="flex flex-wrap gap-3">
             <button
-              onClick={() => {
-                localStorage.removeItem('vaada_onboarded')
-                window.location.href = '/'
-              }}
+              onClick={() => setShowPreview(true)}
               className="px-4 py-2 bg-[#2EE59D]/10 text-[#2EE59D] border border-[#2EE59D]/30 rounded-xl text-sm font-medium hover:bg-[#2EE59D]/20 transition-colors"
             >
               👋 Preview Onboarding
@@ -473,6 +472,9 @@ export default function AdminPage() {
             </a>
           </div>
         </div>
+
+        {/* Onboarding Preview Modal */}
+        {showPreview && <OnboardingPreview onClose={() => setShowPreview(false)} />}
 
         {/* Links */}
         <div className="mt-8 text-center text-[var(--text-secondary)] text-sm">

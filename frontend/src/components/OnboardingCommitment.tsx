@@ -671,3 +671,180 @@ export function LiveChallengeCard() {
     </div>
   )
 }
+
+// ==========================================
+// PREVIEW MODE - For admin testing only
+// ==========================================
+export function OnboardingPreview({ onClose }: { onClose: () => void }) {
+  const [step, setStep] = useState<'intro' | 'approve' | 'join' | 'done'>('intro')
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      {/* Preview Badge */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-yellow-500 text-black text-sm font-bold rounded-full z-[60] animate-pulse">
+        👁️ PREVIEW MODE — No transactions
+      </div>
+      
+      <div className="bg-[var(--background)] border border-[var(--border)] rounded-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200 relative">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors z-10"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div className="p-5">
+          {step === 'done' ? (
+            // Success state
+            <div className="text-center py-8">
+              <div className="w-16 h-16 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">✓</span>
+              </div>
+              <h2 className="text-xl font-bold mb-2">You're in!</h2>
+              <p className="text-sm text-[var(--text-secondary)] mb-3">
+                Now join a vaada within 24h
+              </p>
+              <p className="text-xs text-[var(--text-secondary)] bg-[var(--surface)] rounded-lg px-3 py-2 inline-block">
+                💰 Your $5 will be returned after verification
+              </p>
+              <button
+                onClick={() => setStep('intro')}
+                className="mt-4 text-sm text-[#2EE59D] hover:underline"
+              >
+                ← Back to start
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* Welcome header */}
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 rounded-2xl bg-[#2EE59D] flex items-center justify-center mx-auto mb-3">
+                  <span className="text-white font-black text-3xl leading-none">v</span>
+                </div>
+                <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
+                <p className="text-sm text-[var(--text-secondary)] mb-2">
+                  The promise market
+                </p>
+                <p className="text-xs text-[var(--text-secondary)] inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--surface)] rounded-full border border-[var(--border)]">
+                  <span className="font-semibold text-[#2EE59D]">vaada</span>
+                  <span>=</span>
+                  <span>promise</span>
+                </p>
+              </div>
+
+              {/* How it works - compact */}
+              <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
+                    💰
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Stake money on your vaada</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Put $5-$50 on the line</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
+                    ✅
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Keep your promise, keep your stake</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Auto-verified by oracles</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
+                    🏆
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Earn from those who don't</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Winners split the pool</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* New User Challenge */}
+              <div className="flex items-center gap-3 mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
+                <span className="text-2xl">⏰</span>
+                <div>
+                  <p className="text-sm font-bold">New User Challenge</p>
+                  <p className="text-xs text-[var(--text-secondary)]">
+                    Stake $5 • Join a vaada within 24h
+                  </p>
+                  <p className="text-[10px] text-[var(--text-secondary)]/70 mt-0.5">
+                    ✓ Join → $5 returned after verification
+                  </p>
+                  <p className="text-[10px] text-[var(--text-secondary)]/70">
+                    ✗ Don't join → $5 forfeited
+                  </p>
+                </div>
+              </div>
+
+              {/* Preview Balance display */}
+              <div className="mb-3 p-3 rounded-xl text-sm bg-[#2EE59D]/10 border border-[#2EE59D]/30">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-[#2EE59D]">✓ ETH (gas)</span>
+                  <span className="font-mono text-xs text-[#2EE59D]">0.0050 ETH</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[#2EE59D]">✓ USDC (stake)</span>
+                  <span className="font-mono text-xs text-[#2EE59D]">$6.52 / $5</span>
+                </div>
+              </div>
+
+              {/* Step indicator */}
+              <div className="flex gap-2 mb-3">
+                {['intro', 'approve', 'join'].map((s, i) => (
+                  <button
+                    key={s}
+                    onClick={() => setStep(s as any)}
+                    className={`flex-1 py-1.5 text-xs rounded-lg border transition-colors ${
+                      step === s 
+                        ? 'bg-[#2EE59D]/10 border-[#2EE59D] text-[#2EE59D]' 
+                        : 'border-[var(--border)] text-[var(--text-secondary)] hover:border-[#2EE59D]/50'
+                    }`}
+                  >
+                    {i + 1}. {s === 'intro' ? 'Start' : s === 'approve' ? 'Approve' : 'Join'}
+                  </button>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <button
+                onClick={() => {
+                  if (step === 'intro') setStep('approve')
+                  else if (step === 'approve') setStep('join')
+                  else setStep('done')
+                }}
+                className="w-full py-3 font-bold rounded-xl bg-[#2EE59D] text-white hover:bg-[#26c987] transition-colors"
+              >
+                {step === 'intro' ? "Stake $5 — I'm In" : 
+                 step === 'approve' ? (
+                   <span className="flex items-center justify-center gap-2">
+                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                     Approving USDC...
+                   </span>
+                 ) : (
+                   <span className="flex items-center justify-center gap-2">
+                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                     Joining Challenge...
+                   </span>
+                 )}
+              </button>
+
+              {/* Fund wallet button */}
+              <button
+                className="w-full mt-3 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface)] transition-colors"
+              >
+                💰 I need to fund my wallet first
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
