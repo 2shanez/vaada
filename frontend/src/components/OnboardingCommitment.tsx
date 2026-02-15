@@ -218,10 +218,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               </div>
               <h2 className="text-xl font-bold mb-2">You're in!</h2>
               <p className="text-sm text-[var(--text-secondary)] mb-3">
-                Now join a vaada within 24h
-              </p>
-              <p className="text-xs text-[var(--text-secondary)] bg-[var(--surface)] rounded-lg px-3 py-2 inline-block">
-                💰 Your ${stakeAmountFormatted} will be returned after verification
+                Now join any goal within 24h to get your ${stakeAmountFormatted} back
               </p>
             </div>
           ) : (
@@ -279,13 +276,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    Stake ${stakeAmountFormatted} • Join a vaada within 24h
-                  </p>
-                  <p className="text-[10px] text-[var(--text-secondary)]/70 mt-0.5">
-                    ✓ Join → ${stakeAmountFormatted} returned after verification
-                  </p>
-                  <p className="text-[10px] text-[var(--text-secondary)]/70">
-                    ✗ Don't join → ${stakeAmountFormatted} forfeited
+                    Everyone starts with a ${stakeAmountFormatted} stake. Join any goal within 24h to get it back — if you don't, your ${stakeAmountFormatted} is split among the people who do.
                   </p>
                 </div>
               </div>
@@ -616,8 +607,8 @@ export function LiveChallengeCard() {
           </h3>
           <p className="text-sm text-[var(--text-secondary)]">
             {isCompleted 
-              ? 'You joined a vaada in time. Your $5 will be returned!' 
-              : 'You didn\'t join a vaada within 24h. $5 forfeited.'
+              ? 'You joined a goal in time. Your $5 will be returned!' 
+              : 'You didn\'t join a goal within 24h. Your $5 was split among those who did.'
             }
           </p>
         </div>
@@ -645,9 +636,8 @@ export function LiveChallengeCard() {
             🚀
           </div>
           <div className="min-w-0">
-            <h3 className="font-bold text-sm leading-tight">24-Hour Promise</h3>
-            <p className="text-xs text-[var(--text-secondary)]">Join a vaada within 24h or lose your $5</p>
-            <p className="text-[10px] text-[var(--text-secondary)]/70">Your $5 returns after 24h verification</p>
+            <h3 className="font-bold text-sm leading-tight">New User Challenge</h3>
+            <p className="text-xs text-[var(--text-secondary)]">Join any goal within 24h to get your $5 back — or it's split among those who do</p>
           </div>
         </div>
         
@@ -705,10 +695,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
               </div>
               <h2 className="text-xl font-bold mb-2">You're in!</h2>
               <p className="text-sm text-[var(--text-secondary)] mb-3">
-                Now join a vaada within 24h
-              </p>
-              <p className="text-xs text-[var(--text-secondary)] bg-[var(--surface)] rounded-lg px-3 py-2 inline-block">
-                💰 Your $5 will be returned after verification
+                Now join any goal within 24h to get your $5 back
               </p>
               <button
                 onClick={() => setStep('intro')}
@@ -772,13 +759,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    Stake $5 • Join a vaada within 24h
-                  </p>
-                  <p className="text-[10px] text-[var(--text-secondary)]/70 mt-0.5">
-                    ✓ Join → $5 returned after verification
-                  </p>
-                  <p className="text-[10px] text-[var(--text-secondary)]/70">
-                    ✗ Don't join → $5 forfeited
+                    Everyone starts with a $5 stake. Join any goal within 24h to get it back — if you don't, your $5 is split among the people who do.
                   </p>
                 </div>
               </div>
