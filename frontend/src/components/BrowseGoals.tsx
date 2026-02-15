@@ -1,10 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useAccount } from 'wagmi'
 import { GoalCard, Goal } from './GoalCard'
 import { DOMAINS, type DomainKey } from '@/lib/abis'
-import { useFitbitConnection } from './FitbitConnect'
 
 // Email Modal Component
 function NotifyModal({ 
@@ -135,8 +133,6 @@ const TIMEFRAMES = ['All', 'Daily', 'Weekly', 'Monthly'] as const
 type Timeframe = typeof TIMEFRAMES[number]
 
 export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
-  const { address } = useAccount()
-  const { isConnected: fitbitConnected } = useFitbitConnection()
   const [mounted, setMounted] = useState(false)
   const [notified, setNotified] = useState<string[]>([])
   const [modalFeature, setModalFeature] = useState<string | null>(null)
@@ -280,32 +276,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
         {filteredGoals.length === 0 ? (
           <div className="w-full text-center py-12">
             <div className="text-4xl mb-3">⏳</div>
-            <p className="text-[var(--text-secondary)] mb-2">New goals coming soon!</p>
-            <p className="text-sm text-[var(--text-secondary)] mb-6">
-              Connect your Fitbit while you wait.
-            </p>
-            
-            {/* Fitbit Connect Button */}
-            {address && (
-              <div className="flex flex-col items-center gap-3">
-                {fitbitConnected ? (
-                  <div className="flex items-center gap-2 px-4 py-2 bg-[#00B0B9]/10 border border-[#00B0B9]/30 rounded-xl">
-                    <span className="text-lg">✅</span>
-                    <span className="text-sm font-medium text-[#00B0B9]">Fitbit Connected</span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      window.location.href = `/api/fitbit/auth?wallet=${address}`
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#00B0B9] hover:bg-[#009BA3] text-white rounded-xl transition-colors"
-                  >
-                    <span className="text-lg">⌚</span>
-                    <span className="text-sm font-medium">Connect Fitbit</span>
-                  </button>
-                )}
-              </div>
-            )}
+            <p className="text-[var(--text-secondary)]">New goals coming soon!</p>
           </div>
         ) : (
           filteredGoals.map((goal, index) => (
