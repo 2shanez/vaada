@@ -115,6 +115,25 @@ function NotifyModal({
 }
 
 const FEATURED_GOALS: Goal[] = [
+  // TEST GOAL - 2K steps by 3pm EST (Goal ID 1)
+  {
+    id: 'test-2k-steps',
+    onChainId: 1,
+    title: '2K Steps Test',
+    description: 'Hit 2,000 steps by 3pm EST. Quick test goal!',
+    emoji: '🧪',
+    targetMiles: 2000,
+    targetUnit: 'steps',
+    durationDays: 0, // Same day
+    minStake: 1,
+    maxStake: 1,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Test',
+    domain: 'Fitness',
+    subdomain: 'Steps',
+    live: true,
+  },
   // Preview goal - UI only for now (no onChainId = not connected to contract)
   {
     id: 'daily-10k-steps',
