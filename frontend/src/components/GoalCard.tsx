@@ -730,7 +730,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           </div>
           <div className="relative flex items-center gap-2">
             <button 
-              onClick={(e) => { e.stopPropagation(); if (participants > 0) setShowPlayers(!showPlayers); setShowLeaderboard(false) }}
+              onClick={(e) => { e.stopPropagation(); if (participants > 0 || hasJoined) setShowPlayers(!showPlayers); setShowLeaderboard(false) }}
               className="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface)] border border-[var(--border)] py-1 px-3 hover:border-[#2EE59D]/50 transition-colors"
             >
               <span className="text-[11px] font-medium text-[var(--foreground)]">
