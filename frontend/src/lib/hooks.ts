@@ -143,6 +143,7 @@ export function useGoalDetails(goalId?: number) {
   const goal = goalData as any
 
   return {
+    startTime: goal ? Number(goal.startTime) : undefined,
     entryDeadline: goal ? Number(goal.entryDeadline) : undefined,
     deadline: goal ? Number(goal.deadline) : undefined,
     totalStaked: goal ? Number(formatUnits(goal.totalStaked, 6)) : 0,
