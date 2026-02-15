@@ -46,7 +46,7 @@ function IntegrationsDropdown() {
   const handleToggle = () => {
     if (!open && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
-      const menuWidth = 224 // w-56
+      const menuWidth = 280 // wider for content
       let left = rect.left
       // Ensure menu stays within viewport with padding
       if (left + menuWidth > window.innerWidth - 16) {
@@ -85,40 +85,38 @@ function IntegrationsDropdown() {
         <>
           <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
           <div 
-            className="fixed w-56 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101]"
-            style={{ top: menuPos.top, left: menuPos.left, maxWidth: 'calc(100vw - 32px)' }}
+            className="fixed bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101]"
+            style={{ top: menuPos.top, left: menuPos.left, width: '280px', maxWidth: 'calc(100vw - 32px)' }}
           >
             {/* Fitbit Section */}
             <div className="px-4 py-3 border-b border-[var(--border)]">
               {fitbitConnected ? (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span>⌚</span>
-                    <span className="text-sm font-medium">Fitbit</span>
-                    <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full">Connected</span>
-                  </div>
+                <div className="flex items-center gap-3">
+                  <span>⌚</span>
+                  <span className="text-sm font-medium">Fitbit</span>
+                  <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full whitespace-nowrap">Connected</span>
                   <button
                     type="button"
                     onClick={() => handleDisconnect()}
-                    className="text-xs text-[var(--text-secondary)] hover:text-red-500 transition-colors"
+                    className="text-xs text-[var(--text-secondary)] hover:text-red-500 transition-colors whitespace-nowrap ml-auto"
                   >
                     Disconnect
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 mb-2">
-                  <span>⌚</span>
-                  <span className="text-sm font-medium">Fitbit</span>
-                </div>
-              )}
-              {!fitbitConnected && (
-                <button
-                  type="button"
-                  onClick={() => { window.location.href = fitbitUrl; }}
-                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
-                >
-                  Connect Fitbit
-                </button>
+                <>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span>⌚</span>
+                    <span className="text-sm font-medium">Fitbit</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { window.location.href = fitbitUrl; }}
+                    className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
+                  >
+                    Connect Fitbit
+                  </button>
+                </>
               )}
             </div>
             
