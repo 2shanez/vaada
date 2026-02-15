@@ -22,105 +22,51 @@ const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
 const ProfileNameButton = dynamic(() => import('@/components/ProfileName').then(m => ({ default: m.ProfileNameButton })), { ssr: false })
 const DevResetButton = dynamic(() => import('@/components/DevResetButton').then(m => ({ default: m.DevResetButton })), { ssr: false })
-// Integrations dropdown with portal-style fixed positioning
-function IntegrationsDropdown() {
+// Simple Fitbit connect button - no dropdown complexity
+function FitbitButton() {
   const { address } = useAccount()
-  const [open, setOpen] = useState(false)
-  const buttonRef = useRef<HTMLButtonElement>(null)
-  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 })
+  const [connected, setConnected] = useState(false)
   
-  // Check if Fitbit is connected via cookie
-  const [fitbitConnected, setFitbitConnected] = useState(false)
   useEffect(() => {
     const userId = document.cookie
       .split('; ')
       .find(row => row.startsWith('fitbit_user_id='))
       ?.split('=')[1]
-    setFitbitConnected(!!userId)
+    setConnected(!!userId)
   }, [])
   
   const fitbitUrl = address 
     ? `/api/fitbit/auth?wallet=${address}`
     : '/api/fitbit/auth'
 
-  const handleToggle = () => {
-    if (!open && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect()
-      const menuWidth = 256 // w-64 = 16rem = 256px
-      // Calculate left position, ensuring menu stays within viewport
-      let left = rect.left
-      if (left + menuWidth > window.innerWidth - 16) {
-        left = window.innerWidth - menuWidth - 16
-      }
-      if (left < 16) left = 16
-      setMenuPos({
-        top: rect.bottom + 8,
-        left: left,
-      })
-    }
-    setOpen(!open)
+  const handleDisconnect = () => {
+    // Clear the cookie
+    document.cookie = 'fitbit_user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    setConnected(false)
+  }
+
+  if (connected) {
+    return (
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-[#00B0B9]">⌚ Fitbit ✓</span>
+        <button
+          onClick={handleDisconnect}
+          className="text-xs text-[var(--text-secondary)] hover:text-red-500 transition-colors"
+        >
+          Disconnect
+        </button>
+      </div>
+    )
   }
 
   return (
-    <>
-      <button
-        ref={buttonRef}
-        onClick={handleToggle}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all"
-      >
-        <span>🔗</span>
-        <span className="hidden sm:inline">Integrations</span>
-        <svg className={`w-3 h-3 ml-1 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      
-      {open && (
-        <>
-          <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
-          <div 
-            className="fixed w-64 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
-            style={{ top: menuPos.top, left: menuPos.left }}
-          >
-            {/* Fitbit Section */}
-            <div className="px-4 py-3 border-b border-[var(--border)]">
-              <div className="flex items-center gap-2 mb-2">
-                <span>⌚</span>
-                <span className="text-sm font-medium">Fitbit</span>
-                {fitbitConnected && (
-                  <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full">Connected</span>
-                )}
-              </div>
-              <div className="flex gap-2">
-                <a
-                  href={fitbitUrl}
-                  className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors"
-                >
-                  Connect
-                </a>
-                <a
-                  href={fitbitUrl}
-                  className="flex-1 text-center px-3 py-1.5 text-xs font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
-                >
-                  Reconnect
-                </a>
-              </div>
-            </div>
-            
-            {/* Strava Section - Coming Soon */}
-            <div className="px-4 py-3 opacity-40">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span>🏃</span>
-                  <span className="text-sm">Strava</span>
-                </div>
-                <span className="text-xs">Coming soon</span>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-    </>
+    <a
+      href={fitbitUrl}
+      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#00B0B9] text-white text-sm font-medium hover:bg-[#009BA3] transition-all"
+    >
+      <span>⌚</span>
+      <span>Connect Fitbit</span>
+    </a>
   )
 }
 
@@ -283,7 +229,7 @@ export default function Home() {
               <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
                 Vaadas
               </a>
-              {authenticated && <IntegrationsDropdown />}
+              {authenticated && <FitbitButton />}
               {authenticated && <ProfileNameButton />}
               {authenticated && <FundWalletButton />}
               <PrivyConnectButton />
