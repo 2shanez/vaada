@@ -22,7 +22,55 @@ const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
 const ProfileNameButton = dynamic(() => import('@/components/ProfileName').then(m => ({ default: m.ProfileNameButton })), { ssr: false })
 const DevResetButton = dynamic(() => import('@/components/DevResetButton').then(m => ({ default: m.DevResetButton })), { ssr: false })
-const FitbitHeaderButton = dynamic(() => import('@/components/FitbitConnect').then(m => ({ default: m.FitbitHeaderButton })), { ssr: false })
+// Integrations dropdown - inline to avoid dynamic import issues
+function IntegrationsDropdown() {
+  const { address } = useAccount()
+  const [open, setOpen] = useState(false)
+  
+  const fitbitUrl = address 
+    ? `/api/fitbit/auth?wallet=${address}`
+    : '/api/fitbit/auth'
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all"
+      >
+        <span>🔗</span>
+        <span className="hidden sm:inline">Integrations</span>
+        <svg className={`w-3 h-3 ml-1 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 top-full mt-2 w-52 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-50 overflow-hidden">
+            <a
+              href={fitbitUrl}
+              className="flex items-center justify-between px-4 py-3 hover:bg-[var(--surface)] transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <span>⌚</span>
+                <span className="text-sm font-medium">Fitbit</span>
+              </div>
+              <span className="text-xs text-[#00B0B9]">Connect / Reconnect</span>
+            </a>
+            <div className="flex items-center justify-between px-4 py-3 opacity-40 cursor-not-allowed">
+              <div className="flex items-center gap-2">
+                <span>🏃</span>
+                <span className="text-sm">Strava</span>
+              </div>
+              <span className="text-xs">Coming soon</span>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
 
 // Stats card component with count-up animation
 function StatsCard({ 
@@ -183,7 +231,7 @@ export default function Home() {
               <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
                 Vaadas
               </a>
-              {authenticated && <FitbitHeaderButton />}
+              {authenticated && <IntegrationsDropdown />}
               {authenticated && <ProfileNameButton />}
               {authenticated && <FundWalletButton />}
               <PrivyConnectButton />
