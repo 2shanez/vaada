@@ -63,6 +63,18 @@ const VAADA_ABI = [
   },
 ] as const
 
+const USDC_ABI = [
+  {
+    name: 'balanceOf',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [{ type: 'uint256' }],
+  },
+] as const
+
+const TREASURY_WALLET = '0xBf16F926d7732B22d4AaA9177b71AB7ba3159640' as const
+
 const NEW_USER_ABI = [
   {
     name: 'totalActiveStakes',
@@ -185,6 +197,14 @@ export default function AdminPage() {
     args: [contracts.newUserChallenge],
   })
 
+  // Treasury wallet USDC balance
+  const { data: treasuryWalletBalance } = useReadContract({
+    address: contracts.usdc,
+    abi: USDC_ABI,
+    functionName: 'balanceOf',
+    args: [TREASURY_WALLET],
+  })
+
   useEffect(() => {
     setMounted(true)
     const saved = sessionStorage.getItem('vaada_admin_auth')
@@ -246,6 +266,9 @@ export default function AdminPage() {
   const nucPending = (nucTotalChallenges ? Number(nucTotalChallenges) : 0) - 
                      (nucTotalWon ? Number(nucTotalWon) : 0) - 
                      (nucTotalForfeited ? Number(nucTotalForfeited) : 0)
+
+  // Treasury wallet balance
+  const treasuryBalanceUSDC = treasuryWalletBalance ? Number(formatUnits(treasuryWalletBalance, 6)) : 0
 
   return (
     <div className="min-h-screen bg-[var(--background)] p-8">
@@ -374,6 +397,28 @@ export default function AdminPage() {
             <div>
               <div className="text-[var(--text-secondary)] text-sm">Vault Shares</div>
               <div className="text-sm font-mono truncate">{vaultShares?.toString() || '0'}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Treasury Wallet */}
+        <div className="bg-[var(--surface)] rounded-2xl p-6 mb-6 border border-[var(--border)]">
+          <h2 className="text-lg font-semibold mb-4">💳 Treasury Wallet</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">USDC Balance</div>
+              <div className="text-2xl font-bold">${treasuryBalanceUSDC.toFixed(2)}</div>
+            </div>
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Address</div>
+              <a 
+                href={`https://basescan.org/address/${TREASURY_WALLET}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-[#2EE59D] hover:underline font-mono text-sm truncate block"
+              >
+                {TREASURY_WALLET.slice(0, 10)}...{TREASURY_WALLET.slice(-8)}
+              </a>
             </div>
           </div>
         </div>
