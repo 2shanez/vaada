@@ -9,7 +9,7 @@ contract DeployNewUserChallenge is Script {
     address constant USDC = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
     address constant MORPHO_VAULT = 0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61;
     address constant GOAL_STAKE_V3 = 0xAc67E863221B703CEE9B440a7beFe71EA8725434;
-    address constant FUNCTIONS_ROUTER = 0xf9b8fc078197181c841c296c876945aaa425b278;
+    address constant FUNCTIONS_ROUTER = 0xf9B8fc078197181C841c296C876945aaa425B278;
     bytes32 constant DON_ID = 0x66756e2d626173652d6d61696e6e65742d310000000000000000000000000000;
     
     // Chainlink Functions subscription ID
