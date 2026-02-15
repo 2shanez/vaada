@@ -5,14 +5,15 @@ import {Script, console} from "forge-std/Script.sol";
 import {NewUserChallenge} from "../src/NewUserChallenge.sol";
 
 contract DeployNewUserChallenge is Script {
-    // Base Sepolia addresses
-    address constant USDC = 0x036CbD53842c5426634e7929541eC2318f3dCF7e;
-    address constant GOAL_STAKE_V3 = 0x13b8eaEb7F7927527CE1fe7A600f05e61736d217;
-    address constant FUNCTIONS_ROUTER = 0xf9B8fc078197181C841c296C876945aaa425B278;
-    bytes32 constant DON_ID = 0x66756e2d626173652d7365706f6c69612d310000000000000000000000000000;
+    // Base Mainnet addresses
+    address constant USDC = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
+    address constant MORPHO_VAULT = 0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61;
+    address constant GOAL_STAKE_V3 = 0xAc67E863221B703CEE9B440a7beFe71EA8725434;
+    address constant FUNCTIONS_ROUTER = 0xf9b8fc078197181c841c296c876945aaa425b278;
+    bytes32 constant DON_ID = 0x66756e2d626173652d6d61696e6e65742d310000000000000000000000000000;
     
-    // Your Chainlink Functions subscription ID
-    uint64 constant SUBSCRIPTION_ID = 561;
+    // Chainlink Functions subscription ID
+    uint64 constant SUBSCRIPTION_ID = 132;
 
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
@@ -20,23 +21,21 @@ contract DeployNewUserChallenge is Script {
         
         console.log("Deploying NewUserChallenge...");
         console.log("Deployer:", deployer);
-        console.log("Treasury:", deployer); // Treasury = deployer for now
+        console.log("Treasury:", deployer);
 
         vm.startBroadcast(deployerPrivateKey);
 
         NewUserChallenge challenge = new NewUserChallenge(
             USDC,
+            MORPHO_VAULT,
             GOAL_STAKE_V3,
-            deployer,          // treasury (you can change later)
+            deployer,          // treasury
             FUNCTIONS_ROUTER,
             DON_ID,
             SUBSCRIPTION_ID
         );
 
         console.log("NewUserChallenge deployed at:", address(challenge));
-        
-        // Note: You'll need to set the verification source after deployment:
-        // challenge.setVerificationSource(sourceBytes);
 
         vm.stopBroadcast();
     }
