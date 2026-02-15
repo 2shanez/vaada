@@ -6,7 +6,7 @@ import { formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
 import { base } from 'wagmi/chains'
 
-const ADMIN_PASSWORD = 'vaada-admin-2026'
+const ADMIN_PASSWORD = 'ripplepigdetect098'
 
 const VAULT_ABI = [
   {
