@@ -230,63 +230,23 @@ export function useFitbitConnection() {
   return { isConnected, isLoading }
 }
 
-// Header button for integrations dropdown
+// Header button for Fitbit - simple direct link
 export function FitbitHeaderButton() {
   const { address } = useAccount()
   const { isConnected: fitbitConnected } = useFitbitConnection()
-  const [showMenu, setShowMenu] = useState(false)
 
-  const handleFitbitConnect = () => {
-    setShowMenu(false)
-    if (address) {
-      window.location.href = `/api/fitbit/auth?wallet=${address}`
-    } else {
-      window.location.href = '/api/fitbit/auth'
-    }
-  }
+  const authUrl = address 
+    ? `/api/fitbit/auth?wallet=${address}`
+    : '/api/fitbit/auth'
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setShowMenu(!showMenu)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all"
-      >
-        <span>🔗</span>
-        <span className="hidden sm:inline">Integrations</span>
-        <span className={`text-[var(--text-secondary)] text-xs transition-transform ${showMenu ? 'rotate-90' : ''}`}>›</span>
-      </button>
-      
-      {showMenu && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-          <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2 min-w-[180px] shadow-xl">
-            {/* Fitbit */}
-            <button
-              onClick={handleFitbitConnect}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[var(--background)] text-sm"
-            >
-              <div className="flex items-center gap-2">
-                <span>⌚</span>
-                <span>Fitbit</span>
-              </div>
-              {fitbitConnected ? (
-                <span className="text-xs text-[#00B0B9]">✓ Connected</span>
-              ) : (
-                <span className="text-xs text-[var(--text-secondary)]">Connect →</span>
-              )}
-            </button>
-            
-            {/* Strava - coming soon */}
-            <div className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] opacity-50">
-              <div className="flex items-center gap-2">
-                <span>🏃</span>
-                <span>Strava</span>
-              </div>
-              <span className="text-xs">Soon</span>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+    <a
+      href={authUrl}
+      className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#00B0B9]/50 transition-all cursor-pointer"
+    >
+      <span>⌚</span>
+      <span className="hidden sm:inline">{fitbitConnected ? 'Fitbit ✓' : 'Connect Fitbit'}</span>
+      <span className="sm:hidden">{fitbitConnected ? '✓' : ''}</span>
+    </a>
   )
 }
