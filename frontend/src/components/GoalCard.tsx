@@ -179,7 +179,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   useEffect(() => {
     if (isJoinSuccess && step === 'joining') {
       setJustJoined(true) // Immediately show Joined state
-      setJustStakedAmount(stakeAmount) // Store the stake amount for immediate display
+      setJustStakedAmount(Number(stakeAmount)) // Store the stake amount for immediate display
       setExpanded(false) // Collapse the stake panel
       setStep('idle') // Go back to idle (skip 'done' screen)
       refetchParticipant()
