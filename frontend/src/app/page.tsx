@@ -29,6 +29,16 @@ function IntegrationsDropdown() {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const [menuPos, setMenuPos] = useState({ top: 0, right: 0 })
   
+  // Check if Fitbit is connected via cookie
+  const [fitbitConnected, setFitbitConnected] = useState(false)
+  useEffect(() => {
+    const userId = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('fitbit_user_id='))
+      ?.split('=')[1]
+    setFitbitConnected(!!userId)
+  }, [])
+  
   const fitbitUrl = address 
     ? `/api/fitbit/auth?wallet=${address}`
     : '/api/fitbit/auth'
@@ -62,26 +72,45 @@ function IntegrationsDropdown() {
         <>
           <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
           <div 
-            className="fixed w-52 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
+            className="fixed w-64 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
             style={{ top: menuPos.top, right: menuPos.right }}
           >
-            <a
-              href={fitbitUrl}
-              className="flex items-center justify-between px-4 py-3 hover:bg-[var(--surface)] transition-colors"
-              onClick={() => setOpen(false)}
-            >
-              <div className="flex items-center gap-2">
+            {/* Fitbit Section */}
+            <div className="px-4 py-3 border-b border-[var(--border)]">
+              <div className="flex items-center gap-2 mb-2">
                 <span>⌚</span>
                 <span className="text-sm font-medium">Fitbit</span>
+                {fitbitConnected && (
+                  <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full">Connected</span>
+                )}
               </div>
-              <span className="text-xs text-[#00B0B9]">Connect / Reconnect</span>
-            </a>
-            <div className="flex items-center justify-between px-4 py-3 opacity-40 cursor-not-allowed">
-              <div className="flex items-center gap-2">
-                <span>🏃</span>
-                <span className="text-sm">Strava</span>
+              <div className="flex gap-2">
+                <a
+                  href={fitbitUrl}
+                  onClick={() => setOpen(false)}
+                  className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors"
+                >
+                  Connect
+                </a>
+                <a
+                  href={fitbitUrl}
+                  onClick={() => setOpen(false)}
+                  className="flex-1 text-center px-3 py-1.5 text-xs font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
+                >
+                  Reconnect
+                </a>
               </div>
-              <span className="text-xs">Coming soon</span>
+            </div>
+            
+            {/* Strava Section - Coming Soon */}
+            <div className="px-4 py-3 opacity-40">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span>🏃</span>
+                  <span className="text-sm">Strava</span>
+                </div>
+                <span className="text-xs">Coming soon</span>
+              </div>
             </div>
           </div>
         </>
