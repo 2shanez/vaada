@@ -99,7 +99,10 @@ function IntegrationsDropdown() {
                 <div className="flex gap-2 relative z-[200]">
                   <button
                     type="button"
-                    onClick={() => { window.location.href = fitbitUrl; }}
+                    onClick={() => { 
+                      console.log('Reconnect clicked, navigating to:', fitbitUrl);
+                      window.location.assign(fitbitUrl); 
+                    }}
                     className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
                   >
                     Reconnect
@@ -115,7 +118,10 @@ function IntegrationsDropdown() {
               ) : (
                 <button
                   type="button"
-                  onClick={() => { window.location.href = fitbitUrl; }}
+                  onClick={() => { 
+                    console.log('Connect clicked, navigating to:', fitbitUrl);
+                    window.location.assign(fitbitUrl); 
+                  }}
                   className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer relative z-[200]"
                 >
                   Connect Fitbit
