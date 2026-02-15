@@ -303,12 +303,11 @@ export default function Home() {
                 Vaadas
               </a>
               {authenticated && <IntegrationsDropdown />}
-              {/* TEST: Simple direct link */}
+              {/* TEST: Simple direct link - NO JS, just pure <a> tag */}
               {authenticated && (
                 <a 
                   href="https://www.vaada.io/api/fitbit/auth" 
                   className="px-2 py-1 bg-red-500 text-white text-xs rounded"
-                  onClick={(e) => { e.preventDefault(); alert('Click works!'); window.location.href = 'https://www.vaada.io/api/fitbit/auth'; }}
                 >
                   TEST
                 </a>
