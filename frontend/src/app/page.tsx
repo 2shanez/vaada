@@ -303,13 +303,13 @@ export default function Home() {
                 Vaadas
               </a>
               {authenticated && <IntegrationsDropdown />}
-              {/* TEST: External URL to rule out domain-specific issue */}
+              {/* TEST: Try with trailing slash to bypass Next.js router */}
               {authenticated && (
                 <a 
-                  href="https://www.google.com" 
+                  href="/api/fitbit/auth/" 
                   className="px-2 py-1 bg-red-500 text-white text-xs rounded"
                 >
-                  GOOGLE
+                  FITBIT
                 </a>
               )}
               {authenticated && <ProfileNameButton />}
