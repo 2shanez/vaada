@@ -725,14 +725,18 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               <button
                 onClick={(e) => {
                   e.stopPropagation()
-                  if (goal.onChainId === undefined || !entryOpen || hasJoined) return
+                  if (hasJoined) return
+                  // Allow expanding even for preview goals (onChainId undefined)
+                  if (!entryOpen && goal.onChainId !== undefined) return
                   authenticated ? setExpanded(true) : login()
                 }}
-                disabled={goal.onChainId === undefined || !entryOpen || hasJoined}
+                disabled={hasJoined || (!entryOpen && goal.onChainId !== undefined)}
                 className={`w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 ${
                   hasJoined
                     ? 'bg-[#2EE59D]/20 text-[#2EE59D] cursor-default border border-[#2EE59D]/30'
-                    : goal.onChainId === undefined || !entryOpen
+                    : goal.onChainId === undefined
+                    ? 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
+                    : !entryOpen
                     ? 'bg-[var(--border)] text-[var(--text-secondary)] cursor-not-allowed'
                     : 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
                 }`}
@@ -740,7 +744,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 {hasJoined 
                   ? `Joined ✓ · $${userStake}` 
                   : goal.onChainId === undefined 
-                  ? 'Coming Soon' 
+                  ? `Stake $${goal.minStake}` 
                   : !entryOpen 
                   ? 'Entry Closed' 
                   : `Stake $${goal.minStake}+`}
@@ -799,6 +803,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               isStoreConfirming={isStoreConfirming}
               stakeAmount={stakeAmount}
               onClick={handleActionButton}
+              isPreview={goal.onChainId === undefined}
             />
           </div>
         </div>
@@ -1153,7 +1158,7 @@ function LoadingIndicator({ isApprovePending, isApproveConfirming, isJoinPending
   )
 }
 
-function ActionButton({ stravaConnected, fitbitConnected, trackerConnected, isStepsGoal, hasTokenOnChain, hasBalance, isLoading, isWrongNetwork, isStorePending, isStoreConfirming, stakeAmount, onClick }: {
+function ActionButton({ stravaConnected, fitbitConnected, trackerConnected, isStepsGoal, hasTokenOnChain, hasBalance, isLoading, isWrongNetwork, isStorePending, isStoreConfirming, stakeAmount, onClick, isPreview }: {
   stravaConnected: boolean
   fitbitConnected: boolean
   trackerConnected: boolean
@@ -1166,11 +1171,13 @@ function ActionButton({ stravaConnected, fitbitConnected, trackerConnected, isSt
   isStoreConfirming: boolean
   stakeAmount: string
   onClick: () => void
+  isPreview?: boolean
 }) {
-  // Disable only when insufficient balance or loading
-  const disabled = isLoading || !hasBalance
+  // Disable only when insufficient balance, loading, or preview mode
+  const disabled = isLoading || !hasBalance || isPreview
   
   const getLabel = () => {
+    if (isPreview) return '🚀 Coming Soon'
     if (!hasBalance) return 'Insufficient USDC'
     if (isLoading) return 'Processing...'
     if (isWrongNetwork) return '⚠️ Switch to Base'
@@ -1179,6 +1186,7 @@ function ActionButton({ stravaConnected, fitbitConnected, trackerConnected, isSt
   }
 
   const getStyle = () => {
+    if (isPreview) return 'bg-gradient-to-r from-[#2EE59D]/80 to-[#26c987]/80 text-white cursor-not-allowed opacity-90'
     if (disabled || !hasBalance) return 'bg-gray-100 dark:bg-gray-800 text-[var(--text-secondary)] cursor-not-allowed'
     return 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md'
   }
