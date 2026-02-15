@@ -5,10 +5,20 @@ import {FunctionsClient} from "chainlink/contracts/src/v0.8/functions/v1_0_0/Fun
 import {FunctionsRequest} from "chainlink/contracts/src/v0.8/functions/v1_0_0/libraries/FunctionsRequest.sol";
 import {IERC20} from "forge-std/interfaces/IERC20.sol";
 
+// Minimal ERC4626 interface for Morpho vault
+interface IERC4626 {
+    function deposit(uint256 assets, address receiver) external returns (uint256 shares);
+    function withdraw(uint256 assets, address receiver, address owner) external returns (uint256 shares);
+    function maxWithdraw(address owner) external view returns (uint256);
+    function convertToAssets(uint256 shares) external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+}
+
 /**
  * @title NewUserChallenge
  * @notice Onboarding challenge: stake $5, join a goal within 24h or forfeit to platform
  * @dev Users can only join once ever. Uses Chainlink Functions to verify goal participation.
+ *      Stakes are deposited into Morpho vault to earn yield while locked.
  */
 contract NewUserChallenge is FunctionsClient {
     using FunctionsRequest for FunctionsRequest.Request;
@@ -26,6 +36,7 @@ contract NewUserChallenge is FunctionsClient {
 
     // Core state
     IERC20 public immutable usdc;
+    IERC4626 public immutable vault;  // Morpho vault for yield
     address public immutable goalStakeV3;
     address public treasury;
     address public owner;
@@ -33,6 +44,9 @@ contract NewUserChallenge is FunctionsClient {
     // Challenge parameters
     uint256 public stakeAmount = 5 * 1e6;  // 5 USDC (6 decimals)
     uint256 public challengeDuration = 24 hours;
+
+    // Track total active stakes for yield calculation
+    uint256 public totalActiveStakes;
 
     // User challenges (one per user, ever)
     mapping(address => Challenge) public challenges;
@@ -60,6 +74,9 @@ contract NewUserChallenge is FunctionsClient {
     event ChallengeSettled(address indexed user, bool won, uint256 amount);
     event VerificationRequested(bytes32 indexed requestId, address indexed user);
     event TreasuryUpdated(address oldTreasury, address newTreasury);
+    event DepositedToVault(uint256 assets, uint256 shares);
+    event WithdrawnFromVault(uint256 assets, uint256 shares);
+    event YieldClaimed(uint256 amount);
 
     // ═══════════════════════════════════════════════════════════════════
     // ERRORS
@@ -71,6 +88,7 @@ contract NewUserChallenge is FunctionsClient {
     error DeadlineNotReached();
     error OnlyOwner();
     error TransferFailed();
+    error NoYieldAvailable();
 
     // ═══════════════════════════════════════════════════════════════════
     // CONSTRUCTOR
@@ -78,6 +96,7 @@ contract NewUserChallenge is FunctionsClient {
 
     constructor(
         address _usdc,
+        address _vault,
         address _goalStakeV3,
         address _treasury,
         address _functionsRouter,
@@ -85,11 +104,15 @@ contract NewUserChallenge is FunctionsClient {
         uint64 _subscriptionId
     ) FunctionsClient(_functionsRouter) {
         usdc = IERC20(_usdc);
+        vault = IERC4626(_vault);
         goalStakeV3 = _goalStakeV3;
         treasury = _treasury;
         owner = msg.sender;
         donId = _donId;
         subscriptionId = _subscriptionId;
+
+        // Approve vault to spend USDC (max approval)
+        IERC20(_usdc).approve(_vault, type(uint256).max);
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -106,6 +129,13 @@ contract NewUserChallenge is FunctionsClient {
         // Transfer stake from user
         bool success = usdc.transferFrom(msg.sender, address(this), stakeAmount);
         if (!success) revert TransferFailed();
+
+        // Deposit USDC to Morpho vault for yield
+        uint256 shares = vault.deposit(stakeAmount, address(this));
+        emit DepositedToVault(stakeAmount, shares);
+
+        // Track active stakes
+        totalActiveStakes += stakeAmount;
 
         // Record challenge
         challenges[msg.sender] = Challenge({
@@ -172,6 +202,11 @@ contract NewUserChallenge is FunctionsClient {
         c.settled = true;
         c.won = won;
 
+        // Withdraw from vault
+        uint256 shares = vault.withdraw(c.amount, address(this), address(this));
+        emit WithdrawnFromVault(c.amount, shares);
+        totalActiveStakes -= c.amount;
+
         if (won) {
             // Refund user
             totalWon++;
@@ -217,6 +252,15 @@ contract NewUserChallenge is FunctionsClient {
         return (totalChallenges, totalWon, totalForfeited, pending * stakeAmount);
     }
 
+    /**
+     * @notice Get available yield to claim
+     */
+    function getAvailableYield() external view returns (uint256) {
+        uint256 totalValue = vault.maxWithdraw(address(this));
+        if (totalValue <= totalActiveStakes) return 0;
+        return totalValue - totalActiveStakes;
+    }
+
     // ═══════════════════════════════════════════════════════════════════
     // ADMIN FUNCTIONS
     // ═══════════════════════════════════════════════════════════════════
@@ -224,6 +268,20 @@ contract NewUserChallenge is FunctionsClient {
     modifier onlyOwner() {
         if (msg.sender != owner) revert OnlyOwner();
         _;
+    }
+
+    /**
+     * @notice Claim accumulated yield to treasury
+     */
+    function claimYield() external onlyOwner {
+        uint256 totalValue = vault.maxWithdraw(address(this));
+        if (totalValue <= totalActiveStakes) revert NoYieldAvailable();
+        
+        uint256 yieldAmount = totalValue - totalActiveStakes;
+        uint256 shares = vault.withdraw(yieldAmount, treasury, address(this));
+        
+        emit WithdrawnFromVault(yieldAmount, shares);
+        emit YieldClaimed(yieldAmount);
     }
 
     function setVerificationSource(bytes calldata _source) external onlyOwner {
