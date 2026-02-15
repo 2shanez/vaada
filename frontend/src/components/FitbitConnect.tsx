@@ -219,12 +219,26 @@ export function useFitbitConnection() {
   const [isLoading, setIsLoading] = useState(true)
   
   useEffect(() => {
-    const userId = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('fitbit_user_id='))
-      ?.split('=')[1]
-    setIsConnected(!!userId)
-    setIsLoading(false)
+    const checkConnection = () => {
+      // Check cookie
+      const userId = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('fitbit_user_id='))
+        ?.split('=')[1]
+      
+      // Also check URL params (just returned from OAuth)
+      const params = new URLSearchParams(window.location.search)
+      const fitbitSuccess = params.get('fitbit') === 'success'
+      
+      setIsConnected(!!userId || fitbitSuccess)
+      setIsLoading(false)
+    }
+    
+    checkConnection()
+    
+    // Re-check periodically in case cookie was set by another component
+    const interval = setInterval(checkConnection, 1000)
+    return () => clearInterval(interval)
   }, [])
   
   return { isConnected, isLoading }
