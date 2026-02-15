@@ -134,25 +134,6 @@ const FEATURED_GOALS: Goal[] = [
     subdomain: 'Steps',
     live: true,
   },
-  // Preview goal - UI only for now (no onChainId = not connected to contract)
-  {
-    id: 'daily-10k-steps',
-    // onChainId: undefined, // Will add once created on-chain
-    title: 'Daily 10K Steps',
-    description: 'Hit 10,000 steps in 24 hours. Verified automatically via Fitbit.',
-    emoji: '👟',
-    targetMiles: 10000,
-    targetUnit: 'steps',
-    durationDays: 1,
-    minStake: 20,
-    maxStake: 20,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Daily',
-    domain: 'Fitness',
-    subdomain: 'Steps',
-    live: true,
-  },
 ]
 
 const COMING_SOON = [
