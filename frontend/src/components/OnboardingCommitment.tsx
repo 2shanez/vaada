@@ -681,7 +681,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       {/* Preview Badge */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-yellow-500 text-black text-sm font-bold rounded-full z-[60] animate-pulse">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-yellow-500 text-black text-sm font-bold rounded-full z-[60]">
         👁️ PREVIEW MODE — No transactions
       </div>
       
