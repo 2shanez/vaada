@@ -38,9 +38,10 @@ function IntegrationsDropdown() {
     setFitbitConnected(!!userId)
   }, [])
   
+  // Use absolute URL to bypass any routing interception
   const fitbitUrl = address 
-    ? `/api/fitbit/auth?wallet=${address}`
-    : '/api/fitbit/auth'
+    ? `https://www.vaada.io/api/fitbit/auth?wallet=${address}`
+    : 'https://www.vaada.io/api/fitbit/auth'
 
   const handleToggle = () => {
     if (!open && buttonRef.current) {
