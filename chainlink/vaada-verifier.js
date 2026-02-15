@@ -1,5 +1,5 @@
 // Chainlink Functions: Vaada Activity Verifier
-// Handles both Strava (miles) and Fitbit (steps)
+// Handles both Strava (miles) and Fitbit (steps) via unified /api/verify
 //
 // Arguments from smart contract (GoalStakeAutomationV3):
 // args[0] = User wallet address
@@ -14,24 +14,13 @@ const endTimestamp = args[2];
 const goalType = args[3] || "miles";
 const apiBaseUrl = args[4] || "https://vaada.io";
 
-// Determine which API endpoint to call based on goal type
-let endpoint;
-if (goalType === "steps") {
-  endpoint = `${apiBaseUrl}/api/fitbit/steps`;
-} else {
-  endpoint = `${apiBaseUrl}/api/verify`;
-}
+// Use unified /api/verify endpoint (handles both Strava miles + Fitbit steps)
+const url = `${apiBaseUrl}/api/verify?user=${userAddress}&start=${startTimestamp}&end=${endTimestamp}&type=${goalType}`;
 
-// Call verification API
 const response = await Functions.makeHttpRequest({
-  url: endpoint,
-  params: {
-    wallet: userAddress,
-    user: userAddress,  // backward compat
-    start: startTimestamp,
-    end: endTimestamp,
-    date: new Date(parseInt(endTimestamp) * 1000).toISOString().split('T')[0]  // for fitbit
-  }
+  url: url,
+  method: "GET",
+  headers: { "Accept": "application/json" }
 });
 
 if (response.error) {
@@ -45,13 +34,7 @@ if (!data.success) {
 }
 
 // Return value in wei (1e18 = 1 unit)
-// For miles: data.milesWei
-// For steps: data.stepsWei or data.steps * 1e18
-let valueWei;
-if (goalType === "steps") {
-  valueWei = BigInt(data.stepsWei || String(BigInt(data.steps || 0) * BigInt(1e18)));
-} else {
-  valueWei = BigInt(data.milesWei || "0");
-}
+// API returns milesWei for both types (steps are scaled the same way)
+const valueWei = BigInt(data.milesWei || "0");
 
 return Functions.encodeUint256(valueWei);
