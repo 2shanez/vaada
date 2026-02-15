@@ -97,22 +97,13 @@ function IntegrationsDropdown() {
                 )}
               </div>
               {fitbitConnected ? (
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => { window.location.href = fitbitUrl; }}
-                    className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
-                  >
-                    Reconnect
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDisconnect()}
-                    className="flex-1 text-center px-3 py-1.5 text-xs font-medium border border-red-500/50 text-red-500 rounded-lg hover:bg-red-500/10 transition-colors"
-                  >
-                    Disconnect
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDisconnect()}
+                  className="w-full text-center px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-red-500 transition-colors"
+                >
+                  Disconnect
+                </button>
               ) : (
                 <button
                   type="button"
