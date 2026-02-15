@@ -96,15 +96,17 @@ function IntegrationsDropdown() {
                 )}
               </div>
               {fitbitConnected ? (
-                <div className="flex gap-2">
+                <div className="flex gap-2 relative z-[200]">
                   <button
-                    onClick={(e) => { e.stopPropagation(); e.preventDefault(); window.location.href = fitbitUrl; }}
+                    type="button"
+                    onClick={() => { window.location.href = fitbitUrl; }}
                     className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
                   >
                     Reconnect
                   </button>
                   <button
-                    onClick={(e) => { e.stopPropagation(); handleDisconnect(); }}
+                    type="button"
+                    onClick={() => handleDisconnect()}
                     className="flex-1 text-center px-3 py-1.5 text-xs font-medium border border-red-500/50 text-red-500 rounded-lg hover:bg-red-500/10 transition-colors"
                   >
                     Disconnect
@@ -112,8 +114,9 @@ function IntegrationsDropdown() {
                 </div>
               ) : (
                 <button
-                  onClick={(e) => { e.stopPropagation(); e.preventDefault(); window.location.href = fitbitUrl; }}
-                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
+                  type="button"
+                  onClick={() => { window.location.href = fitbitUrl; }}
+                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer relative z-[200]"
                 >
                   Connect Fitbit
                 </button>
