@@ -154,7 +154,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
   const [mounted, setMounted] = useState(false)
   const [notified, setNotified] = useState<string[]>([])
   const [modalFeature, setModalFeature] = useState<string | null>(null)
-  const [activeOnly, setActiveOnly] = useState(true)  // Toggle for on-chain goals only
+  const [activeOnly, setActiveOnly] = useState(false)  // Show all goals including previews
   const [selectedDomain, setSelectedDomain] = useState<DomainKey | 'All'>('All')
   const [selectedTimeframe, setSelectedTimeframe] = useState<Timeframe>('All')
   
