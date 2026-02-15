@@ -573,14 +573,25 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <p className={`font-bold text-[var(--foreground)] ${goal.targetMiles >= 10000 ? 'text-sm' : goal.targetMiles >= 1000 ? 'text-lg' : 'text-xl'}`}>{goal.targetMiles.toLocaleString()}</p>
             <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">{goal.targetUnit || (goal.targetMiles === 1 ? 'mile' : 'miles')}</p>
           </div>
-          <div className="flex-1 min-w-0 bg-[var(--surface)] rounded-xl px-2 py-2.5 text-center border border-[var(--border)]/50">
-            <p className="text-xl font-bold text-[#2EE59D]">${goal.minStake}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">min stake</p>
-          </div>
-          <div className="flex-1 min-w-0 bg-[var(--surface)] rounded-xl px-2 py-2.5 text-center border border-[var(--border)]/50">
-            <p className="text-xl font-bold text-[#2EE59D]">${goal.maxStake}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">max stake</p>
-          </div>
+          {goal.minStake === goal.maxStake ? (
+            // Fixed stake - single box
+            <div className="flex-1 min-w-0 bg-[var(--surface)] rounded-xl px-2 py-2.5 text-center border border-[#2EE59D]/30">
+              <p className="text-xl font-bold text-[#2EE59D]">${goal.minStake}</p>
+              <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">stake</p>
+            </div>
+          ) : (
+            // Variable stake - min/max boxes
+            <>
+              <div className="flex-1 min-w-0 bg-[var(--surface)] rounded-xl px-2 py-2.5 text-center border border-[var(--border)]/50">
+                <p className="text-xl font-bold text-[#2EE59D]">${goal.minStake}</p>
+                <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">min stake</p>
+              </div>
+              <div className="flex-1 min-w-0 bg-[var(--surface)] rounded-xl px-2 py-2.5 text-center border border-[var(--border)]/50">
+                <p className="text-xl font-bold text-[#2EE59D]">${goal.maxStake}</p>
+                <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider font-medium">max stake</p>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -821,7 +832,27 @@ function StakeSelector({ goal, stakeAmount, setStakeAmount, balanceNum }: {
   setStakeAmount: (v: string) => void
   balanceNum: number
 }) {
-  // Round middle value to nearest 5 for cleaner UI
+  const isFixedStake = goal.minStake === goal.maxStake
+  
+  // Fixed stake mode - clean single display
+  if (isFixedStake) {
+    return (
+      <div className="mb-4">
+        <div className="flex items-center justify-between bg-[var(--background)] border border-[#2EE59D]/30 rounded-xl px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-[#2EE59D]">${goal.minStake}</span>
+            <span className="text-sm text-[var(--text-secondary)]">stake</span>
+          </div>
+          <div className="text-right">
+            <div className="text-xs text-[var(--text-secondary)]">Your balance</div>
+            <div className="text-sm font-medium">${balanceNum.toFixed(2)}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Variable stake mode - show selector
   const midStake = Math.round((goal.minStake + goal.maxStake) / 2 / 5) * 5
   const quickStakes = [goal.minStake, midStake, goal.maxStake]
   
