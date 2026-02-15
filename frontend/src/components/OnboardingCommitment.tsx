@@ -249,8 +249,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     💰
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Stake money on your vaada</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Put $5-$50 on the line</p>
+                    <p className="text-sm font-medium">Make a promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Stake $ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -258,8 +258,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     ✅
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Keep your promise, keep your stake</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Auto-verified by oracles</p>
+                    <p className="text-sm font-medium">Keep your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -267,8 +267,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     🏆
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Earn from those who don't</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Winners split the pool from those who don't</p>
+                    <p className="text-sm font-medium">Earn from your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don't</p>
                   </div>
                 </div>
               </div>
@@ -742,8 +742,8 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                     💰
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Stake money on your vaada</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Put $5-$50 on the line</p>
+                    <p className="text-sm font-medium">Make a promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Stake $ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -751,8 +751,8 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                     ✅
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Keep your promise, keep your stake</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Auto-verified by oracles</p>
+                    <p className="text-sm font-medium">Keep your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -760,8 +760,8 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                     🏆
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Earn from those who don't</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Winners split the pool</p>
+                    <p className="text-sm font-medium">Earn from your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don't</p>
                   </div>
                 </div>
               </div>
