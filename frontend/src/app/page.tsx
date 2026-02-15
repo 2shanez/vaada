@@ -95,18 +95,17 @@ function IntegrationsDropdown() {
                   <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full">Connected</span>
                 )}
               </div>
+              {/* Debug: show URL */}
+              <div className="text-[8px] text-gray-400 mb-1 break-all">{fitbitUrl}</div>
               {fitbitConnected ? (
-                <div className="flex gap-2 relative z-[200]">
-                  <button
-                    type="button"
-                    onClick={() => { 
-                      console.log('Reconnect clicked, navigating to:', fitbitUrl);
-                      window.location.assign(fitbitUrl); 
-                    }}
-                    className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
+                <div className="flex gap-2 relative z-[200]" style={{ pointerEvents: 'auto' }}>
+                  <a
+                    href={fitbitUrl}
+                    className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer no-underline"
+                    style={{ pointerEvents: 'auto' }}
                   >
                     Reconnect
-                  </button>
+                  </a>
                   <button
                     type="button"
                     onClick={() => handleDisconnect()}
@@ -116,16 +115,13 @@ function IntegrationsDropdown() {
                   </button>
                 </div>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => { 
-                    console.log('Connect clicked, navigating to:', fitbitUrl);
-                    window.location.assign(fitbitUrl); 
-                  }}
-                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer relative z-[200]"
+                <a
+                  href={fitbitUrl}
+                  style={{ pointerEvents: 'auto' }}
+                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer relative z-[200] no-underline"
                 >
                   Connect Fitbit
-                </button>
+                </a>
               )}
             </div>
             
