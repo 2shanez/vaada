@@ -258,7 +258,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     ✅
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Keep your vaada, keep your stake</p>
+                    <p className="text-sm font-medium">Keep your promise, keep your stake</p>
                     <p className="text-xs text-[var(--text-secondary)]">Auto-verified by oracles</p>
                   </div>
                 </div>
