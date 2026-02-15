@@ -27,7 +27,7 @@ function IntegrationsDropdown() {
   const { address } = useAccount()
   const [open, setOpen] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const [menuPos, setMenuPos] = useState({ top: 0, right: 0 })
+  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 })
   
   // Check if Fitbit is connected via cookie
   const [fitbitConnected, setFitbitConnected] = useState(false)
@@ -46,12 +46,24 @@ function IntegrationsDropdown() {
   const handleToggle = () => {
     if (!open && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
+      const menuWidth = 256 // w-64 = 16rem = 256px
+      // Calculate left position, ensuring menu stays within viewport
+      let left = rect.left
+      if (left + menuWidth > window.innerWidth - 16) {
+        left = window.innerWidth - menuWidth - 16
+      }
+      if (left < 16) left = 16
       setMenuPos({
         top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
+        left: left,
       })
     }
     setOpen(!open)
+  }
+
+  const handleFitbitClick = () => {
+    // Navigate to Fitbit auth
+    window.location.href = fitbitUrl
   }
 
   return (
@@ -73,7 +85,7 @@ function IntegrationsDropdown() {
           <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
           <div 
             className="fixed w-64 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
-            style={{ top: menuPos.top, right: menuPos.right }}
+            style={{ top: menuPos.top, left: menuPos.left }}
           >
             {/* Fitbit Section */}
             <div className="px-4 py-3 border-b border-[var(--border)]">
@@ -85,20 +97,18 @@ function IntegrationsDropdown() {
                 )}
               </div>
               <div className="flex gap-2">
-                <a
-                  href={fitbitUrl}
-                  onClick={() => setOpen(false)}
+                <button
+                  onClick={handleFitbitClick}
                   className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors"
                 >
                   Connect
-                </a>
-                <a
-                  href={fitbitUrl}
-                  onClick={() => setOpen(false)}
+                </button>
+                <button
+                  onClick={handleFitbitClick}
                   className="flex-1 text-center px-3 py-1.5 text-xs font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
                 >
                   Reconnect
-                </a>
+                </button>
               </div>
             </div>
             
