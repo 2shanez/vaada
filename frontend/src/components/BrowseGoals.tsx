@@ -115,24 +115,7 @@ function NotifyModal({
 }
 
 const FEATURED_GOALS: Goal[] = [
-  {
-    id: 'mainnet-steps-0',
-    onChainId: 0,
-    title: '3K Steps by 9pm',
-    description: 'Hit 3,000 steps before 9pm EST. First mainnet goal!',
-    emoji: '👟',
-    targetMiles: 3000,
-    targetUnit: 'steps',
-    durationDays: 0, // Same day
-    minStake: 1,
-    maxStake: 10,
-    participants: 0,
-    totalStaked: 0,
-    category: 'Daily',
-    domain: 'Fitness',
-    subdomain: 'Steps',
-    live: true,
-  },
+  // Goal 0 removed - was test goal that's now settled
 ]
 
 const COMING_SOON = [
