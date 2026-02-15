@@ -80,6 +80,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const [leaderboardData, setLeaderboardData] = useState<{address: string, name?: string, steps: number, stake: number}[]>([])
   const [leaderboardLoading, setLeaderboardLoading] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
+  const [playerProfiles, setPlayerProfiles] = useState<Record<string, string>>({})
   
   // Combine on-chain state with local state for immediate UI feedback
   // Only show joined state if user is authenticated
@@ -456,6 +457,15 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     }
   })
 
+  // Fetch player profiles when addresses change
+  useEffect(() => {
+    if (playerAddresses.length > 0) {
+      fetchProfiles(playerAddresses).then(profiles => {
+        setPlayerProfiles(profiles)
+      })
+    }
+  }, [playerAddresses.join(',')])
+
   // Phase timeline - maps contract phase to timeline step (0=Entry, 1=Compete, 2=Verify, 3=Payout)
   const getPhaseStep = () => {
     if (isSettled) return 3
@@ -754,8 +764,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2 min-w-[200px] shadow-xl">
               {playerList.map((p, i) => (
                 <div key={i} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-[var(--background)]">
-                  <span className="text-[11px] text-[var(--text-secondary)] font-mono">
-                    {p.address.slice(0, 6)}...{p.address.slice(-4)}
+                  <span className="text-[11px] text-[var(--text-secondary)]">
+                    {playerProfiles[p.address.toLowerCase()] || `${p.address.slice(0, 6)}...${p.address.slice(-4)}`}
                   </span>
                   <span className="text-[11px] font-medium text-[#2EE59D]">${p.stake}</span>
                 </div>
