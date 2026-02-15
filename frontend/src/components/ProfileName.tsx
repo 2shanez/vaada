@@ -43,6 +43,7 @@ export function ProfileNameButton() {
   const [inputValue, setInputValue] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   
   useEffect(() => {
@@ -56,6 +57,15 @@ export function ProfileNameButton() {
   }, [displayName])
   
   if (!isConnected || !address) return null
+  
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    navigator.clipboard.writeText(address)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+  
+  const shortAddress = `${address.slice(0, 6)}...${address.slice(-4)}`
   
   const handleSave = async () => {
     if (!inputValue.trim()) return
@@ -86,21 +96,44 @@ export function ProfileNameButton() {
     }
   }
   
-  // Compact display when not editing
+  // Compact display when not editing - combined name + copy button
   if (!isEditing) {
     return (
-      <button
-        onClick={() => setIsEditing(true)}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all"
-        title="Set display name"
-      >
-        {displayName ? (
-          <span className="font-medium text-[var(--foreground)]">{displayName}</span>
-        ) : (
-          <span className="text-[var(--text-secondary)]">Set name</span>
-        )}
-        <span className="text-[10px]">✏️</span>
-      </button>
+      <div className="flex items-center rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
+        {/* Main button - click to edit name */}
+        <button
+          onClick={() => setIsEditing(true)}
+          className="flex items-center gap-1.5 px-3 py-2 text-sm hover:bg-[var(--background)] transition-all"
+          title={displayName ? "Edit name" : "Set display name"}
+        >
+          {displayName ? (
+            <span className="font-medium text-[var(--foreground)]">{displayName}</span>
+          ) : (
+            <span className="text-[var(--text-secondary)] font-mono text-xs">{shortAddress}</span>
+          )}
+          <span className="text-[10px] opacity-60">✏️</span>
+        </button>
+        
+        {/* Divider */}
+        <div className="w-px h-5 bg-[var(--border)]" />
+        
+        {/* Copy button */}
+        <button
+          onClick={handleCopy}
+          className="px-2.5 py-2 text-[var(--text-secondary)] hover:text-[#2EE59D] hover:bg-[var(--background)] transition-all"
+          title="Copy wallet address"
+        >
+          {copied ? (
+            <svg className="w-4 h-4 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          )}
+        </button>
+      </div>
     )
   }
   
