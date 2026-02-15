@@ -4,14 +4,14 @@
 
 The promise market. Stake money on your goals, keep your promise → keep your stake + earn from those who don't.
 
-🔗 **Live:** [vaada.io](https://vaada.io) (Base)  
-📖 **Docs:** [docs/ONBOARDING.md](docs/ONBOARDING.md)
+🔗 **Live:** [vaada.io](https://vaada.io) (Base Mainnet)  
+📖 **Docs:** [docs/WHITEPAPER.md](docs/WHITEPAPER.md)
 
 ---
 
 ## What is Vaada?
 
-Vaada (Hindi for "promise") is a protocol where users stake USDC on personal commitments. Chainlink oracles verify progress automatically, and smart contracts handle settlement — no human referees, no disputes.
+Vaada (Hindi for "promise") is a protocol where users stake USDC on personal commitments. Chainlink oracles verify progress automatically via Fitbit and Strava, and smart contracts handle settlement — no human referees, no disputes.
 
 **Polymarket** is where you bet on the world. **Vaada** is where you bet on yourself.
 
@@ -20,8 +20,8 @@ Vaada (Hindi for "promise") is a protocol where users stake USDC on personal com
 ## How It Works
 
 ```
-1. Pick a goal    → "Run 3 miles today" or "5K steps"
-2. Stake USDC     → $1 - $100
+1. Pick a goal    → "10K steps today" or "Run 3 miles"
+2. Stake USDC     → $20 fixed stake
 3. Connect Fitbit/Strava → Auto-verification enabled  
 4. Deadline hits  → Chainlink verifies your activity
 5. Results:
@@ -35,13 +35,14 @@ Vaada (Hindi for "promise") is a protocol where users stake USDC on personal com
 
 | Layer | Technology |
 |-------|------------|
-| **Chain** | Base (Coinbase L2) |
+| **Chain** | Base (Coinbase L2) — Mainnet |
 | **Contracts** | Solidity + Foundry |
 | **Oracles** | Chainlink Functions + Automation |
-| **Frontend** | Next.js 14, React, Tailwind |
+| **Yield** | Morpho Vault (~4.9% APY on locked stakes) |
+| **Frontend** | Next.js 16, React, Tailwind |
 | **Auth** | Privy (email/Google/wallet) |
-| **Fitness** | Strava + Fitbit APIs |
-| **Database** | Supabase (OAuth tokens) |
+| **Fitness** | Fitbit (steps) + Strava (miles) |
+| **Database** | Supabase (OAuth tokens, profiles) |
 
 ---
 
@@ -51,8 +52,9 @@ Vaada (Hindi for "promise") is a protocol where users stake USDC on personal com
 vaada/
 ├── contracts/        # Solidity smart contracts
 │   ├── src/
-│   │   ├── GoalStakeV3.sol           # Core protocol
-│   │   └── GoalStakeAutomationV3.sol # Chainlink bridge
+│   │   ├── VaadaV3.sol               # Core protocol
+│   │   ├── GoalStakeAutomationV3.sol # Chainlink bridge
+│   │   └── NewUserChallenge.sol      # Onboarding contract
 │   └── script/       # Deploy scripts
 │
 ├── frontend/         # Next.js web app
@@ -63,39 +65,42 @@ vaada/
 │   └── .env.local    # Secrets
 │
 ├── chainlink/        # Chainlink Functions scripts
-├── scripts/          # Deployment & ops scripts
-├── supabase/         # Database schema
+│   ├── vaada-verifier.js      # Fitness verification
+│   └── newuser-verifier.js    # Goal-joining verification
 │
 └── docs/             # Documentation
-    ├── ONBOARDING.md     # Developer onboarding
-    ├── WHITEPAPER.md     # Protocol spec
-    └── research/         # Market research
+    └── WHITEPAPER.md     # Protocol spec
 ```
 
 ---
 
-## Contracts (Base Sepolia)
+## Contracts (Base Mainnet)
 
 | Contract | Address |
 |----------|---------|
-| GoalStakeV3 | `0xE570BE5EC4039e2b256ADb1e02F6E595eCE921B9` |
-| AutomationV3 | `0x6e6b1834afE0E221fB965edD69A7bC82C784f906` |
-| USDC (testnet) | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` |
+| VaadaV3 | `0xAc67E863221B703CEE9B440a7beFe71EA8725434` |
+| AutomationV3 | `0xA6BcEcA41fCF743324a864F47dd03F0D3806341D` |
+| NewUserChallenge | `0x7a2959ff82aeF587A6B8491A1816bb4BA7aEE554` |
+| Morpho Vault | `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` |
+| USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
+
+**Chainlink:** Subscription ID 132
 
 ---
 
 ## Features
 
 - ✅ Stake USDC on fitness goals
-- ✅ Strava integration (miles)
 - ✅ Fitbit integration (steps)
+- ✅ Strava integration (miles)
 - ✅ Chainlink oracle verification
+- ✅ Morpho vault yield on locked stakes
 - ✅ Stake-weighted payouts
 - ✅ Privy auth (email/Google/wallet)
-- ✅ One-tx join (approve once)
-- ✅ OAuth popup (no redirects)
-- ⏳ Create your own goals
-- ⏳ Mainnet deployment
+- ✅ Profile names & leaderboards
+- ✅ Admin dashboard
+- ✅ Anti-cheat (device-recorded only)
+- ✅ **Live on Base Mainnet**
 
 ---
 
@@ -122,8 +127,9 @@ forge test
 ## Links
 
 - **Website:** https://vaada.io
-- **BaseScan:** [View contracts](https://sepolia.basescan.org/address/0xE570BE5EC4039e2b256ADb1e02F6E595eCE921B9)
-- **Chainlink Sub:** 561
+- **Admin:** https://vaada.io/admin
+- **BaseScan:** [View contracts](https://basescan.org/address/0xAc67E863221B703CEE9B440a7beFe71EA8725434)
+- **Chainlink:** [Subscription 132](https://functions.chain.link/base/132)
 
 ---
 
@@ -133,4 +139,4 @@ MIT
 
 ---
 
-*Built by [Shane Sarin](https://2667.io) with Alfred 🎩*
+*Built by [Shane Sarin](https://shanesarin.com) with Alfred 🎩*
