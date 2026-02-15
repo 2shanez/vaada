@@ -279,7 +279,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    By signing up, you're making your first promise. If you don't join a goal within 24 hours, your $${stakeAmountFormatted} will be split among those who did. Ready?
+                    By signing up, you're making your first promise. If you don't join a goal within 24 hours, your ${stakeAmountFormatted} will be split among those who did. Ready?
                   </p>
                 </div>
               </div>
