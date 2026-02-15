@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
           .from('fitbit_tokens')
           .upsert({
             wallet_address: walletAddress,
-            fitbit_user_id: tokenData.user_id,
+            user_id: tokenData.user_id,
             access_token: tokenData.access_token,
             refresh_token: tokenData.refresh_token,
             expires_at: expiresAt,
