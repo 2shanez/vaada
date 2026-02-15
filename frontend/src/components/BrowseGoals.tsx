@@ -115,7 +115,21 @@ function NotifyModal({
 }
 
 const FEATURED_GOALS: Goal[] = [
-  // Placeholder - will add new goal after creation
+  {
+    id: 'quick-test-2k-steps',
+    onChainId: 2,
+    title: 'Quick Test 2K Steps',
+    targetMiles: 2000,
+    targetUnit: 'steps',
+    durationDays: 0, // Less than a day
+    minStake: 0.5,
+    maxStake: 0.5,
+    participants: 0,
+    totalStaked: 0,
+    domain: 'Fitness',
+    subdomain: 'Steps',
+    live: true,
+  },
 ]
 
 const COMING_SOON = [
