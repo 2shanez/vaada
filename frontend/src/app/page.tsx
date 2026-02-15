@@ -99,15 +99,13 @@ function IntegrationsDropdown() {
               <div className="text-[8px] text-gray-400 mb-1 break-all">{fitbitUrl}</div>
               {fitbitConnected ? (
                 <div className="flex gap-2 relative z-[200]" style={{ pointerEvents: 'auto' }}>
-                  <a
-                    href={fitbitUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer no-underline"
-                    style={{ pointerEvents: 'auto' }}
+                  <button
+                    type="button"
+                    onClick={() => window.open(fitbitUrl, '_blank')}
+                    className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer"
                   >
                     Reconnect ↗
-                  </a>
+                  </button>
                   <button
                     type="button"
                     onClick={() => handleDisconnect()}
@@ -117,15 +115,13 @@ function IntegrationsDropdown() {
                   </button>
                 </div>
               ) : (
-                <a
-                  href={fitbitUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ pointerEvents: 'auto' }}
-                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer relative z-[200] no-underline"
+                <button
+                  type="button"
+                  onClick={() => window.open(fitbitUrl, '_blank')}
+                  className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors cursor-pointer relative z-[200]"
                 >
                   Connect Fitbit ↗
-                </a>
+                </button>
               )}
             </div>
             
