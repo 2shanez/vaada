@@ -324,15 +324,14 @@ export default function Home() {
             <h2 className="text-2xl font-bold mt-2">How It Works</h2>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 relative">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 relative">
             {/* Connecting line */}
-            <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+            <div className="hidden md:block absolute top-8 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
-              { step: '01', icon: '👤', title: 'Sign up', desc: 'Email, Google, or wallet.' },
-              { step: '02', icon: '🤝', title: 'Make a vaada', desc: 'A vaada is a promise.' },
-              { step: '03', icon: '💵', title: 'Stake money', desc: 'Put skin in the game.' },
-              { step: '04', icon: '🏆', title: 'Keep it', desc: "Keep stake + earn from those who don't." },
+              { step: '01', icon: '💰', title: 'Make a promise', desc: 'Stake money on your goal. Put real skin in the game to back your word.' },
+              { step: '02', icon: '✅', title: 'Keep your promise', desc: 'We verify automatically via Fitbit. Just walk — we track your progress.' },
+              { step: '03', icon: '🏆', title: 'Earn from your promise', desc: "Keep your stake + earn from those who don't. Winners split the pool." },
             ].map((item, i) => (
               <div 
                 key={item.step} 
@@ -346,7 +345,7 @@ export default function Home() {
                   </span>
                 </div>
                 <h3 className="font-semibold text-sm mb-1 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{item.desc}</p>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed max-w-[200px] mx-auto">{item.desc}</p>
               </div>
             ))}
           </div>
