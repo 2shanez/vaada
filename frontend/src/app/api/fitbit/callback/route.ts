@@ -109,9 +109,7 @@ export async function GET(request: NextRequest) {
           .upsert({
             wallet_address: walletAddress,
             user_id: tokenData.user_id,
-            access_token: tokenData.access_token,
             refresh_token: tokenData.refresh_token,
-            expires_at: expiresAt,
             updated_at: new Date().toISOString(),
           }, {
             onConflict: 'wallet_address'
