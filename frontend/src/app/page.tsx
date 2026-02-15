@@ -81,7 +81,7 @@ function IntegrationsDropdown() {
       
       {open && (
         <>
-          <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
+          {/* Backdrop removed for testing - was blocking clicks */}
           <div 
             className="fixed w-64 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
             style={{ top: menuPos.top, left: menuPos.left }}
