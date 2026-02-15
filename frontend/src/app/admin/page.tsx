@@ -63,6 +63,44 @@ const VAADA_ABI = [
   },
 ] as const
 
+const NEW_USER_ABI = [
+  {
+    name: 'totalActiveStakes',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    name: 'totalChallenges',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    name: 'totalWon',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    name: 'totalForfeited',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+  },
+  {
+    name: 'stakeAmount',
+    type: 'function',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+  },
+] as const
+
 export default function AdminPage() {
   const [mounted, setMounted] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
@@ -70,7 +108,7 @@ export default function AdminPage() {
   const [error, setError] = useState('')
   const contracts = CONTRACTS[base.id]
 
-  // All hooks must be called unconditionally
+  // VaadaV3 hooks
   const { data: totalActiveStakes } = useReadContract({
     address: contracts.goalStake,
     abi: VAADA_ABI,
@@ -113,6 +151,38 @@ export default function AdminPage() {
     abi: VAULT_ABI,
     functionName: 'maxWithdraw',
     args: [contracts.goalStake],
+  })
+
+  // NewUserChallenge hooks
+  const { data: nucActiveStakes } = useReadContract({
+    address: contracts.newUserChallenge,
+    abi: NEW_USER_ABI,
+    functionName: 'totalActiveStakes',
+  })
+
+  const { data: nucTotalChallenges } = useReadContract({
+    address: contracts.newUserChallenge,
+    abi: NEW_USER_ABI,
+    functionName: 'totalChallenges',
+  })
+
+  const { data: nucTotalWon } = useReadContract({
+    address: contracts.newUserChallenge,
+    abi: NEW_USER_ABI,
+    functionName: 'totalWon',
+  })
+
+  const { data: nucTotalForfeited } = useReadContract({
+    address: contracts.newUserChallenge,
+    abi: NEW_USER_ABI,
+    functionName: 'totalForfeited',
+  })
+
+  const { data: nucMaxWithdraw } = useReadContract({
+    address: contracts.morphoVault,
+    abi: VAULT_ABI,
+    functionName: 'maxWithdraw',
+    args: [contracts.newUserChallenge],
   })
 
   useEffect(() => {
@@ -163,17 +233,25 @@ export default function AdminPage() {
     )
   }
 
-  // Calculate stats
+  // Calculate VaadaV3 stats
   const totalStakedUSDC = totalActiveStakes ? Number(formatUnits(totalActiveStakes, 6)) : 0
   const vaultValueUSDC = maxWithdraw ? Number(formatUnits(maxWithdraw, 6)) : 0
   const yieldEarned = vaultValueUSDC - totalStakedUSDC
   const yieldPercent = totalStakedUSDC > 0 ? ((yieldEarned / totalStakedUSDC) * 100).toFixed(4) : '0'
 
+  // Calculate NewUserChallenge stats
+  const nucStakedUSDC = nucActiveStakes ? Number(formatUnits(nucActiveStakes, 6)) : 0
+  const nucVaultUSDC = nucMaxWithdraw ? Number(formatUnits(nucMaxWithdraw, 6)) : 0
+  const nucYield = nucVaultUSDC - nucStakedUSDC
+  const nucPending = (nucTotalChallenges ? Number(nucTotalChallenges) : 0) - 
+                     (nucTotalWon ? Number(nucTotalWon) : 0) - 
+                     (nucTotalForfeited ? Number(nucTotalForfeited) : 0)
+
   return (
     <div className="min-h-screen bg-[var(--background)] p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-2">🔐 Admin Dashboard</h1>
-        <p className="text-[var(--text-secondary)] mb-8">VaadaV3 Contract Stats</p>
+        <p className="text-[var(--text-secondary)] mb-8">Vaada Contract Stats</p>
 
         {/* Contract Addresses */}
         <div className="bg-[var(--surface)] rounded-2xl p-6 mb-6 border border-[var(--border)]">
@@ -212,10 +290,10 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Treasury Stats */}
+        {/* VaadaV3 Treasury Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-            <h2 className="text-lg font-semibold mb-4">💰 Treasury</h2>
+            <h2 className="text-lg font-semibold mb-4">💰 VaadaV3 Treasury</h2>
             <div className="space-y-4">
               <div>
                 <div className="text-[var(--text-secondary)] text-sm">Total Active Stakes</div>
@@ -231,24 +309,71 @@ export default function AdminPage() {
                   ${yieldEarned.toFixed(6)} ({yieldPercent}%)
                 </div>
               </div>
+              <div>
+                <div className="text-[var(--text-secondary)] text-sm">Total Goals</div>
+                <div className="text-xl font-bold">{goalCount?.toString() || '0'}</div>
+              </div>
             </div>
           </div>
 
           <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-            <h2 className="text-lg font-semibold mb-4">📊 Stats</h2>
+            <h2 className="text-lg font-semibold mb-4">🚀 NewUserChallenge</h2>
             <div className="space-y-4">
               <div>
-                <div className="text-[var(--text-secondary)] text-sm">Total Goals</div>
-                <div className="text-2xl font-bold">{goalCount?.toString() || '0'}</div>
+                <div className="text-[var(--text-secondary)] text-sm">Active Stakes</div>
+                <div className="text-2xl font-bold">${nucStakedUSDC.toFixed(2)}</div>
               </div>
               <div>
-                <div className="text-[var(--text-secondary)] text-sm">Vault Shares</div>
-                <div className="text-lg font-mono truncate">{vaultShares?.toString() || '0'}</div>
+                <div className="text-[var(--text-secondary)] text-sm">Vault Value</div>
+                <div className="text-2xl font-bold">${nucVaultUSDC.toFixed(6)}</div>
               </div>
               <div>
-                <div className="text-[var(--text-secondary)] text-sm">Morpho APY</div>
-                <div className="text-2xl font-bold text-[#2EE59D]">~4.9%</div>
+                <div className="text-[var(--text-secondary)] text-sm">Yield Earned</div>
+                <div className="text-2xl font-bold text-[#2EE59D]">
+                  ${nucYield.toFixed(6)}
+                </div>
               </div>
+              <div className="grid grid-cols-3 gap-2 pt-2">
+                <div>
+                  <div className="text-[var(--text-secondary)] text-xs">Total</div>
+                  <div className="font-bold">{nucTotalChallenges?.toString() || '0'}</div>
+                </div>
+                <div>
+                  <div className="text-[var(--text-secondary)] text-xs">Won</div>
+                  <div className="font-bold text-green-500">{nucTotalWon?.toString() || '0'}</div>
+                </div>
+                <div>
+                  <div className="text-[var(--text-secondary)] text-xs">Forfeited</div>
+                  <div className="font-bold text-red-500">{nucTotalForfeited?.toString() || '0'}</div>
+                </div>
+              </div>
+              <div>
+                <div className="text-[var(--text-secondary)] text-sm">Pending</div>
+                <div className="text-xl font-bold text-yellow-500">{nucPending}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Platform Stats */}
+        <div className="bg-[var(--surface)] rounded-2xl p-6 mb-6 border border-[var(--border)]">
+          <h2 className="text-lg font-semibold mb-4">📊 Platform Totals</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Total TVL</div>
+              <div className="text-2xl font-bold">${(vaultValueUSDC + nucVaultUSDC).toFixed(2)}</div>
+            </div>
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Total Yield</div>
+              <div className="text-2xl font-bold text-[#2EE59D]">${(yieldEarned + nucYield).toFixed(6)}</div>
+            </div>
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Morpho APY</div>
+              <div className="text-2xl font-bold text-[#2EE59D]">~4.9%</div>
+            </div>
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Vault Shares</div>
+              <div className="text-sm font-mono truncate">{vaultShares?.toString() || '0'}</div>
             </div>
           </div>
         </div>
