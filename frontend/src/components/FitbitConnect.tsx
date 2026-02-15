@@ -229,3 +229,62 @@ export function useFitbitConnection() {
   
   return { isConnected, isLoading }
 }
+
+// Header button for Fitbit connection with reconnect option
+export function FitbitHeaderButton() {
+  const { address } = useAccount()
+  const { isConnected, isLoading } = useFitbitConnection()
+  const [showMenu, setShowMenu] = useState(false)
+
+  const handleConnect = () => {
+    if (address) {
+      window.location.href = `/api/fitbit/auth?wallet=${address}`
+    }
+  }
+
+  if (isLoading) return null
+
+  if (!isConnected) {
+    return (
+      <button
+        onClick={handleConnect}
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-white text-sm font-medium hover:opacity-90 transition-all"
+        style={{ backgroundColor: FITBIT_TEAL }}
+      >
+        <span>⌚</span>
+        <span className="hidden sm:inline">Connect Fitbit</span>
+      </button>
+    )
+  }
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#00B0B9]/50 transition-all"
+      >
+        <span className="text-[#00B0B9]">✓</span>
+        <span className="hidden sm:inline">Fitbit</span>
+        <span className="text-[var(--text-secondary)] text-xs">›</span>
+      </button>
+      
+      {showMenu && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
+          <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2 min-w-[140px] shadow-xl">
+            <button
+              onClick={() => {
+                setShowMenu(false)
+                handleConnect()
+              }}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[var(--background)] text-sm text-left"
+            >
+              <span>🔄</span>
+              <span>Reconnect</span>
+            </button>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
