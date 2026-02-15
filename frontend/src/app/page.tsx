@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useAccount, useReadContract } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
@@ -22,19 +22,33 @@ const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
 const ProfileNameButton = dynamic(() => import('@/components/ProfileName').then(m => ({ default: m.ProfileNameButton })), { ssr: false })
 const DevResetButton = dynamic(() => import('@/components/DevResetButton').then(m => ({ default: m.DevResetButton })), { ssr: false })
-// Integrations dropdown - inline to avoid dynamic import issues
+// Integrations dropdown with portal-style fixed positioning
 function IntegrationsDropdown() {
   const { address } = useAccount()
   const [open, setOpen] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [menuPos, setMenuPos] = useState({ top: 0, right: 0 })
   
   const fitbitUrl = address 
     ? `/api/fitbit/auth?wallet=${address}`
     : '/api/fitbit/auth'
 
+  const handleToggle = () => {
+    if (!open && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect()
+      setMenuPos({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      })
+    }
+    setOpen(!open)
+  }
+
   return (
-    <div className="relative">
+    <>
       <button
-        onClick={() => setOpen(!open)}
+        ref={buttonRef}
+        onClick={handleToggle}
         className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all"
       >
         <span>🔗</span>
@@ -46,11 +60,15 @@ function IntegrationsDropdown() {
       
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-52 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-50 overflow-hidden">
+          <div className="fixed inset-0 z-[100]" onClick={() => setOpen(false)} />
+          <div 
+            className="fixed w-52 bg-[var(--background)] border border-[var(--border)] rounded-xl shadow-lg z-[101] overflow-hidden"
+            style={{ top: menuPos.top, right: menuPos.right }}
+          >
             <a
               href={fitbitUrl}
               className="flex items-center justify-between px-4 py-3 hover:bg-[var(--surface)] transition-colors"
+              onClick={() => setOpen(false)}
             >
               <div className="flex items-center gap-2">
                 <span>⌚</span>
@@ -68,7 +86,7 @@ function IntegrationsDropdown() {
           </div>
         </>
       )}
-    </div>
+    </>
   )
 }
 
