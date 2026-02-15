@@ -984,8 +984,8 @@ function StakeSelector({ goal, stakeAmount, setStakeAmount, balanceNum }: {
       <div className="mb-4">
         <div className="flex items-center justify-between bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3">
           <div className="flex items-baseline gap-1.5">
+            <span className="text-sm text-[var(--text-secondary)]">Stake:</span>
             <span className="text-lg font-semibold text-[#2EE59D]">${goal.minStake}</span>
-            <span className="text-sm text-[var(--text-secondary)]">stake</span>
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-sm text-[var(--text-secondary)]">Balance:</span>
