@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { useAccount, useReadContract } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
@@ -43,10 +43,10 @@ function IntegrationsDropdown() {
     ? `https://www.vaada.io/api/fitbit/auth?wallet=${address}`
     : 'https://www.vaada.io/api/fitbit/auth'
 
-  const handleToggle = () => {
-    if (!open && buttonRef.current) {
+  const updateMenuPosition = useCallback(() => {
+    if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
-      const menuWidth = 280 // wider for content
+      const menuWidth = 280
       let left = rect.left
       // Ensure menu stays within viewport with padding
       if (left + menuWidth > window.innerWidth - 16) {
@@ -58,8 +58,28 @@ function IntegrationsDropdown() {
         left: left,
       })
     }
+  }, [])
+
+  const handleToggle = () => {
+    if (!open) {
+      updateMenuPosition()
+    }
     setOpen(!open)
   }
+
+  // Update position on resize/scroll while open
+  useEffect(() => {
+    if (!open) return
+    
+    const handleResize = () => updateMenuPosition()
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleResize, true)
+    
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', handleResize, true)
+    }
+  }, [open, updateMenuPosition])
 
   const handleDisconnect = () => {
     document.cookie = 'fitbit_user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
