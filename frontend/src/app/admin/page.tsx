@@ -442,6 +442,38 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Dev Tools */}
+        <div className="bg-[var(--surface)] rounded-2xl p-6 mt-6 border border-[var(--border)]">
+          <h2 className="text-lg font-semibold mb-4">🛠️ Dev Tools</h2>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => {
+                localStorage.removeItem('vaada_onboarded')
+                window.location.href = '/'
+              }}
+              className="px-4 py-2 bg-[#2EE59D]/10 text-[#2EE59D] border border-[#2EE59D]/30 rounded-xl text-sm font-medium hover:bg-[#2EE59D]/20 transition-colors"
+            >
+              👋 Preview Onboarding
+            </button>
+            <button
+              onClick={() => {
+                localStorage.clear()
+                sessionStorage.clear()
+                alert('All local data cleared! Refresh to see changes.')
+              }}
+              className="px-4 py-2 bg-red-500/10 text-red-500 border border-red-500/30 rounded-xl text-sm font-medium hover:bg-red-500/20 transition-colors"
+            >
+              🗑️ Clear All Data
+            </button>
+            <a
+              href="/"
+              className="px-4 py-2 bg-[var(--background)] border border-[var(--border)] rounded-xl text-sm font-medium hover:border-[#2EE59D]/50 transition-colors"
+            >
+              🏠 Back to Site
+            </a>
+          </div>
+        </div>
+
         {/* Links */}
         <div className="mt-8 text-center text-[var(--text-secondary)] text-sm">
           <a href="https://functions.chain.link/base/132" target="_blank" rel="noopener noreferrer" className="hover:text-[#2EE59D]">
