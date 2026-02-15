@@ -74,6 +74,10 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const [step, setStep] = useState<Step>('idle')
   const [showClaimCelebration, setShowClaimCelebration] = useState(false)
   const [justJoined, setJustJoined] = useState(false) // Local flag to show Joined state immediately
+  const [showLeaderboard, setShowLeaderboard] = useState(false)
+  const [leaderboardData, setLeaderboardData] = useState<{address: string, steps: number, stake: number}[]>([])
+  const [leaderboardLoading, setLeaderboardLoading] = useState(false)
+  const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
   
   // Combine on-chain state with local state for immediate UI feedback
   // Only show joined state if user is authenticated
@@ -345,6 +349,42 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     if (!stravaConnected) handleStravaConnect()
     else if (!hasTokenOnChain) handleStoreToken()
     else handleJoin()
+  }
+
+  // Fetch leaderboard data (step counts for all participants)
+  const fetchLeaderboard = async () => {
+    if (!goalDetails.startTime || !goalDetails.deadline || playerList.length === 0) return
+    
+    setLeaderboardLoading(true)
+    setLeaderboardError(null)
+    
+    try {
+      const results = await Promise.all(
+        playerList.map(async (p) => {
+          try {
+            const res = await fetch(
+              `/api/verify?user=${p.address}&start=${goalDetails.startTime}&end=${goalDetails.deadline}&type=${isStepsGoal ? 'steps' : 'miles'}`
+            )
+            const data = await res.json()
+            return {
+              address: p.address,
+              steps: data.success ? (data.steps || data.miles || 0) : 0,
+              stake: p.stake,
+            }
+          } catch {
+            return { address: p.address, steps: 0, stake: p.stake }
+          }
+        })
+      )
+      
+      // Sort by steps descending
+      results.sort((a, b) => b.steps - a.steps)
+      setLeaderboardData(results)
+    } catch (err) {
+      setLeaderboardError('Failed to fetch leaderboard')
+    } finally {
+      setLeaderboardLoading(false)
+    }
   }
 
   // Format duration
@@ -666,9 +706,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-          <div className="relative flex items-center">
+          <div className="relative flex items-center gap-2">
             <button 
-              onClick={(e) => { e.stopPropagation(); if (participants > 0) setShowPlayers(!showPlayers) }}
+              onClick={(e) => { e.stopPropagation(); if (participants > 0) setShowPlayers(!showPlayers); setShowLeaderboard(false) }}
               className="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface)] border border-[var(--border)] py-1 px-3 hover:border-[#2EE59D]/50 transition-colors"
             >
               <span className="text-[11px] font-medium text-[var(--foreground)]">
@@ -676,7 +716,28 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               </span>
               <span className={`text-[var(--text-secondary)] text-xs transition-transform ${showPlayers ? 'rotate-90' : ''}`}>›</span>
             </button>
+            
+            {/* Leaderboard button - show during compete phase (phase 1+) */}
+            {currentPhaseStep >= 1 && participants > 0 && isStepsGoal && (
+              <button 
+                onClick={(e) => { 
+                  e.stopPropagation()
+                  setShowPlayers(false)
+                  setShowLeaderboard(!showLeaderboard)
+                  if (!showLeaderboard && leaderboardData.length === 0) fetchLeaderboard()
+                }}
+                className={`p-1.5 rounded-lg border transition-colors ${
+                  showLeaderboard 
+                    ? 'bg-[#2EE59D]/10 border-[#2EE59D] text-[#2EE59D]' 
+                    : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[#2EE59D]/50'
+                }`}
+                title="Leaderboard"
+              >
+                📊
+              </button>
+            )}
           
+          {/* Players dropdown */}
           {showPlayers && playerList.length > 0 && (
             <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-2 min-w-[200px] shadow-xl">
               {playerList.map((p, i) => (
@@ -687,6 +748,61 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   <span className="text-[11px] font-medium text-[#2EE59D]">${p.stake}</span>
                 </div>
               ))}
+            </div>
+          )}
+          
+          {/* Leaderboard dropdown */}
+          {showLeaderboard && (
+            <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 min-w-[260px] shadow-xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-[var(--foreground)]">📊 Leaderboard</span>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); fetchLeaderboard() }}
+                  disabled={leaderboardLoading}
+                  className="text-[10px] text-[#2EE59D] hover:underline disabled:opacity-50"
+                >
+                  {leaderboardLoading ? '⏳' : '🔄 Refresh'}
+                </button>
+              </div>
+              
+              {leaderboardError && (
+                <p className="text-[10px] text-red-500 mb-2">{leaderboardError}</p>
+              )}
+              
+              {leaderboardLoading && leaderboardData.length === 0 ? (
+                <div className="py-4 text-center">
+                  <div className="w-5 h-5 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin mx-auto" />
+                  <p className="text-[10px] text-[var(--text-secondary)] mt-2">Fetching steps...</p>
+                </div>
+              ) : leaderboardData.length === 0 ? (
+                <p className="text-[10px] text-[var(--text-secondary)] text-center py-2">No data yet</p>
+              ) : (
+                <div className="space-y-1">
+                  {leaderboardData.map((p, i) => (
+                    <div key={i} className={`flex items-center justify-between py-1.5 px-2 rounded-lg ${
+                      i === 0 ? 'bg-[#2EE59D]/10' : 'hover:bg-[var(--background)]'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-bold ${i === 0 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
+                          {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
+                        </span>
+                        <span className="text-[11px] text-[var(--text-secondary)] font-mono">
+                          {p.address.slice(0, 6)}...{p.address.slice(-4)}
+                        </span>
+                      </div>
+                      <span className={`text-[11px] font-bold ${p.steps >= goal.targetMiles ? 'text-[#2EE59D]' : 'text-[var(--foreground)]'}`}>
+                        {p.steps.toLocaleString()} {isStepsGoal ? 'steps' : 'mi'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              <div className="mt-2 pt-2 border-t border-[var(--border)]">
+                <p className="text-[9px] text-[var(--text-secondary)] text-center">
+                  Target: {goal.targetMiles.toLocaleString()} {isStepsGoal ? 'steps' : 'miles'}
+                </p>
+              </div>
             </div>
           )}
           </div>
