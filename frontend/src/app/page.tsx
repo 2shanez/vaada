@@ -61,11 +61,6 @@ function IntegrationsDropdown() {
     setOpen(!open)
   }
 
-  const handleFitbitClick = () => {
-    // Navigate to Fitbit auth
-    window.location.href = fitbitUrl
-  }
-
   return (
     <>
       <button
@@ -97,18 +92,18 @@ function IntegrationsDropdown() {
                 )}
               </div>
               <div className="flex gap-2">
-                <button
-                  onClick={handleFitbitClick}
+                <a
+                  href={fitbitUrl}
                   className="flex-1 text-center px-3 py-1.5 text-xs font-medium bg-[#00B0B9] text-white rounded-lg hover:bg-[#009BA3] transition-colors"
                 >
                   Connect
-                </button>
-                <button
-                  onClick={handleFitbitClick}
+                </a>
+                <a
+                  href={fitbitUrl}
                   className="flex-1 text-center px-3 py-1.5 text-xs font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
                 >
                   Reconnect
-                </button>
+                </a>
               </div>
             </div>
             
