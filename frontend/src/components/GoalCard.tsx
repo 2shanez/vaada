@@ -75,6 +75,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const [step, setStep] = useState<Step>('idle')
   const [showClaimCelebration, setShowClaimCelebration] = useState(false)
   const [justJoined, setJustJoined] = useState(false) // Local flag to show Joined state immediately
+  const [justStakedAmount, setJustStakedAmount] = useState<number | null>(null) // Store stake amount for immediate display
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const [leaderboardData, setLeaderboardData] = useState<{address: string, name?: string, steps: number, stake: number}[]>([])
   const [leaderboardLoading, setLeaderboardLoading] = useState(false)
@@ -177,6 +178,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   useEffect(() => {
     if (isJoinSuccess && step === 'joining') {
       setJustJoined(true) // Immediately show Joined state
+      setJustStakedAmount(stakeAmount) // Store the stake amount for immediate display
       setExpanded(false) // Collapse the stake panel
       setStep('idle') // Go back to idle (skip 'done' screen)
       refetchParticipant()
@@ -885,7 +887,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 }`}
               >
                 {hasJoined 
-                  ? `Joined ✓ · $${userStake}` 
+                  ? `Joined ✓ · $${userStake || justStakedAmount || stakeAmount}` 
                   : goal.onChainId === undefined 
                   ? `Stake $${goal.minStake}` 
                   : !entryOpen 
