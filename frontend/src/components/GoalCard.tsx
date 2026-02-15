@@ -13,6 +13,7 @@ import { WithingsConnect, useWithingsConnection } from './WithingsConnect'
 import { RescueTimeConnect, useRescueTimeConnection } from './RescueTimeConnect'
 import { FitbitConnect, useFitbitConnection } from './FitbitConnect'
 import { OnboardingCommitment } from './OnboardingCommitment'
+import { fetchProfiles } from './ProfileName'
 // Re-export Goal type for other components
 export type { Goal }
 
@@ -75,7 +76,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const [showClaimCelebration, setShowClaimCelebration] = useState(false)
   const [justJoined, setJustJoined] = useState(false) // Local flag to show Joined state immediately
   const [showLeaderboard, setShowLeaderboard] = useState(false)
-  const [leaderboardData, setLeaderboardData] = useState<{address: string, steps: number, stake: number}[]>([])
+  const [leaderboardData, setLeaderboardData] = useState<{address: string, name?: string, steps: number, stake: number}[]>([])
   const [leaderboardLoading, setLeaderboardLoading] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
   
@@ -359,8 +360,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     setLeaderboardError(null)
     
     try {
-      const results = await Promise.all(
-        playerList.map(async (p) => {
+      // Fetch profile names in parallel with step data
+      const addresses = playerList.map(p => p.address)
+      const [profilesMap, ...stepResults] = await Promise.all([
+        fetchProfiles(addresses),
+        ...playerList.map(async (p) => {
           try {
             const res = await fetch(
               `/api/verify?user=${p.address}&start=${goalDetails.startTime}&end=${goalDetails.deadline}&type=${isStepsGoal ? 'steps' : 'miles'}`
@@ -375,11 +379,17 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             return { address: p.address, steps: 0, stake: p.stake }
           }
         })
-      )
+      ])
+      
+      // Add names to results
+      const resultsWithNames = stepResults.map(r => ({
+        ...r,
+        name: profilesMap[r.address.toLowerCase()] || undefined,
+      }))
       
       // Sort by steps descending
-      results.sort((a, b) => b.steps - a.steps)
-      setLeaderboardData(results)
+      resultsWithNames.sort((a, b) => b.steps - a.steps)
+      setLeaderboardData(resultsWithNames)
     } catch (err) {
       setLeaderboardError('Failed to fetch leaderboard')
     } finally {
@@ -786,9 +796,15 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                         <span className={`text-xs font-bold ${i === 0 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
                           {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
                         </span>
-                        <span className="text-[11px] text-[var(--text-secondary)] font-mono">
-                          {p.address.slice(0, 6)}...{p.address.slice(-4)}
-                        </span>
+                        {p.name ? (
+                          <span className="text-[11px] font-medium text-[var(--foreground)]">
+                            {p.name}
+                          </span>
+                        ) : (
+                          <span className="text-[11px] text-[var(--text-secondary)] font-mono">
+                            {p.address.slice(0, 6)}...{p.address.slice(-4)}
+                          </span>
+                        )}
                       </div>
                       <span className={`text-[11px] font-bold ${p.steps >= goal.targetMiles ? 'text-[#2EE59D]' : 'text-[var(--foreground)]'}`}>
                         {p.steps.toLocaleString()} {isStepsGoal ? 'steps' : 'mi'}

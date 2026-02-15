@@ -20,6 +20,7 @@ const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => (
 const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton').then(m => ({ default: m.PrivyConnectButton })), { ssr: false })
 // StravaConnect removed from header - now shown contextually in GoalCard for Running goals
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
+const ProfileNameButton = dynamic(() => import('@/components/ProfileName').then(m => ({ default: m.ProfileNameButton })), { ssr: false })
 const DevResetButton = dynamic(() => import('@/components/DevResetButton').then(m => ({ default: m.DevResetButton })), { ssr: false })
 
 // Stats card component with count-up animation
@@ -181,6 +182,7 @@ export default function Home() {
               <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
                 Vaadas
               </a>
+              {authenticated && <ProfileNameButton />}
               {authenticated && <FundWalletButton />}
               <PrivyConnectButton />
               <ThemeToggle />
