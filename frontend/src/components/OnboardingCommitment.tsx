@@ -1,13 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { usePrivy } from '@privy-io/react-auth'
+import { useState, useEffect, useCallback } from 'react'
+import { usePrivy, useFundWallet } from '@privy-io/react-auth'
 import { useAccount, useBalance, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi'
 import { base } from 'wagmi/chains'
-import { formatUnits } from 'viem'
+import { formatUnits, maxUint256 } from 'viem'
 import { NEW_USER_CHALLENGE_ABI, USDC_ABI } from '@/lib/abis'
 import { useContracts } from '@/lib/hooks'
-// Faucet removed - mainnet only
 
 // Check if this is a first-time user (never completed onboarding)
 export function isFirstTimeUser(): boolean {
@@ -24,32 +23,22 @@ interface OnboardingCommitmentProps {
   onComplete: () => void
 }
 
-// Links to get mainnet USDC/ETH
-const FUND_LINKS = {
-  eth: 'https://www.coinbase.com/price/ethereum', // Buy ETH on Coinbase
-  usdc: 'https://www.coinbase.com/price/usdc', // Buy USDC on Coinbase
-  bridge: 'https://superbridge.app/base', // Bridge to Base
-}
-
-// Modal shown to first-time users after sign-in
+// Streamlined single-screen onboarding modal
 export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) {
   const { user } = usePrivy()
+  const { fundWallet } = useFundWallet()
   const { address } = useAccount()
   const contracts = useContracts()
   const chainId = useChainId()
   const { switchChain, isPending: isSwitching } = useSwitchChain()
-  const [step, setStep] = useState<'intro' | 'approve' | 'join' | 'done'>('intro')
+  const [phase, setPhase] = useState<'ready' | 'switching' | 'approving' | 'joining' | 'done'>('ready')
   const [error, setError] = useState<string | null>(null)
-  const [showFundModal, setShowFundModal] = useState(false)
-  const [copied, setCopied] = useState(false)
   
   const isWrongNetwork = chainId !== base.id
-
-  // Check if contract is deployed (address is not zero)
   const isContractDeployed = contracts.newUserChallenge !== '0x0000000000000000000000000000000000000000'
 
-  // Check if user already joined (refetch to catch state changes)
-  const { data: hasJoined, refetch: refetchHasJoined } = useReadContract({
+  // Contract reads
+  const { data: hasJoined } = useReadContract({
     address: contracts.newUserChallenge,
     abi: NEW_USER_CHALLENGE_ABI,
     functionName: 'hasJoinedChallenge',
@@ -57,7 +46,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     query: { enabled: !!address && isContractDeployed, refetchInterval: 3000 },
   })
 
-  // Get stake amount from contract
   const { data: stakeAmount } = useReadContract({
     address: contracts.newUserChallenge,
     abi: NEW_USER_CHALLENGE_ABI,
@@ -65,13 +53,9 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     query: { enabled: isContractDeployed },
   })
 
-  // Check ETH balance (for gas)
-  const { data: ethBalance } = useBalance({
-    address: address,
-  })
+  const { data: ethBalance } = useBalance({ address })
   const hasEnoughGas = ethBalance && ethBalance.value > BigInt(0)
 
-  // Check USDC balance
   const { data: usdcBalance } = useReadContract({
     address: contracts.usdc,
     abi: USDC_ABI,
@@ -80,7 +64,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     query: { enabled: !!address },
   })
 
-  // Check USDC allowance
   const { data: allowance } = useReadContract({
     address: contracts.usdc,
     abi: USDC_ABI,
@@ -88,113 +71,55 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     args: address ? [address, contracts.newUserChallenge] : undefined,
     query: { enabled: !!address && isContractDeployed },
   })
-  
-  // Derived state
+
   const hasEnoughUSDC = usdcBalance !== undefined && stakeAmount !== undefined && 
     (usdcBalance as bigint) >= (stakeAmount as bigint)
   const canStake = hasEnoughUSDC && hasEnoughGas
+  const needsApproval = !allowance || (allowance as bigint) < (stakeAmount as bigint || BigInt(0))
 
   // Contract writes
-  const { writeContract: approve, data: approveTxHash } = useWriteContract()
-  const { writeContract: join, data: joinTxHash } = useWriteContract()
+  const { writeContract: approve, data: approveTxHash, error: approveError } = useWriteContract()
+  const { writeContract: join, data: joinTxHash, error: joinError } = useWriteContract()
 
-  // Wait for transactions
-  const { isLoading: isApproving, isSuccess: approveSuccess } = useWaitForTransactionReceipt({
-    hash: approveTxHash,
-  })
-  const { isLoading: isJoining, isSuccess: joinSuccess } = useWaitForTransactionReceipt({
-    hash: joinTxHash,
-  })
+  const { isLoading: isApproving, isSuccess: approveSuccess } = useWaitForTransactionReceipt({ hash: approveTxHash })
+  const { isLoading: isJoining, isSuccess: joinSuccess } = useWaitForTransactionReceipt({ hash: joinTxHash })
 
-  // Handle approve success
+  // Auto-advance: approve success → join
   useEffect(() => {
-    if (approveSuccess) {
-      setStep('join')
-    }
-  }, [approveSuccess])
-
-  // Handle join success
-  useEffect(() => {
-    if (joinSuccess) {
-      setStep('done')
-      markOnboarded()
-      setTimeout(() => {
-        onComplete()
-        // Scroll to goals
-        const element = document.getElementById('promises')
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' })
-        }
-      }, 2000)
-    }
-  }, [joinSuccess, onComplete])
-
-  const handleCommit = async () => {
-    if (!address || !stakeAmount) return
-    setError(null)
-
-    // If contract not deployed, fall back to localStorage-only flow
-    if (!isContractDeployed) {
-      markOnboarded()
-      onComplete()
-      setTimeout(() => {
-        const element = document.getElementById('promises')
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' })
-        }
-      }, 100)
-      return
-    }
-
-    // Check balances first
-    if (!hasEnoughGas) {
-      setError('No ETH for gas fees. Fund your wallet first.')
-      return
-    }
-    if (!hasEnoughUSDC) {
-      setError(`Insufficient USDC balance. You need $${stakeAmountFormatted} USDC.`)
-      return
-    }
-
-    try {
-      // Check if we need approval
-      const stakeAmountBigInt = stakeAmount as bigint
-      const allowanceBigInt = allowance as bigint | undefined
-      const needsApproval = !allowanceBigInt || allowanceBigInt < stakeAmountBigInt
-
-      if (needsApproval) {
-        setStep('approve')
-        approve({
-          address: contracts.usdc,
-          abi: USDC_ABI,
-          functionName: 'approve',
-          args: [contracts.newUserChallenge, stakeAmountBigInt],
-        })
-      } else {
-        // Already approved, go straight to join
-        setStep('join')
-        join({
-          address: contracts.newUserChallenge,
-          abi: NEW_USER_CHALLENGE_ABI,
-          functionName: 'join',
-        })
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Transaction failed')
-      setStep('intro')
-    }
-  }
-
-  // If already approved, trigger join
-  useEffect(() => {
-    if (step === 'join' && !isJoining && !joinTxHash) {
+    if (approveSuccess && phase === 'approving') {
+      setPhase('joining')
       join({
         address: contracts.newUserChallenge,
         abi: NEW_USER_CHALLENGE_ABI,
         functionName: 'join',
       })
     }
-  }, [step, isJoining, joinTxHash, join])
+  }, [approveSuccess, phase])
+
+  // Auto-advance: join success → done
+  useEffect(() => {
+    if (joinSuccess) {
+      setPhase('done')
+      markOnboarded()
+      setTimeout(() => {
+        onComplete()
+        const element = document.getElementById('promises')
+        if (element) element.scrollIntoView({ behavior: 'smooth' })
+      }, 2000)
+    }
+  }, [joinSuccess, onComplete])
+
+  // Handle errors
+  useEffect(() => {
+    if (approveError) {
+      setError('Approval failed. Please try again.')
+      setPhase('ready')
+    }
+    if (joinError) {
+      setError('Join failed. Please try again.')
+      setPhase('ready')
+    }
+  }, [approveError, joinError])
 
   // If user already joined, just close
   useEffect(() => {
@@ -204,7 +129,92 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     }
   }, [hasJoined, onComplete])
 
+  // Auto-switch network when wrong
+  useEffect(() => {
+    if (isWrongNetwork && phase === 'switching') {
+      switchChain({ chainId: base.id })
+    }
+  }, [isWrongNetwork, phase])
+
+  // After network switch succeeds, continue flow
+  useEffect(() => {
+    if (!isWrongNetwork && phase === 'switching') {
+      handleCommitFlow()
+    }
+  }, [isWrongNetwork, phase])
+
   const stakeAmountFormatted = stakeAmount ? formatUnits(stakeAmount as bigint, 6) : '5'
+
+  // One-click commit: handles network switch → approve → join automatically
+  const handleCommitFlow = useCallback(async () => {
+    if (!address || !stakeAmount) return
+    setError(null)
+
+    // If contract not deployed, fall back to localStorage-only
+    if (!isContractDeployed) {
+      markOnboarded()
+      onComplete()
+      return
+    }
+
+    // Step 1: Auto-switch network if needed
+    if (isWrongNetwork) {
+      setPhase('switching')
+      return // useEffect will continue after switch
+    }
+
+    // Step 2: Check balances
+    if (!hasEnoughGas) {
+      setError('You need ETH on Base for gas. Tap "Fund Wallet" below.')
+      return
+    }
+    if (!hasEnoughUSDC) {
+      setError(`You need $${stakeAmountFormatted} USDC on Base. Tap "Fund Wallet" below.`)
+      return
+    }
+
+    try {
+      if (needsApproval) {
+        // Use max approval so they never need to approve again
+        setPhase('approving')
+        approve({
+          address: contracts.usdc,
+          abi: USDC_ABI,
+          functionName: 'approve',
+          args: [contracts.newUserChallenge, maxUint256],
+        })
+      } else {
+        // Already approved — go straight to join
+        setPhase('joining')
+        join({
+          address: contracts.newUserChallenge,
+          abi: NEW_USER_CHALLENGE_ABI,
+          functionName: 'join',
+        })
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Transaction failed')
+      setPhase('ready')
+    }
+  }, [address, stakeAmount, isContractDeployed, isWrongNetwork, hasEnoughGas, hasEnoughUSDC, needsApproval, contracts, stakeAmountFormatted])
+
+  const handleFundWallet = async () => {
+    if (!address) return
+    try {
+      await fundWallet({ address, options: { chain: base } })
+    } catch {
+      // User closed the fund modal, no-op
+    }
+  }
+
+  // Progress steps for the indicator
+  const steps = [
+    { label: 'Network', done: !isWrongNetwork, active: phase === 'switching' },
+    { label: 'Approve', done: approveSuccess || !needsApproval, active: phase === 'approving' },
+    { label: 'Join', done: joinSuccess, active: phase === 'joining' },
+  ]
+
+  const isProcessing = phase !== 'ready' && phase !== 'done'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
@@ -213,13 +223,12 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-5">
-          {step === 'done' ? (
-            // Success state
+          {phase === 'done' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-4">
                 <span className="text-4xl">✓</span>
               </div>
-              <h2 className="text-xl font-bold mb-2">You're in!</h2>
+              <h2 className="text-xl font-bold mb-2">You&apos;re in!</h2>
               <p className="text-sm text-[var(--text-secondary)] mb-3">
                 Now join any goal within 24h to get your ${stakeAmountFormatted} back
               </p>
@@ -245,30 +254,24 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               {/* How it works - compact */}
               <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
-                    💰
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">💰</div>
                   <div>
                     <p className="text-sm font-medium">Make a promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">Stake $$$ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
-                    ✅
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
                   <div>
                     <p className="text-sm font-medium">Keep your promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
-                    🏆
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">🏆</div>
                   <div>
                     <p className="text-sm font-medium">Earn from your promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don't</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don&apos;t</p>
                   </div>
                 </div>
               </div>
@@ -279,10 +282,41 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    By signing up, you're making your first promise. If you don't join a goal within 24 hours, your ${stakeAmountFormatted} will be split among those who did. Ready?
+                    By signing up, you&apos;re making your first promise. If you don&apos;t join a goal within 24 hours, your ${stakeAmountFormatted} will be split among those who did. Ready?
                   </p>
                 </div>
               </div>
+
+              {/* Progress bar - only shown when processing */}
+              {isProcessing && (
+                <div className="mb-4">
+                  <div className="flex justify-between mb-2">
+                    {steps.map((s, i) => (
+                      <div key={s.label} className="flex items-center gap-1.5 text-xs">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                          s.done ? 'bg-[#2EE59D] text-white' : 
+                          s.active ? 'bg-[#2EE59D]/20 text-[#2EE59D] border-2 border-[#2EE59D]' : 
+                          'bg-[var(--surface)] text-[var(--text-secondary)] border border-[var(--border)]'
+                        }`}>
+                          {s.done ? '✓' : s.active ? (
+                            <span className="w-2.5 h-2.5 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin" />
+                          ) : i + 1}
+                        </div>
+                        <span className={s.done ? 'text-[#2EE59D]' : s.active ? 'text-[var(--foreground)] font-medium' : 'text-[var(--text-secondary)]'}>
+                          {s.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="h-1.5 bg-[var(--surface)] rounded-full overflow-hidden">
+                    <div className={`h-full bg-[#2EE59D] rounded-full transition-all duration-500 ${
+                      phase === 'switching' ? 'w-1/6' :
+                      phase === 'approving' ? 'w-2/6' :
+                      phase === 'joining' ? 'w-4/6' : 'w-0'
+                    }`} />
+                  </div>
+                </div>
+              )}
 
               {/* Error message */}
               {error && (
@@ -291,169 +325,44 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 </div>
               )}
 
-              {/* Balance display */}
-              <div className={`mb-3 p-3 rounded-xl text-sm ${
-                canStake 
-                  ? 'bg-[#2EE59D]/10 border border-[#2EE59D]/30' 
-                  : 'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800'
-              }`}>
-                <div className="flex justify-between items-center mb-1">
-                  <span className={hasEnoughGas ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}>
-                    {hasEnoughGas ? '✓' : '✗'} ETH (gas)
-                  </span>
-                  <span className={`font-mono text-xs ${hasEnoughGas ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}`}>
-                    {ethBalance ? parseFloat(formatUnits(ethBalance.value, 18)).toFixed(4) : '0'} ETH
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className={hasEnoughUSDC ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}>
-                    {hasEnoughUSDC ? '✓' : '✗'} USDC (stake)
-                  </span>
-                  <span className={`font-mono text-xs ${hasEnoughUSDC ? 'text-[#2EE59D]' : 'text-orange-600 dark:text-orange-400'}`}>
-                    ${usdcBalance ? formatUnits(usdcBalance as bigint, 6) : '0'} / ${stakeAmountFormatted}
-                  </span>
-                </div>
-                {!canStake && (
-                  <p className="text-xs text-center mt-2 text-orange-600 dark:text-orange-400">
-                    Fund your wallet below ↓
-                  </p>
-                )}
-              </div>
-
-              {/* Wrong Network Warning */}
-              {isWrongNetwork && (
-                <button
-                  onClick={() => switchChain({ chainId: base.id })}
-                  disabled={isSwitching}
-                  className="w-full py-3 mb-3 font-bold rounded-xl bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50 transition-colors"
-                >
-                  {isSwitching ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Switching...
-                    </span>
-                  ) : (
-                    '⚠️ Switch to Base'
-                  )}
-                </button>
-              )}
-
-              {/* CTA */}
+              {/* Single CTA button */}
               <button
-                onClick={handleCommit}
-                disabled={isApproving || isJoining || !canStake || isWrongNetwork}
-                className={`w-full py-3 font-bold rounded-xl transition-colors disabled:cursor-not-allowed ${
-                  canStake && !isWrongNetwork
-                    ? 'bg-[#2EE59D] text-white hover:bg-[#26c987] disabled:opacity-50' 
-                    : 'bg-[var(--border)] text-[var(--text-secondary)]'
+                onClick={handleCommitFlow}
+                disabled={isProcessing}
+                className={`w-full py-3 font-bold rounded-xl transition-all disabled:cursor-not-allowed ${
+                  isProcessing
+                    ? 'bg-[#2EE59D]/50 text-white'
+                    : 'bg-[#2EE59D] text-white hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 active:scale-[0.98]'
                 }`}
               >
-                {isApproving ? (
+                {phase === 'switching' ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Switching to Base...
+                  </span>
+                ) : phase === 'approving' ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     Approving USDC...
                   </span>
-                ) : isJoining ? (
+                ) : phase === 'joining' ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Joining Challenge...
+                    Joining...
                   </span>
-                ) : isWrongNetwork ? (
-                  'Switch network first ↑'
-                ) : !canStake ? (
-                  !hasEnoughGas ? 'Need ETH for gas' : 'Need USDC to stake'
                 ) : (
                   `Stake $${stakeAmountFormatted} — I'm In`
                 )}
               </button>
 
-              {/* Fund wallet button */}
-              <button
-                onClick={() => setShowFundModal(true)}
-                className="w-full mt-3 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface)] transition-colors"
-              >
-                💰 I need to fund my wallet first
-              </button>
-
-              {/* Fund Modal */}
-              {showFundModal && (
-                <div className="fixed inset-0 z-[60] flex flex-col justify-end sm:justify-center sm:items-center">
-                  <div 
-                    className="absolute inset-0 bg-black/50"
-                    onClick={() => setShowFundModal(false)}
-                  />
-                  <div className="relative bg-[var(--background)] rounded-t-2xl p-4 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:max-w-sm sm:w-full sm:mx-4 sm:pb-4 animate-in slide-in-from-bottom duration-200">
-                    <p className="text-base font-semibold mb-4 text-center">Get USDC on Base</p>
-                    
-                    <p className="text-sm text-[var(--text-secondary)] mb-4 text-center">
-                      You need USDC on Base to stake. Here are some ways to get it:
-                    </p>
-                    
-                    <a
-                      href={FUND_LINKS.usdc}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-2 active:scale-[0.98] transition-transform text-sm"
-                    >
-                      <span className="text-xl">💵</span>
-                      <div>
-                        <p className="font-medium">Buy USDC on Coinbase</p>
-                      </div>
-                      <svg className="w-4 h-4 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                    
-                    <a
-                      href={FUND_LINKS.eth}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[var(--surface)] border border-[var(--border)] mb-2 active:scale-[0.98] transition-transform text-sm"
-                    >
-                      <span className="text-xl">⛽</span>
-                      <div>
-                        <p className="font-medium">Buy ETH on Coinbase</p>
-                      </div>
-                      <svg className="w-4 h-4 ml-auto text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                    
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (address) {
-                          navigator.clipboard.writeText(address)
-                          setCopied(true)
-                          setTimeout(() => setCopied(false), 2000)
-                        }
-                      }}
-                      className={`flex items-center gap-3 px-4 py-4 rounded-xl border w-full active:scale-[0.98] transition-all ${
-                        copied 
-                          ? 'bg-[#2EE59D]/10 border-[#2EE59D]' 
-                          : 'bg-[var(--surface)] border-[var(--border)]'
-                      }`}
-                    >
-                      <span className="text-2xl">{copied ? '✅' : '📋'}</span>
-                      <div className="text-left">
-                        <p className={`font-medium ${copied ? 'text-[#2EE59D]' : ''}`}>
-                          {copied ? 'Copied!' : 'Copy Wallet Address'}
-                        </p>
-                        {address && (
-                          <p className="text-sm text-[var(--text-secondary)] font-mono">{address.slice(0, 10)}...{address.slice(-6)}</p>
-                        )}
-                      </div>
-                    </button>
-                    
-                    <button
-                      type="button"
-                      onClick={() => setShowFundModal(false)}
-                      className="w-full mt-4 px-4 py-3 bg-[#2EE59D] text-white font-bold rounded-xl active:scale-[0.98] transition-transform"
-                    >
-                      Done — Back to Challenge
-                    </button>
-                  </div>
-                </div>
+              {/* Fund wallet - uses Privy's built-in on-ramp */}
+              {!canStake && phase === 'ready' && (
+                <button
+                  onClick={handleFundWallet}
+                  className="w-full mt-3 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface)] transition-colors"
+                >
+                  💰 Fund wallet with card
+                </button>
               )}
             </>
           )}
@@ -471,10 +380,8 @@ export function LiveChallengeCard() {
   const [timeLeft, setTimeLeft] = useState('')
   const [dismissed, setDismissed] = useState(false)
 
-  // Check if contract is deployed
   const isContractDeployed = contracts.newUserChallenge !== '0x0000000000000000000000000000000000000000'
 
-  // Get stats from contract
   const { data: stats } = useReadContract({
     address: contracts.newUserChallenge,
     abi: NEW_USER_CHALLENGE_ABI,
@@ -482,8 +389,7 @@ export function LiveChallengeCard() {
     query: { enabled: isContractDeployed },
   })
 
-  // Check if current user has joined (refetch every 5s to catch updates)
-  const { data: hasJoined, refetch: refetchHasJoined } = useReadContract({
+  const { data: hasJoined } = useReadContract({
     address: contracts.newUserChallenge,
     abi: NEW_USER_CHALLENGE_ABI,
     functionName: 'hasJoinedChallenge',
@@ -491,7 +397,6 @@ export function LiveChallengeCard() {
     query: { enabled: !!address && isContractDeployed, refetchInterval: 5000 },
   })
 
-  // Get user's challenge details
   const { data: challenge } = useReadContract({
     address: contracts.newUserChallenge,
     abi: NEW_USER_CHALLENGE_ABI,
@@ -500,8 +405,6 @@ export function LiveChallengeCard() {
     query: { enabled: !!address && !!hasJoined && isContractDeployed },
   })
 
-  // Parse challenge data
-  // Structure: [joinTime, deadline, hasJoinedVaada, claimed, forfeited]
   const challengeData = challenge as [bigint, bigint, boolean, boolean, boolean] | undefined
   const deadline = challengeData ? Number(challengeData[1]) * 1000 : 0
   const hasJoinedVaada = challengeData ? challengeData[2] : false
@@ -511,20 +414,15 @@ export function LiveChallengeCard() {
   const isCompleted = hasJoinedVaada || claimed
   const isFailed = isExpired && !isCompleted && !forfeited
 
-  // Check localStorage for dismissed state
   useEffect(() => {
     if (typeof window !== 'undefined' && address) {
       const dismissKey = `vaada_challenge_dismissed_${address}`
-      if (localStorage.getItem(dismissKey)) {
-        setDismissed(true)
-      }
+      if (localStorage.getItem(dismissKey)) setDismissed(true)
     }
   }, [address])
 
-  // Calculate time left for user's challenge
   useEffect(() => {
     if (!challenge) {
-      // Default: time until midnight UTC
       const updateTime = () => {
         const now = new Date()
         const midnight = new Date(now)
@@ -538,14 +436,10 @@ export function LiveChallengeCard() {
       const interval = setInterval(updateTime, 60000)
       return () => clearInterval(interval)
     } else {
-      // User has a challenge, show their deadline
       const updateTime = () => {
         const now = Date.now()
         const diff = deadline - now
-        if (diff <= 0) {
-          setTimeLeft('Ended')
-          return
-        }
+        if (diff <= 0) { setTimeLeft('Ended'); return }
         const hours = Math.floor(diff / (1000 * 60 * 60))
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
         setTimeLeft(`${hours}h ${minutes}m`)
@@ -557,28 +451,19 @@ export function LiveChallengeCard() {
   }, [challenge, deadline])
 
   const handleJoin = () => {
-    if (!authenticated) {
-      login()
-      return
-    }
-    // Scroll to show the onboarding modal will appear
+    if (!authenticated) { login(); return }
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleDismiss = () => {
-    if (address) {
-      localStorage.setItem(`vaada_challenge_dismissed_${address}`, 'true')
-    }
+    if (address) localStorage.setItem(`vaada_challenge_dismissed_${address}`, 'true')
     setDismissed(true)
   }
 
-  // Stats from contract or defaults
   const statsData = stats as [bigint, bigint, bigint, bigint] | undefined
   const totalChallenges = statsData ? Number(statsData[0]) : 0
   const totalWon = statsData ? Number(statsData[1]) : 0
-  const pendingCount = statsData ? totalChallenges - totalWon - Number(statsData[2]) : 0
 
-  // Don't show if dismissed
   if (dismissed) return null
 
   // Show result state (expired challenge)
@@ -598,7 +483,6 @@ export function LiveChallengeCard() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        
         <div className="text-center py-2">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 ${
             isCompleted ? 'bg-[#2EE59D]/20' : 'bg-red-500/20'
@@ -622,7 +506,6 @@ export function LiveChallengeCard() {
   return (
     <div className="bg-gradient-to-br from-[#2EE59D]/10 via-[#2EE59D]/5 to-transparent border border-[#2EE59D]/30 rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto">
       <div className="relative">
-        {/* Top row: Badge + Timer */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-[#2EE59D] text-white uppercase tracking-wide">
             New User Challenge
@@ -632,8 +515,6 @@ export function LiveChallengeCard() {
             {timeLeft} left
           </span>
         </div>
-        
-        {/* Content row */}
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2EE59D]/20 to-[#2EE59D]/10 flex items-center justify-center text-xl flex-shrink-0 border border-[#2EE59D]/20">
             🚀
@@ -643,12 +524,10 @@ export function LiveChallengeCard() {
             <p className="text-xs text-[var(--text-secondary)]">Your first promise. Join a goal within 24h or your $5 goes to those who did.</p>
           </div>
         </div>
-        
-        {/* CTA */}
         {hasJoined ? (
           <div className="w-full flex items-center justify-center gap-2 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-sm border border-[#2EE59D]/30">
             <span>✓</span>
-            <span>You're in!</span>
+            <span>You&apos;re in!</span>
           </div>
         ) : (
           <button
@@ -673,7 +552,6 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      {/* Preview Badge */}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-yellow-500 text-black text-sm font-bold rounded-full z-[60]">
         👁️ PREVIEW MODE — No transactions
       </div>
@@ -682,7 +560,6 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
         className="bg-[var(--background)] border border-[var(--border)] rounded-2xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors z-10"
@@ -694,100 +571,67 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
 
         <div className="p-5">
           {step === 'done' ? (
-            // Success state
             <div className="text-center py-8">
               <div className="w-16 h-16 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-4">
                 <span className="text-4xl">✓</span>
               </div>
-              <h2 className="text-xl font-bold mb-2">You're in!</h2>
+              <h2 className="text-xl font-bold mb-2">You&apos;re in!</h2>
               <p className="text-sm text-[var(--text-secondary)] mb-3">
                 Now join any goal within 24h to get your $5 back
               </p>
-              <button
-                onClick={() => setStep('intro')}
-                className="mt-4 text-sm text-[#2EE59D] hover:underline"
-              >
+              <button onClick={() => setStep('intro')} className="mt-4 text-sm text-[#2EE59D] hover:underline">
                 ← Back to start
               </button>
             </div>
           ) : (
             <>
-              {/* Welcome header */}
               <div className="text-center mb-4">
                 <div className="w-16 h-16 rounded-2xl bg-[#2EE59D] flex items-center justify-center mx-auto mb-3">
                   <span className="text-white font-black text-3xl leading-none">v</span>
                 </div>
                 <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
-                <p className="text-sm text-[var(--text-secondary)] mb-2">
-                  The promise market
-                </p>
-                <p className="text-xs text-[var(--text-secondary)] inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--surface)] rounded-full border border-[var(--border)]">
-                  <span className="font-semibold text-[#2EE59D]">vaada</span>
-                  <span>=</span>
-                  <span>promise</span>
-                </p>
+                <p className="text-sm text-[var(--text-secondary)] mb-2">The promise market</p>
               </div>
 
-              {/* How it works - compact */}
               <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
-                    💰
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">💰</div>
                   <div>
                     <p className="text-sm font-medium">Make a promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">Stake $$$ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
-                    ✅
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
                   <div>
                     <p className="text-sm font-medium">Keep your promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">
-                    🏆
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">🏆</div>
                   <div>
                     <p className="text-sm font-medium">Earn from your promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don't</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don&apos;t</p>
                   </div>
                 </div>
               </div>
 
-              {/* New User Challenge */}
               <div className="flex items-center gap-3 mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
                 <span className="text-2xl">⏰</span>
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    By signing up, you're making your first promise. If you don't join a goal within 24 hours, your $5 will be split among those who did. Ready?
+                    By signing up, you&apos;re making your first promise. If you don&apos;t join a goal within 24 hours, your $5 will be split among those who did. Ready?
                   </p>
                 </div>
               </div>
 
-              {/* Preview Balance display */}
-              <div className="mb-3 p-3 rounded-xl text-sm bg-[#2EE59D]/10 border border-[#2EE59D]/30">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-[#2EE59D]">✓ ETH (gas)</span>
-                  <span className="font-mono text-xs text-[#2EE59D]">0.0050 ETH</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#2EE59D]">✓ USDC (stake)</span>
-                  <span className="font-mono text-xs text-[#2EE59D]">$6.52 / $5</span>
-                </div>
-              </div>
-
-              {/* Step indicator */}
               <div className="flex gap-2 mb-3">
                 {['intro', 'approve', 'join'].map((s, i) => (
                   <button
                     key={s}
-                    onClick={() => setStep(s as any)}
+                    onClick={() => setStep(s as 'intro' | 'approve' | 'join')}
                     className={`flex-1 py-1.5 text-xs rounded-lg border transition-colors ${
                       step === s 
                         ? 'bg-[#2EE59D]/10 border-[#2EE59D] text-[#2EE59D]' 
@@ -799,7 +643,6 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                 ))}
               </div>
 
-              {/* CTA */}
               <button
                 onClick={() => {
                   if (step === 'intro') setStep('approve')
@@ -822,10 +665,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                  )}
               </button>
 
-              {/* Fund wallet button */}
-              <button
-                className="w-full mt-3 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface)] transition-colors"
-              >
+              <button className="w-full mt-3 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface)] transition-colors">
                 💰 I need to fund my wallet first
               </button>
             </>
