@@ -33,13 +33,13 @@ function NetworkBanner() {
   if (!isConnected || !isWrongNetwork) return null
 
   return (
-    <div className="fixed top-[61px] left-0 right-0 z-40 bg-amber-500 text-black py-2 px-4 text-center text-sm font-medium">
-      ⚠️ Wrong network detected. 
+    <div className="fixed top-[61px] left-0 right-0 z-40 bg-red-500 text-white py-3 px-4 text-center text-sm font-semibold shadow-lg animate-pulse">
+      ⚠️ You&apos;re on the wrong network — Vaada runs on Base. 
       <button 
         onClick={() => switchChain({ chainId: base.id })}
-        className="ml-2 underline hover:no-underline font-bold"
+        className="ml-2 bg-white text-red-600 px-3 py-1 rounded-full font-bold hover:bg-red-100 transition-colors"
       >
-        Switch to Base
+        Switch to Base →
       </button>
     </div>
   )
