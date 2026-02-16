@@ -220,12 +220,12 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
   const isProcessing = phase !== 'ready' && phase !== 'done'
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
       <div 
-        className="bg-[var(--background)] border border-[var(--border)] rounded-t-2xl sm:rounded-2xl w-full max-w-sm overflow-hidden animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-200 pb-[env(safe-area-inset-bottom)]"
+        className="bg-[var(--background)] border border-[var(--border)] rounded-t-2xl sm:rounded-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-5">
+        <div className="p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
           {phase === 'done' ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-4">
