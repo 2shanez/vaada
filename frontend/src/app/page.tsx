@@ -428,7 +428,12 @@ export default function Home() {
 
       {/* Stats Section - Vertical Cards */}
       <section ref={statsView.ref} className="border-t border-[var(--border)] py-8 sm:py-12 px-4 sm:px-6">
-        <div className="max-w-md mx-auto space-y-4">
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-6">
+            <span className="text-xs font-semibold text-[#2EE59D] uppercase tracking-wider">Platform Stats</span>
+            <h2 className="text-2xl font-bold mt-2">The Numbers</h2>
+          </div>
+          <div className="space-y-4">
           <StatsCard
             label="Total Staked"
             value={platformStats.totalStaked}
@@ -474,6 +479,7 @@ export default function Home() {
             isInView={statsView.isInView}
             delay={300}
           />
+          </div>
         </div>
       </section>
 
