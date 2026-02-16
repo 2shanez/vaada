@@ -115,24 +115,8 @@ function NotifyModal({
 }
 
 const FEATURED_GOALS: Goal[] = [
-  {
-    id: 'quick-500-steps',
-    onChainId: 5,
-    title: 'Quick 500 Steps',
-    description: 'Walk 500 steps to win',
-    emoji: '⚡',
-    category: 'Test',
-    targetMiles: 500,
-    targetUnit: 'steps',
-    durationDays: 0,
-    minStake: 0.5,
-    maxStake: 0.5,
-    participants: 0,
-    totalStaked: 0,
-    domain: 'Fitness',
-    subdomain: 'Steps',
-    live: true,
-  },
+  // Goals will be added here when created
+  // Settled goals are auto-hidden by GoalCard
 ]
 
 const COMING_SOON = [
@@ -291,9 +275,12 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
       {/* Goals Grid with stagger animation */}
       <div className="flex flex-wrap justify-center gap-4">
         {filteredGoals.length === 0 ? (
-          <div className="w-full text-center py-12">
-            <div className="text-4xl mb-3">⏳</div>
-            <p className="text-[var(--text-secondary)]">New goals coming soon!</p>
+          <div className="w-full text-center py-16">
+            <div className="text-5xl mb-4">🎯</div>
+            <h3 className="text-lg font-semibold mb-2">No active vaadas right now</h3>
+            <p className="text-sm text-[var(--text-secondary)] max-w-sm mx-auto">
+              New challenges drop regularly. Check back soon or connect your tracker to get notified!
+            </p>
           </div>
         ) : (
           filteredGoals.map((goal, index) => (
