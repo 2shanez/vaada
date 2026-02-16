@@ -56,7 +56,7 @@ export function CreateChallenge() {
   const contracts = CONTRACTS[chainId as keyof typeof CONTRACTS] || CONTRACTS[base.id]
   
   const [targetMiles, setTargetMiles] = useState('20')
-  const [stakeAmount, setStakeAmount] = useState('10')
+  const [stakeAmount, setStakeAmount] = useState('5')
   const [durationValue, setDurationValue] = useState(1)
   const [durationUnit, setDurationUnit] = useState<'days' | 'weeks' | 'months'>('weeks')
   const [stravaConnected, setStravaConnected] = useState(false)
