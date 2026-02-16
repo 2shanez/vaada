@@ -250,7 +250,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                   </div>
                   <div>
                     <p className="text-sm font-medium">Make a promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Stake $5 on your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Stake $ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -273,13 +273,13 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 </div>
               </div>
 
-              {/* Your First Promise */}
+              {/* New User Challenge */}
               <div className="flex items-center gap-3 mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
                 <span className="text-2xl">⏰</span>
                 <div>
-                  <p className="text-sm font-bold">Your First Promise</p>
+                  <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    Your first promise: join a goal within 24 hours or lose your ${stakeAmountFormatted} stake to those who did.
+                    By signing up, you're making your first promise. If you don't join a goal within 24 hours, your ${stakeAmountFormatted} will be split among those who did. Ready?
                   </p>
                 </div>
               </div>
@@ -625,7 +625,7 @@ export function LiveChallengeCard() {
         {/* Top row: Badge + Timer */}
         <div className="flex items-center justify-between mb-3">
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-[#2EE59D] text-white uppercase tracking-wide">
-            Your First Promise
+            New User Challenge
           </span>
           <span className="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-[var(--surface)] border border-[var(--border)] flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#2EE59D] animate-pulse" />
@@ -639,7 +639,7 @@ export function LiveChallengeCard() {
             🚀
           </div>
           <div className="min-w-0">
-            <h3 className="font-bold text-sm leading-tight">Your First Promise</h3>
+            <h3 className="font-bold text-sm leading-tight">New User Challenge</h3>
             <p className="text-xs text-[var(--text-secondary)]">Your first promise. Join a goal within 24h or your $5 goes to those who did.</p>
           </div>
         </div>
@@ -736,7 +736,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                   </div>
                   <div>
                     <p className="text-sm font-medium">Make a promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Stake $5 on your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Stake $ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -759,13 +759,13 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                 </div>
               </div>
 
-              {/* Your First Promise */}
+              {/* New User Challenge */}
               <div className="flex items-center gap-3 mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
                 <span className="text-2xl">⏰</span>
                 <div>
-                  <p className="text-sm font-bold">Your First Promise</p>
+                  <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    Your first promise: join a goal within 24 hours or lose your $5 stake to those who did.
+                    By signing up, you're making your first promise. If you don't join a goal within 24 hours, your $5 will be split among those who did. Ready?
                   </p>
                 </div>
               </div>
