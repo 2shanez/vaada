@@ -250,7 +250,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                   </div>
                   <div>
                     <p className="text-sm font-medium">Make a promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Stake $ on your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Stake $$$ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -736,7 +736,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                   </div>
                   <div>
                     <p className="text-sm font-medium">Make a promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Stake $ on your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Stake $$$ on your promise</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
