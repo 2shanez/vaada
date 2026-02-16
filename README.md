@@ -5,7 +5,8 @@
 The promise market. Stake money on your goals, keep your promise → keep your stake + earn from those who don't.
 
 🔗 **Live:** [vaada.io](https://vaada.io) (Base Mainnet)  
-📖 **Docs:** [docs/WHITEPAPER.md](docs/WHITEPAPER.md)
+📖 **Whitepaper:** [docs/WHITEPAPER.md](docs/WHITEPAPER.md)  
+📊 **Business Plan:** [BUSINESS_PLAN.md](BUSINESS_PLAN.md)
 
 ---
 
