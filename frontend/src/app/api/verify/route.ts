@@ -215,6 +215,21 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // If goal hasn't started yet, return 0 progress
+    const nowSeconds = Math.floor(Date.now() / 1000)
+    const startSeconds = parseInt(startTimestamp)
+    if (startSeconds > nowSeconds) {
+      return NextResponse.json({
+        success: true,
+        steps: 0,
+        stepsWei: '0',
+        miles: 0,
+        milesWei: '0',
+        message: 'Goal has not started yet',
+        startsIn: startSeconds - nowSeconds,
+      })
+    }
+
     const supabase = createServerSupabase()
 
     // Convert timestamps to date strings for Fitbit API (YYYY-MM-DD)
