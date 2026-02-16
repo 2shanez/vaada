@@ -66,7 +66,7 @@ export function useGoalState(goalId?: number) {
     abi: GOALSTAKE_ABI,
     functionName: 'isEntryOpen',
     args: goalId !== undefined ? [BigInt(goalId)] : undefined,
-    query: { enabled: goalId !== undefined },
+    query: { enabled: goalId !== undefined, refetchInterval: 5000 },
   })
 
   const { data: goalPhase } = useReadContract({
@@ -74,7 +74,7 @@ export function useGoalState(goalId?: number) {
     abi: GOALSTAKE_ABI,
     functionName: 'getGoalPhase',
     args: goalId !== undefined ? [BigInt(goalId)] : undefined,
-    query: { enabled: goalId !== undefined },
+    query: { enabled: goalId !== undefined, refetchInterval: 5000 },
   })
 
   return {
