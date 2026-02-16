@@ -7,6 +7,9 @@ import { base } from 'viem/chains'
 const GOALSTAKE_ADDRESS = '0xAc67E863221B703CEE9B440a7beFe71EA8725434'
 const AUTOMATION_ADDRESS = '0xA6BcEcA41fCF743324a864F47dd03F0D3806341D'
 
+// Use custom RPC if available, fallback to public (with rate limits)
+const RPC_URL = process.env.BASE_RPC_URL || 'https://base.llamarpc.com'
+
 const GOALSTAKE_ABI = parseAbi([
   'function goalCount() view returns (uint256)',
   'function getGoal(uint256 goalId) view returns ((uint256 id, string name, uint256 targetMiles, uint256 minStake, uint256 maxStake, uint256 startTime, uint256 entryDeadline, uint256 deadline, bool active, bool settled, uint256 totalStaked, uint256 participantCount))',
@@ -45,14 +48,14 @@ export async function GET(request: NextRequest) {
   try {
     const publicClient = createPublicClient({
       chain: base,
-      transport: http(),
+      transport: http(RPC_URL),
     })
 
     const account = privateKeyToAccount(privateKey as `0x${string}`)
     const walletClient = createWalletClient({
       account,
       chain: base,
-      transport: http(),
+      transport: http(RPC_URL),
     })
 
     // Get goal count
