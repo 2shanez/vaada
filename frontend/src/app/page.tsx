@@ -524,7 +524,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { icon: '🧠', title: 'Loss Aversion', desc: 'We work 2x harder to avoid losing money than to gain it.' },
-              { icon: '🔗', title: 'Trustless Verification', desc: 'Chainlink oracles verify your progress automatically.' },
+              { icon: '📱', title: 'Automatic Verification', desc: 'Your fitness tracker syncs and verifies your progress automatically.' },
               { icon: '💸', title: 'Real Consequences', desc: 'Break your promise = stake goes to winners. No excuses.' },
             ].map((item, i) => (
               <div 
@@ -586,8 +586,6 @@ export default function Home() {
           <div className="text-sm text-[var(--text-secondary)]">
             Built on{' '}
             <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
-            {' '}×{' '}
-            <a href="https://chain.link" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Chainlink</a>
             {' '}×{' '}
             <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Privy</a>
           </div>

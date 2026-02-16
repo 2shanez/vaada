@@ -83,7 +83,7 @@ export default async function Image() {
           }}
         >
           <span style={{ fontSize: '18px', color: '#a1a1aa' }}>Built on</span>
-          <span style={{ fontSize: '18px', color: '#2EE59D', fontWeight: 600 }}>Base × Chainlink × Privy</span>
+          <span style={{ fontSize: '18px', color: '#2EE59D', fontWeight: 600 }}>Base × Privy</span>
         </div>
       </div>
     ),

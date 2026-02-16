@@ -11,7 +11,7 @@ The promise market. Stake money on your goals, keep your promise → keep your s
 
 ## What is Vaada?
 
-Vaada (Hindi for "promise") is a protocol where users stake USDC on personal commitments. Chainlink oracles verify progress automatically via Fitbit and Strava, and smart contracts handle settlement — no human referees, no disputes.
+Vaada (Hindi for "promise") is a protocol where users stake USDC on personal commitments. Your progress is verified automatically via Fitbit and Strava, and smart contracts handle settlement — no human referees, no disputes.
 
 **Polymarket** is where you bet on the world. **Vaada** is where you bet on yourself.
 
@@ -23,7 +23,7 @@ Vaada (Hindi for "promise") is a protocol where users stake USDC on personal com
 1. Pick a goal    → "10K steps today" or "Run 3 miles"
 2. Stake USDC     → $20 fixed stake
 3. Connect Fitbit/Strava → Auto-verification enabled  
-4. Deadline hits  → Chainlink verifies your activity
+4. Deadline hits  → Backend verifies your activity
 5. Results:
    ✅ Success → Keep stake + share of loser pool
    ❌ Fail    → Stake redistributed to winners
@@ -37,7 +37,7 @@ Vaada (Hindi for "promise") is a protocol where users stake USDC on personal com
 |-------|------------|
 | **Chain** | Base (Coinbase L2) — Mainnet |
 | **Contracts** | Solidity + Foundry |
-| **Oracles** | Chainlink Functions + Automation |
+| **Verification** | Backend verifier + Alchemy RPC |
 | **Yield** | Morpho Vault (~4.9% APY on locked stakes) |
 | **Frontend** | Next.js 16, React, Tailwind |
 | **Auth** | Privy (email/Google/wallet) |
@@ -53,7 +53,7 @@ vaada/
 ├── contracts/        # Solidity smart contracts
 │   ├── src/
 │   │   ├── VaadaV3.sol               # Core protocol
-│   │   ├── GoalStakeAutomationV3.sol # Chainlink bridge
+│   │   ├── GoalStakeAutomationV3.sol # Verification bridge
 │   │   └── NewUserChallenge.sol      # Onboarding contract
 │   └── script/       # Deploy scripts
 │
@@ -63,10 +63,6 @@ vaada/
 │   │   ├── components/   # React components
 │   │   └── lib/          # Utilities, ABIs
 │   └── .env.local    # Secrets
-│
-├── chainlink/        # Chainlink Functions scripts
-│   ├── vaada-verifier.js      # Fitness verification
-│   └── newuser-verifier.js    # Goal-joining verification
 │
 └── docs/             # Documentation
     └── WHITEPAPER.md     # Protocol spec
@@ -84,8 +80,6 @@ vaada/
 | Morpho Vault | `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` |
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 
-**Chainlink:** Subscription ID 132
-
 ---
 
 ## Features
@@ -93,7 +87,7 @@ vaada/
 - ✅ Stake USDC on fitness goals
 - ✅ Fitbit integration (steps)
 - ✅ Strava integration (miles)
-- ✅ Chainlink oracle verification
+- ✅ Automatic fitness verification
 - ✅ Morpho vault yield on locked stakes
 - ✅ Stake-weighted payouts
 - ✅ Privy auth (email/Google/wallet)
@@ -129,7 +123,6 @@ forge test
 - **Website:** https://vaada.io
 - **Admin:** https://vaada.io/admin
 - **BaseScan:** [View contracts](https://basescan.org/address/0xAc67E863221B703CEE9B440a7beFe71EA8725434)
-- **Chainlink:** [Subscription 132](https://functions.chain.link/base/132)
 
 ---
 
