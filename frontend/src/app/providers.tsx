@@ -10,7 +10,17 @@ import { PasswordGate } from '@/components/PasswordGate'
 import { initAnalytics } from '@/lib/analytics'
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient())
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 2000, // Data is fresh for 2 seconds
+        gcTime: 5 * 60 * 1000, // Keep unused data for 5 minutes
+        refetchOnWindowFocus: true, // Refetch when user returns to tab
+        refetchOnReconnect: true, // Refetch on network reconnect
+        retry: 2, // Retry failed requests twice
+      },
+    },
+  }))
 
   // Initialize Mixpanel
   useEffect(() => {
