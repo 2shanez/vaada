@@ -734,8 +734,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 e.stopPropagation()
                 if (participants > 0 || hasJoined) {
                   setShowPlayers(!showPlayers)
-                  // Auto-fetch leaderboard for steps goals in compete phase
-                  if (!showPlayers && currentPhaseStep >= 1 && isStepsGoal && leaderboardData.length === 0) {
+                  // Auto-fetch leaderboard for steps goals (all phases)
+                  if (!showPlayers && isStepsGoal && leaderboardData.length === 0) {
                     fetchLeaderboard()
                   }
                 }
@@ -748,11 +748,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               <span className={`text-[var(--text-secondary)] text-xs transition-transform ${showPlayers ? 'rotate-90' : ''}`}>›</span>
             </button>
           
-          {/* Players dropdown */}
+          {/* Players dropdown - always shows leaderboard style for steps goals */}
           {showPlayers && playerList.length > 0 && (
             <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 min-w-[260px] shadow-xl">
               {/* Header with refresh for steps goals */}
-              {currentPhaseStep >= 1 && isStepsGoal && (
+              {isStepsGoal && (
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-semibold text-[var(--foreground)]">Leaderboard</span>
                   <button 
@@ -770,7 +770,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               )}
               
               {/* Loading state for steps goals */}
-              {currentPhaseStep >= 1 && isStepsGoal && leaderboardLoading && leaderboardData.length === 0 ? (
+              {isStepsGoal && leaderboardLoading && leaderboardData.length === 0 ? (
                 <div className="py-4 text-center">
                   <div className="w-5 h-5 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin mx-auto" />
                   <p className="text-[10px] text-[var(--text-secondary)] mt-2">Fetching steps...</p>
@@ -778,15 +778,15 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               ) : (
                 <div className="space-y-1">
                   {/* Sort by steps if we have leaderboard data, otherwise show player list */}
-                  {(currentPhaseStep >= 1 && isStepsGoal && leaderboardData.length > 0
+                  {(isStepsGoal && leaderboardData.length > 0
                     ? leaderboardData
                     : playerList.map(p => ({ address: p.address, stake: p.stake, steps: 0, name: playerProfiles[p.address.toLowerCase()] }))
                   ).map((p, i) => (
                     <div key={i} className={`flex items-center justify-between py-1.5 px-2 rounded-lg ${
-                      i === 0 && currentPhaseStep >= 1 && isStepsGoal && leaderboardData.length > 0 ? 'bg-[#2EE59D]/10' : 'hover:bg-[var(--background)]'
+                      i === 0 && isStepsGoal && leaderboardData.length > 0 ? 'bg-[#2EE59D]/10' : 'hover:bg-[var(--background)]'
                     }`}>
                       <div className="flex items-center gap-2">
-                        {currentPhaseStep >= 1 && isStepsGoal && leaderboardData.length > 0 && (
+                        {isStepsGoal && leaderboardData.length > 0 && (
                           <span className={`text-xs font-bold ${i === 0 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
                             {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
                           </span>
@@ -796,7 +796,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        {currentPhaseStep >= 1 && isStepsGoal && leaderboardData.length > 0 && (
+                        {isStepsGoal && leaderboardData.length > 0 && (
                           <span className={`text-[11px] font-bold ${p.steps >= goal.targetMiles ? 'text-[#2EE59D]' : 'text-[var(--foreground)]'}`}>
                             {p.steps.toLocaleString()}
                           </span>
@@ -808,8 +808,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 </div>
               )}
               
-              {/* Target footer for steps goals */}
-              {currentPhaseStep >= 1 && isStepsGoal && leaderboardData.length > 0 && (
+              {/* Target footer for steps goals - always show */}
+              {isStepsGoal && (
                 <div className="mt-2 pt-2 border-t border-[var(--border)]">
                   <p className="text-[9px] text-[var(--text-secondary)] text-center">
                     Target: {goal.targetMiles.toLocaleString()} steps
