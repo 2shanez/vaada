@@ -520,6 +520,12 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     )
   }
 
+  // Hide settled goals from browse view (unless user can claim)
+  // Active goals = not settled. Once settled, they're no longer "live"
+  if (isSettled && !canClaim) {
+    return null
+  }
+
   return (
     <>
       {/* New User Challenge Modal */}
