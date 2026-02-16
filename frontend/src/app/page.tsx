@@ -586,7 +586,7 @@ export default function Home() {
               <span className="text-white font-black text-sm leading-none">v</span>
             </div>
             <span className="font-bold text-[#2EE59D] text-lg">vaada</span>
-            <span className="text-sm text-[var(--text-secondary)]">The Promise Market</span>
+            <span className="text-sm text-[var(--text-secondary)]">The Commitment Market</span>
           </div>
           
           <div className="text-sm text-[var(--text-secondary)]">
