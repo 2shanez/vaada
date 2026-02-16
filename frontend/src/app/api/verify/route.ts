@@ -218,8 +218,15 @@ export async function GET(request: NextRequest) {
     const supabase = createServerSupabase()
 
     // Convert timestamps to date strings for Fitbit API (YYYY-MM-DD)
-    const startDate = new Date(parseInt(startTimestamp) * 1000).toISOString().split('T')[0]
-    const endDate = new Date(parseInt(endTimestamp) * 1000).toISOString().split('T')[0]
+    // Fitbit uses user's local timezone for dates, but contract stores UTC timestamps.
+    // To handle timezone differences (up to ±12 hours), we expand the date range by 1 day
+    // on each side. This ensures we capture all steps within the UTC window regardless
+    // of the user's timezone.
+    const startMs = parseInt(startTimestamp) * 1000
+    const endMs = parseInt(endTimestamp) * 1000
+    const oneDayMs = 24 * 60 * 60 * 1000
+    const startDate = new Date(startMs - oneDayMs).toISOString().split('T')[0]
+    const endDate = new Date(endMs + oneDayMs).toISOString().split('T')[0]
 
     // Check which trackers are connected
     const { data: stravaToken } = await supabase
