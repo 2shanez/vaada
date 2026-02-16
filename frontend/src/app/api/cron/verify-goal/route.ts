@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     })
 
     if (goal.settled) {
-      return NextResponse.json({ error: 'Goal already settled', goal })
+      return NextResponse.json({ error: 'Goal already settled', goalId })
     }
 
     // Get goal type
