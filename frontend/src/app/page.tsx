@@ -6,7 +6,9 @@ import { useAccount, useReadContract } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { FEATURED_GOALS } from '@/components/BrowseGoals'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { usePlatformStats, useContracts } from '@/lib/hooks'
+import { usePlatformStats, useContracts, useNetworkCheck } from '@/lib/hooks'
+import { useSwitchChain } from 'wagmi'
+import { base } from 'viem/chains'
 import { useInView } from '@/lib/useInView'
 import { useCountUp } from '@/lib/useCountUp'
 import { LiveChallengeCard, OnboardingCommitment } from '@/components/OnboardingCommitment'
@@ -22,6 +24,27 @@ const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
 const ProfileNameButton = dynamic(() => import('@/components/ProfileName').then(m => ({ default: m.ProfileNameButton })), { ssr: false })
 const DevResetButton = dynamic(() => import('@/components/DevResetButton').then(m => ({ default: m.DevResetButton })), { ssr: false })
+// Network warning banner - shows when user is on wrong network
+function NetworkBanner() {
+  const { isConnected } = useAccount()
+  const { isWrongNetwork } = useNetworkCheck()
+  const { switchChain } = useSwitchChain()
+
+  if (!isConnected || !isWrongNetwork) return null
+
+  return (
+    <div className="fixed top-[61px] left-0 right-0 z-40 bg-amber-500 text-black py-2 px-4 text-center text-sm font-medium">
+      ⚠️ Wrong network detected. 
+      <button 
+        onClick={() => switchChain({ chainId: base.id })}
+        className="ml-2 underline hover:no-underline font-bold"
+      >
+        Switch to Base
+      </button>
+    </div>
+  )
+}
+
 // Integrations dropdown with connect/disconnect for Fitbit
 function IntegrationsDropdown() {
   const { address } = useAccount()
@@ -326,6 +349,9 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* Network Warning Banner */}
+      <NetworkBanner />
 
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] scroll-smooth overflow-x-hidden">
         {/* Subtle Background Pattern - hidden on mobile for performance */}
