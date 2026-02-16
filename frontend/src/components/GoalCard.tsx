@@ -128,7 +128,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const isSettled = phase === GoalPhase.Settled
   const userWon = participantData?.succeeded === true
   const userClaimed = participantData?.claimed === true
-  const canClaim = isSettled && hasJoined && userWon && !userClaimed
+  const canClaim = isSettled && hasJoined && userWon && !userClaimed && !isWrongNetwork
   const stakeAmountWei = parseUnits(stakeAmount || '0', 6)
   const hasAllowance = allowance != null && allowance >= stakeAmountWei
   const hasBalance = balance != null && balance >= stakeAmountWei
@@ -854,6 +854,20 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 className="w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md"
               >
                 {isWrongNetwork ? 'Switch to Base ⚠️' : isClaimConfirming ? 'Claiming...' : isClaimPending ? 'Confirm in wallet...' : isClaimSuccess ? 'Claimed! 🎉' : 'Claim Winnings 💰'}
+              </button>
+            ) : isWrongNetwork && isSettled && hasJoined && userWon && !userClaimed ? (
+              <button
+                onClick={async (e) => {
+                  e.stopPropagation()
+                  try {
+                    await switchChain({ chainId: base.id })
+                  } catch {
+                    alert('Please switch to Base network in your wallet to claim')
+                  }
+                }}
+                className="w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 bg-amber-500 text-black hover:bg-amber-400 active:scale-[0.98] shadow-sm hover:shadow-md"
+              >
+                Switch to Base to Claim ⚠️
               </button>
             ) : userClaimed ? (
               <button
