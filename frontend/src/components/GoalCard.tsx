@@ -833,8 +833,16 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           <div className="pt-2">
             {canClaim ? (
               <button
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation()
+                  if (isWrongNetwork) {
+                    try {
+                      await switchChain({ chainId: base.id })
+                    } catch {
+                      alert('Please switch to Base network to claim')
+                    }
+                    return
+                  }
                   writeClaim({
                     address: contracts.goalStake,
                     abi: GOALSTAKE_ABI,
@@ -845,7 +853,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 disabled={isClaimPending || isClaimConfirming}
                 className="w-full py-3 text-sm font-bold rounded-xl transition-all duration-150 bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98] shadow-sm hover:shadow-md"
               >
-                {isClaimConfirming ? 'Claiming...' : isClaimPending ? 'Confirm in wallet...' : isClaimSuccess ? 'Claimed! 🎉' : 'Claim Winnings 💰'}
+                {isWrongNetwork ? 'Switch to Base ⚠️' : isClaimConfirming ? 'Claiming...' : isClaimPending ? 'Confirm in wallet...' : isClaimSuccess ? 'Claimed! 🎉' : 'Claim Winnings 💰'}
               </button>
             ) : userClaimed ? (
               <button
