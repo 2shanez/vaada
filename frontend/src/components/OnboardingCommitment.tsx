@@ -198,12 +198,15 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     }
   }, [address, stakeAmount, isContractDeployed, isWrongNetwork, hasEnoughGas, hasEnoughUSDC, needsApproval, contracts, stakeAmountFormatted])
 
+  const [showFundLinks, setShowFundLinks] = useState(false)
+
   const handleFundWallet = async () => {
     if (!address) return
     try {
       await fundWallet({ address, options: { chain: base } })
     } catch {
-      // User closed the fund modal, no-op
+      // Privy fund modal not configured or user closed — show fallback links
+      setShowFundLinks(true)
     }
   }
 
@@ -327,12 +330,14 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 
               {/* Single CTA button */}
               <button
-                onClick={handleCommitFlow}
+                onClick={canStake ? handleCommitFlow : handleFundWallet}
                 disabled={isProcessing}
                 className={`w-full py-3 font-bold rounded-xl transition-all disabled:cursor-not-allowed ${
                   isProcessing
                     ? 'bg-[#2EE59D]/50 text-white'
-                    : 'bg-[#2EE59D] text-white hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 active:scale-[0.98]'
+                    : canStake
+                      ? 'bg-[#2EE59D] text-white hover:bg-[#26c987] hover:shadow-lg hover:shadow-[#2EE59D]/25 active:scale-[0.98]'
+                      : 'bg-[#2EE59D] text-white hover:bg-[#26c987] active:scale-[0.98]'
                 }`}
               >
                 {phase === 'switching' ? (
@@ -350,19 +355,44 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     Joining...
                   </span>
-                ) : (
+                ) : canStake ? (
                   `Stake $${stakeAmountFormatted} — I'm In`
+                ) : (
+                  '💰 Fund Wallet to Continue'
                 )}
               </button>
 
-              {/* Fund wallet - uses Privy's built-in on-ramp */}
-              {!canStake && phase === 'ready' && (
-                <button
-                  onClick={handleFundWallet}
-                  className="w-full mt-3 py-2.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] border border-[var(--border)] rounded-xl hover:bg-[var(--surface)] transition-colors"
-                >
-                  💰 Fund wallet with card
-                </button>
+              {/* Fallback fund links when Privy on-ramp not available */}
+              {showFundLinks && !canStake && phase === 'ready' && (
+                <div className="mt-3 p-3 bg-[var(--surface)] border border-[var(--border)] rounded-xl space-y-2">
+                  <p className="text-xs text-[var(--text-secondary)] text-center mb-2">Get USDC + ETH on Base:</p>
+                  <div className="flex gap-2">
+                    <a
+                      href="https://www.coinbase.com/price/usdc"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2 text-center text-sm font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
+                    >
+                      💵 Get USDC
+                    </a>
+                    <a
+                      href="https://www.coinbase.com/price/ethereum"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2 text-center text-sm font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
+                    >
+                      ⛽ Get ETH
+                    </a>
+                  </div>
+                  {address && (
+                    <button
+                      onClick={() => { navigator.clipboard.writeText(address); }}
+                      className="w-full py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
+                    >
+                      📋 Copy wallet: {address.slice(0, 8)}...{address.slice(-4)}
+                    </button>
+                  )}
+                </div>
               )}
             </>
           )}
