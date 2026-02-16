@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useReadContracts, useReadContract } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { parseUnits, formatUnits } from 'viem'
@@ -81,6 +81,29 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const [leaderboardLoading, setLeaderboardLoading] = useState(false)
   const [leaderboardError, setLeaderboardError] = useState<string | null>(null)
   const [playerProfiles, setPlayerProfiles] = useState<Record<string, string>>({})
+  
+  // Ref for click-outside handling on player dropdown
+  const playersDropdownRef = useRef<HTMLDivElement>(null)
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showPlayers) return
+    
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (playersDropdownRef.current && !playersDropdownRef.current.contains(event.target as Node)) {
+        setShowPlayers(false)
+      }
+    }
+    
+    // Use both mouse and touch events for mobile compatibility
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside)
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [showPlayers])
   
   // Combine on-chain state with local state for immediate UI feedback
   // Only show joined state if user is authenticated
@@ -734,28 +757,32 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-          <div className="relative flex items-center gap-2">
+          <div className="relative flex items-center gap-2" ref={playersDropdownRef}>
             <button 
+              type="button"
               onClick={(e) => { 
+                e.preventDefault()
                 e.stopPropagation()
-                if (participants > 0 || hasJoined) {
-                  setShowPlayers(!showPlayers)
-                  // Auto-fetch leaderboard for steps goals (all phases)
-                  if (!showPlayers && isStepsGoal && leaderboardData.length === 0) {
-                    fetchLeaderboard()
-                  }
+                const shouldShow = !showPlayers
+                setShowPlayers(shouldShow)
+                // Auto-fetch leaderboard for steps goals when opening
+                if (shouldShow && isStepsGoal && leaderboardData.length === 0 && (participants > 0 || hasJoined)) {
+                  fetchLeaderboard()
                 }
               }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface)] border border-[var(--border)] py-1 px-3 hover:border-[#2EE59D]/50 transition-colors"
+              disabled={participants === 0 && !hasJoined}
+              className={`inline-flex items-center gap-1.5 rounded-full bg-[var(--surface)] border border-[var(--border)] py-1 px-3 transition-colors select-none touch-manipulation ${
+                participants > 0 || hasJoined ? 'hover:border-[#2EE59D]/50 cursor-pointer' : 'opacity-60 cursor-default'
+              }`}
             >
               <span className="text-[11px] font-medium text-[var(--foreground)]">
                 {participants === 0 ? '0' : participants.toLocaleString()} {participants === 1 ? 'player' : 'players'}
               </span>
-              <span className={`text-[var(--text-secondary)] text-xs transition-transform ${showPlayers ? 'rotate-90' : ''}`}>›</span>
+              <span className={`text-[var(--text-secondary)] text-xs transition-transform duration-150 ${showPlayers ? 'rotate-90' : ''}`}>›</span>
             </button>
           
           {/* Players dropdown - always shows leaderboard style for steps goals */}
-          {showPlayers && playerList.length > 0 && (
+          {showPlayers && (participants > 0 || hasJoined) && (
             <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 min-w-[260px] shadow-xl">
               {/* Header with refresh for steps goals */}
               {isStepsGoal && (
