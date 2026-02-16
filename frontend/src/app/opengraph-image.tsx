@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'Vaada - The Commitment Market'
+export const alt = 'Vaada - The Promise Market'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -54,7 +54,7 @@ export default async function Image() {
             marginBottom: '20px',
           }}
         >
-          The Commitment Market
+          The Promise Market
         </div>
 
         {/* Description */}
@@ -66,7 +66,7 @@ export default async function Image() {
             maxWidth: '800px',
           }}
         >
-          Stake your word. Keep it, keep your stake. Lose it to those who don't.
+          Keep your promise. Keep your stake. Earn from those who don't.
         </div>
 
         {/* Built on badge */}

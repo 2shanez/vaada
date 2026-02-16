@@ -7,13 +7,13 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Vaada | stake your word',
-  description: 'The Commitment Market. Stake your word. Keep it, keep your stake. Lose it to those who don\'t.',
+  title: 'Vaada | keep your promise',
+  description: 'The Promise Market. Keep your promise. Keep your stake. Earn from those who don\'t.',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
   metadataBase: new URL('https://vaada.io'),
   openGraph: {
-    title: 'Vaada | stake your word',
-    description: 'The Commitment Market. Stake your word. Keep it, keep your stake.',
+    title: 'Vaada | keep your promise',
+    description: 'The Promise Market. Keep your promise. Keep your stake. Earn from those who don\'t.',
     url: 'https://vaada.io',
     siteName: 'Vaada',
     locale: 'en_US',
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vaada | stake your word',
-    description: 'The Commitment Market. Stake your word. Keep it, keep your stake.',
+    title: 'Vaada | keep your promise',
+    description: 'The Promise Market. Keep your promise. Keep your stake. Earn from those who don\'t.',
   },
   icons: {
     icon: '/favicon.svg',
