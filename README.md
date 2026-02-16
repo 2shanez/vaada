@@ -22,7 +22,7 @@ Vaada (Hindi for "promise") is a protocol where users stake USDC on personal com
 
 ```
 1. Pick a goal    → "10K steps today" or "Run 3 miles"
-2. Stake USDC     → $20 fixed stake
+2. Stake USDC     → $5 fixed stake
 3. Connect Fitbit/Strava → Auto-verification enabled  
 4. Deadline hits  → Backend verifies your activity
 5. Results:

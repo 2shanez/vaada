@@ -25,6 +25,7 @@ Thumbs.db
 # Foundry
 cache/
 out/
+contracts/broadcast/
 
 # Logs
 *.log
