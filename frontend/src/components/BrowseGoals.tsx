@@ -116,6 +116,24 @@ function NotifyModal({
 
 const FEATURED_GOALS: Goal[] = [
   {
+    id: 'auto-test-500-steps',
+    onChainId: 3,
+    title: 'Auto Test 500 Steps',
+    description: 'Automation test - 500 steps',
+    emoji: '🤖',
+    category: 'Test',
+    targetMiles: 500,
+    targetUnit: 'steps',
+    durationDays: 0,
+    minStake: 0.5,
+    maxStake: 0.5,
+    participants: 0,
+    totalStaked: 0,
+    domain: 'Fitness',
+    subdomain: 'Steps',
+    live: true,
+  },
+  {
     id: 'quick-test-2k-steps',
     onChainId: 2,
     title: 'Quick Test 2K Steps',
