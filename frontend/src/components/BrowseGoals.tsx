@@ -115,8 +115,24 @@ function NotifyModal({
 }
 
 const FEATURED_GOALS: Goal[] = [
-  // Goals will be added here when created
-  // Settled goals are auto-hidden by GoalCard
+  {
+    id: '10k-steps-challenge',
+    onChainId: 6,
+    title: '10K Steps Challenge',
+    description: 'Walk 10,000 steps today',
+    emoji: '🚶‍♂️',
+    category: 'Daily',
+    targetMiles: 10000,
+    targetUnit: 'steps',
+    durationDays: 1,
+    minStake: 0.5,
+    maxStake: 5,
+    participants: 0,
+    totalStaked: 0,
+    domain: 'Fitness',
+    subdomain: 'Steps',
+    live: true,
+  },
 ]
 
 const COMING_SOON = [
