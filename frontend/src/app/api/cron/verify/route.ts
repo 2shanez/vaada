@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
           }
 
           // Get the value (steps or miles in wei format)
-          const actualValue = BigInt(verifyData.stepsWei || verifyData.milesWei || '0')
+          const actualValue = BigInt(verifyData.stepsWei || verifyData.valueWei || verifyData.milesWei || '0')
 
           // Call manualVerify on automation contract
           const txHash = await walletClient.writeContract({
@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
 
           goalResults.participants.push({
             user: userAddress,
-            value: typeStr === 'steps' ? verifyData.steps : verifyData.miles,
+            value: verifyData.steps || verifyData.value || verifyData.miles || 0,
             txHash,
             verified: true,
           })

@@ -304,9 +304,9 @@ export async function GET(request: NextRequest) {
         success: true,
         steps: steps,
         stepsWei: stepsWei,
-        // Also return as miles/milesWei for contract compatibility
-        miles: steps,
-        milesWei: stepsWei,
+        // value/valueWei for generic contract compatibility
+        value: steps,
+        valueWei: stepsWei,
         daysCount: stepsData.summaries?.length || 0,
         userId: fitbitToken.user_id,
         source: 'fitbit',
