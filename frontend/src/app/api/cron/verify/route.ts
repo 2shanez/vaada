@@ -7,8 +7,8 @@ import { base } from 'viem/chains'
 const GOALSTAKE_ADDRESS = '0xAc67E863221B703CEE9B440a7beFe71EA8725434'
 const AUTOMATION_ADDRESS = '0xA6BcEcA41fCF743324a864F47dd03F0D3806341D'
 
-// Use custom RPC if available, fallback to public (with rate limits)
-const RPC_URL = process.env.BASE_RPC_URL || 'https://base.llamarpc.com'
+// Use custom RPC if available, fallback to public
+const RPC_URL = process.env.BASE_RPC_URL || 'https://base.publicnode.com'
 
 const GOALSTAKE_ABI = parseAbi([
   'function goalCount() view returns (uint256)',

@@ -5,7 +5,7 @@ import { base } from 'viem/chains'
 
 const GOALSTAKE_ADDRESS = '0xAc67E863221B703CEE9B440a7beFe71EA8725434'
 const AUTOMATION_ADDRESS = '0xA6BcEcA41fCF743324a864F47dd03F0D3806341D'
-const RPC_URL = process.env.BASE_RPC_URL || 'https://base.llamarpc.com'
+const RPC_URL = process.env.BASE_RPC_URL || 'https://base.publicnode.com'
 
 const GOALSTAKE_ABI = parseAbi([
   'function getGoal(uint256 goalId) view returns ((uint256 id, string name, uint256 targetMiles, uint256 minStake, uint256 maxStake, uint256 startTime, uint256 entryDeadline, uint256 deadline, bool active, bool settled, uint256 totalStaked, uint256 participantCount))',
@@ -121,14 +121,18 @@ export async function GET(request: NextRequest) {
         args: [BigInt(goalId), userAddress, actualValue],
       })
 
+      // Wait briefly for tx to be mined (5 seconds max)
+      await Promise.race([
+        publicClient.waitForTransactionReceipt({ hash: txHash }),
+        new Promise(resolve => setTimeout(resolve, 5000))
+      ])
+
       results.push({
         user: userAddress,
         value: typeStr === 'steps' ? verifyData.steps : verifyData.miles,
         txHash,
         verified: true,
       })
-
-      await publicClient.waitForTransactionReceipt({ hash: txHash })
     }
 
     // Settle the goal
@@ -140,7 +144,6 @@ export async function GET(request: NextRequest) {
         functionName: 'manualSettle',
         args: [BigInt(goalId)],
       })
-      await publicClient.waitForTransactionReceipt({ hash: settleTxHash })
     } catch (err: any) {
       return NextResponse.json({
         success: true,
