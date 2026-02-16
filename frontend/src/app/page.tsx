@@ -411,11 +411,11 @@ export default function Home() {
       )}
 
       {/* Section Divider */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="py-6 sm:py-8">
         <div className="flex items-center gap-4">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
-          <span className="text-xs text-[var(--text-secondary)] uppercase tracking-widest">Browse vaadas</span>
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+          <div className="flex-1 h-px bg-[var(--border)]" />
+          <span className="text-xs text-[var(--text-secondary)] uppercase tracking-widest whitespace-nowrap">Browse vaadas</span>
+          <div className="flex-1 h-px bg-[var(--border)]" />
         </div>
       </div>
 
