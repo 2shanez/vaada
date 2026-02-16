@@ -117,7 +117,7 @@ function NotifyModal({
 const FEATURED_GOALS: Goal[] = [
   {
     id: '10k-steps-challenge',
-    onChainId: 6,
+    onChainId: 7,
     title: '10K Steps Challenge',
     description: 'Walk 10,000 steps today',
     emoji: '🚶‍♂️',
@@ -125,7 +125,7 @@ const FEATURED_GOALS: Goal[] = [
     targetMiles: 10000,
     targetUnit: 'steps',
     durationDays: 1,
-    minStake: 0.5,
+    minStake: 5,
     maxStake: 5,
     participants: 0,
     totalStaked: 0,
