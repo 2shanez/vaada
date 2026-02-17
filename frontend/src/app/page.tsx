@@ -605,7 +605,7 @@ export default function Home() {
             Ready to keep your promise?
           </h2>
           <p className="text-[var(--text-secondary)] mb-6 sm:mb-8 text-base sm:text-lg">
-            Join the promise market.
+            Join the Promise Market.
           </p>
           <button 
             onClick={handleGetStarted}
