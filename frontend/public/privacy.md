@@ -5,7 +5,7 @@
 **Effective Date:** February 16, 2026
 **Last Updated:** February 16, 2026
 
-This Privacy Policy describes how Vaada (https://vaada.io), operated by Shane Sarin ("Vaada," "we," "us," or "our"), collects, uses, and shares your information when you use our platform.
+This Privacy Policy describes how Vaada (https://vaada.io), operated by Vaada (" "we," "us," or "our"), collects, uses, and shares your information when you use our platform.
 
 ---
 
@@ -106,7 +106,7 @@ Depending on your jurisdiction, you may have the right to:
 - **Opt out** of non-essential communications
 - **Disconnect** fitness accounts at any time
 
-To exercise these rights, contact us at **shanesarin@gmail.com**.
+To exercise these rights, contact us at **hello@vaada.io**.
 
 **Note:** Deleting your account does not affect data already recorded on the blockchain, as that data is publicly accessible and immutable.
 
@@ -151,8 +151,8 @@ We may update this Privacy Policy from time to time. Material changes will be co
 
 For questions about this Privacy Policy or to exercise your data rights, contact us at:
 
-**Shane Sarin**
-Email: shanesarin@gmail.com
+**Vaada**
+Email: hello@vaada.io
 Website: https://vaada.io
 
 ---

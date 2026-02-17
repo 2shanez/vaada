@@ -5,7 +5,7 @@
 **Effective Date:** February 16, 2026
 **Last Updated:** February 16, 2026
 
-Welcome to Vaada (https://vaada.io), operated by Shane Sarin ("Vaada," "we," "us," or "our"). By accessing or using our platform, you agree to these Terms of Service ("Terms"). If you do not agree, do not use Vaada.
+Welcome to Vaada (https://vaada.io), operated by Vaada (" "we," "us," or "our"). By accessing or using our platform, you agree to these Terms of Service ("Terms"). If you do not agree, do not use Vaada.
 
 ---
 
@@ -148,7 +148,7 @@ You agree to indemnify and hold harmless Vaada and its operator from any claims,
 
 ### 13.1 Informal Resolution
 
-Before filing any formal claim, you agree to contact us at **shanesarin@gmail.com** and attempt to resolve the dispute informally for at least 30 days.
+Before filing any formal claim, you agree to contact us at **hello@vaada.io** and attempt to resolve the dispute informally for at least 30 days.
 
 ### 13.2 Binding Arbitration
 
@@ -174,8 +174,8 @@ If any provision of these Terms is found unenforceable, the remaining provisions
 
 For questions about these Terms, contact us at:
 
-**Shane Sarin**
-Email: shanesarin@gmail.com
+**Vaada**
+Email: hello@vaada.io
 Website: https://vaada.io
 
 ---
