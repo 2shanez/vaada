@@ -33,7 +33,7 @@ export function useUSDC(spender?: `0x${string}`) {
     abi: USDC_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    query: { enabled: !!address },
+    query: { enabled: !!address, refetchInterval: 5000 }, // Poll every 5s to keep balance fresh
   })
 
   const { data: allowance, refetch: refetchAllowance } = useReadContract({
