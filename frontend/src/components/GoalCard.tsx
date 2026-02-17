@@ -545,56 +545,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     )
   }
 
-  // If we know it's settled early, skip the skeleton entirely
-  if (goalDetails.settled === true && !hasJoinedOnChain) {
+  // While on-chain data is loading, render nothing (avoids skeleton flash for settled goals)
+  if (goal.onChainId !== undefined && goalDetails.startTime === undefined) {
     return null
-  }
-
-  // Loading skeleton while on-chain data loads
-  if (goal.onChainId !== undefined && (goalDetails.isLoading || goalDetails.startTime === undefined)) {
-    return (
-      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden animate-pulse">
-        {/* Hero section skeleton */}
-        <div className="bg-gradient-to-br from-[var(--background)] to-[var(--surface)] px-5 pt-6 pb-5">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="h-5 w-14 bg-[var(--border)] rounded-full" />
-            <div className="h-5 w-20 bg-[var(--border)] rounded-full" />
-          </div>
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 bg-[var(--border)] rounded-2xl flex-shrink-0" />
-            <div className="flex-1">
-              <div className="h-5 w-44 bg-[var(--border)] rounded mb-2" />
-              <div className="h-3 w-32 bg-[var(--border)] rounded" />
-            </div>
-          </div>
-        </div>
-        {/* Stats skeleton */}
-        <div className="px-5 py-4">
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="text-center">
-              <div className="h-3 w-10 bg-[var(--border)] rounded mx-auto mb-2" />
-              <div className="h-6 w-14 bg-[var(--border)] rounded mx-auto" />
-            </div>
-            <div className="text-center">
-              <div className="h-3 w-12 bg-[var(--border)] rounded mx-auto mb-2" />
-              <div className="h-6 w-8 bg-[var(--border)] rounded mx-auto" />
-            </div>
-            <div className="text-center">
-              <div className="h-3 w-14 bg-[var(--border)] rounded mx-auto mb-2" />
-              <div className="h-6 w-16 bg-[var(--border)] rounded mx-auto" />
-            </div>
-          </div>
-          {/* Phase timeline skeleton */}
-          <div className="flex items-center gap-1 mb-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex-1 h-1 bg-[var(--border)] rounded-full" />
-            ))}
-          </div>
-          {/* Button skeleton */}
-          <div className="h-12 bg-[var(--border)] rounded-xl" />
-        </div>
-      </div>
-    )
   }
 
   // Hide settled goals from browse view (unless user can claim)
