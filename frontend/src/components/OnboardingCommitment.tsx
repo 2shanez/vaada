@@ -225,18 +225,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
         className="bg-[var(--background)] border border-[var(--border)] rounded-t-2xl sm:rounded-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-200 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
-        {phase === 'ready' && (
-          <button
-            onClick={() => { markOnboarded(); onComplete(); }}
-            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-[var(--surface)] text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors z-10"
-            aria-label="Close"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        )}
         <div className="p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
           {phase === 'done' ? (
             <div className="text-center py-8">
