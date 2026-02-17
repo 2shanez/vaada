@@ -560,7 +560,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         ${showPlayers ? 'z-40' : 'z-0'}
         ${expanded 
           ? 'border-[#2EE59D] shadow-lg shadow-[#2EE59D]/10' 
-          : 'border-[var(--border)] hover:border-[var(--text-secondary)]/30 hover:shadow-lg'
+          : 'border-[var(--border)] hover:border-[#2EE59D]/50 hover:shadow-lg'
         }`}
       >
         {/* Hero Section */}
