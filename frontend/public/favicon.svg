@@ -1,6 +1,6 @@
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  viewBox="0 0 640 640">
-<rect width="640" height="640" rx="80" fill="#111111"/>
+<!-- transparent background -->
 <g transform="translate(0,640) scale(0.1,-0.1)"
 fill="#2EE59D" stroke="none">
 <path d="M1531 4607 c-13 -6 -34 -25 -45 -40 -46 -62 -51 -51 365 -867 212
