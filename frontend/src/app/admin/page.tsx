@@ -425,6 +425,38 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Gas Sponsorship */}
+        <div className="bg-[var(--surface)] rounded-2xl p-6 mb-6 border border-[var(--border)]">
+          <h2 className="text-lg font-semibold mb-4">⛽ Gas Sponsorship (Privy)</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Status</div>
+              <div className="text-lg font-bold text-[#2EE59D]">✅ Enabled</div>
+            </div>
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Network</div>
+              <div className="text-lg font-bold">Base</div>
+            </div>
+            <div>
+              <div className="text-[var(--text-secondary)] text-sm">Client Txns</div>
+              <div className="text-lg font-bold text-[#2EE59D]">✅ Allowed</div>
+            </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-[var(--border)]">
+            <p className="text-xs text-[var(--text-secondary)] mb-2">
+              Gas credits balance is only available in the Privy dashboard. At ~$0.001/tx on Base, $20 covers ~6,000+ transactions.
+            </p>
+            <a
+              href="https://dashboard.privy.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#2EE59D] bg-[#2EE59D]/10 border border-[#2EE59D]/30 rounded-lg hover:bg-[#2EE59D]/20 transition-colors"
+            >
+              Check Balance → Privy Dashboard
+            </a>
+          </div>
+        </div>
+
         {/* Roles */}
         <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
           <h2 className="text-lg font-semibold mb-4">👤 Roles</h2>
