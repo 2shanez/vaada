@@ -136,7 +136,9 @@ export async function GET(request: NextRequest) {
           }
 
           // Get the value (steps or miles in wei format)
-          const actualValue = BigInt(verifyData.stepsWei || verifyData.valueWei || verifyData.milesWei || '0')
+          // Use raw value (steps/miles), not wei-scaled — contract compares against targetMiles directly
+          const rawValue = verifyData.steps || verifyData.value || verifyData.miles || 0
+          const actualValue = BigInt(rawValue)
 
           // Call manualVerify on automation contract
           const txHash = await walletClient.writeContract({
