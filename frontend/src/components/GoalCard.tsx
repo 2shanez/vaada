@@ -8,6 +8,7 @@ import { base } from 'wagmi/chains'
 import { isStravaConnected, getStravaAuthUrl } from '@/lib/strava'
 import { useContracts, useNetworkCheck, useUSDC, useGoalState, useGoalDetails, useParticipant, useStravaToken } from '@/lib/hooks'
 import { USDC_ABI, GOALSTAKE_ABI, AUTOMATION_ABI, NEW_USER_CHALLENGE_ABI, PHASE_LABELS, CATEGORY_STYLES, GoalPhase, type Goal } from '@/lib/abis'
+import { analytics } from '@/lib/analytics'
 import { DuolingoConnect, useDuolingoConnection } from './DuolingoConnect'
 import { WithingsConnect, useWithingsConnection } from './WithingsConnect'
 import { RescueTimeConnect, useRescueTimeConnection } from './RescueTimeConnect'
@@ -207,6 +208,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       setStep('idle') // Go back to idle (skip 'done' screen)
       refetchParticipant()
       onJoined?.()
+      analytics.goalJoined(goal.onChainId, goal.name, Number(stakeAmount))
     }
   }, [isJoinSuccess, step, refetchParticipant, onJoined])
 

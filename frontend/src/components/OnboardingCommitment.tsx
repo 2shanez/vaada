@@ -7,6 +7,7 @@ import { base } from 'wagmi/chains'
 import { formatUnits, maxUint256 } from 'viem'
 import { NEW_USER_CHALLENGE_ABI, USDC_ABI } from '@/lib/abis'
 import { useContracts } from '@/lib/hooks'
+import { analytics } from '@/lib/analytics'
 
 // Check if this is a first-time user (never completed onboarding)
 export function isFirstTimeUser(): boolean {
@@ -101,6 +102,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     if (joinSuccess) {
       setPhase('done')
       markOnboarded()
+      analytics.challengeJoined(Number(stakeAmountFormatted))
+      analytics.onboardingCompleted(Number(stakeAmountFormatted))
       setTimeout(() => {
         onComplete()
         const element = document.getElementById('promises')
@@ -160,6 +163,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     // Step 1: Auto-switch network if needed
     if (isWrongNetwork) {
       setPhase('switching')
+      analytics.networkSwitchStarted()
       return // useEffect will continue after switch
     }
 
@@ -177,6 +181,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
       if (needsApproval) {
         // Use max approval so they never need to approve again
         setPhase('approving')
+        analytics.approveStarted(Number(stakeAmountFormatted))
         approve({
           address: contracts.usdc,
           abi: USDC_ABI,
@@ -202,6 +207,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 
   const handleFundWallet = async () => {
     if (!address) return
+    analytics.onboardingFundWalletClicked()
     try {
       await fundWallet({ address, options: { chain: base } })
     } catch {

@@ -13,6 +13,7 @@ import { useInView } from '@/lib/useInView'
 import { useCountUp } from '@/lib/useCountUp'
 import { LiveChallengeCard, OnboardingCommitment } from '@/components/OnboardingCommitment'
 import { NEW_USER_CHALLENGE_ABI } from '@/lib/abis'
+import { analytics, identifyUser } from '@/lib/analytics'
 
 // Dynamic imports for heavy components - don't block first paint
 const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => ({ default: m.BrowseGoals })), {
@@ -119,6 +120,7 @@ function IntegrationsDropdown() {
     document.cookie = 'fitbit_user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
     setFitbitConnected(false)
     setOpen(false)
+    analytics.fitbitDisconnected()
   }
 
   return (
@@ -294,6 +296,13 @@ export default function Home() {
       // Will show onboarding once authenticated
     }
   }, [])
+
+  // Identify user in analytics when authenticated
+  useEffect(() => {
+    if (authenticated && address) {
+      identifyUser(address, { wallet: address.slice(0, 10) })
+    }
+  }, [authenticated, address])
 
   // Show onboarding modal for users who haven't completed the challenge
   // Check localStorage first (instant), then verify with contract
