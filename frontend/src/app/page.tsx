@@ -662,14 +662,15 @@ export default function Home() {
             </div>
           </div>
           {/* Bottom bar */}
-          <div className="border-t border-[var(--border)] pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        </div>
+        <div className="border-t border-[var(--border)] mx-0" />
+        <div className="max-w-6xl mx-auto pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <VaadaLogo size={24} />
               <span className="font-bold text-[#2EE59D]">vaada</span>
               <span className="text-xs text-[var(--text-secondary)]">· The Promise Market</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
-          </div>
         </div>
       </footer>
     </main>
