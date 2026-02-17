@@ -5,17 +5,18 @@ export function VaadaLogo({ size = 28, className = '' }: { size?: number; classN
     <svg
       width={size}
       height={size}
-      viewBox="0 0 512 512"
+      viewBox="0 0 640 640"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Triple-stroke V mark — no background */}
-      <path d="M 76,60 L 230,400 Q 256,450 282,400 L 436,60"
-        fill="none" stroke="#2EE59D" strokeWidth="32" strokeLinecap="round" />
-      <path d="M 130,60 L 238,360 Q 256,400 274,360 L 382,60"
-        fill="none" stroke="#2EE59D" strokeWidth="32" strokeLinecap="round" />
-      <path d="M 184,60 L 246,320 Q 256,350 266,320 L 328,60"
-        fill="none" stroke="#2EE59D" strokeWidth="32" strokeLinecap="round" />
+      <g fill="none" stroke="#2EE59D" strokeWidth="35" strokeLinecap="round">
+        {/* Outer V */}
+        <path d="M 115,141 L 320,499 L 525,141" strokeLinejoin="round" />
+        {/* Middle V */}
+        <path d="M 160,141 L 320,470 L 480,141" strokeLinejoin="round" />
+        {/* Inner V */}
+        <path d="M 205,141 L 320,441 L 435,141" strokeLinejoin="round" />
+      </g>
     </svg>
   )
 }
