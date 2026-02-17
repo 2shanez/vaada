@@ -297,7 +297,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    By signing up, you&apos;re making your first promise. If you don&apos;t join a goal within 24 hours, your ${stakeAmountFormatted} will be split among those who did. Ready?
+                    By signing up, you&apos;re making your first promise. If you don&apos;t join a goal within 24 hours, your ${stakeAmountFormatted} is gone. Ready?
                   </p>
                 </div>
               </div>
@@ -557,7 +557,7 @@ export function LiveChallengeCard() {
           </div>
           <h3 className="font-bold text-base mb-1">Promise Broken</h3>
           <p className="text-sm text-[var(--text-secondary)]">
-            You didn&apos;t join a goal within 24h. Your $5 was split among those who did.
+            You didn&apos;t join a goal within 24h. Your $5 is gone. Promise broken.
           </p>
         </div>
       </div>
@@ -672,7 +672,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                 <div>
                   <p className="text-sm font-bold">New User Challenge</p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    By signing up, you&apos;re making your first promise. If you don&apos;t join a goal within 24 hours, your $5 will be split among those who did. Ready?
+                    By signing up, you&apos;re making your first promise. If you don&apos;t join a goal within 24 hours, your $5 is gone. Ready?
                   </p>
                 </div>
               </div>
