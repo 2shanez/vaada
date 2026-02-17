@@ -648,7 +648,6 @@ export default function Home() {
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Community</h4>
               <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
-                <li><a href="https://twitter.com/vaadaio" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Twitter / X</a></li>
                 <li><a href="mailto:hello@vaada.io" className="hover:text-[var(--foreground)] transition-colors">Contact</a></li>
                 <li><a href="/support" className="hover:text-[var(--foreground)] transition-colors">Bug Reports</a></li>
               </ul>
