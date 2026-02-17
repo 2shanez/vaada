@@ -491,11 +491,6 @@ export function LiveChallengeCard() {
     }
   }, [challenge, deadline])
 
-  const handleJoin = () => {
-    if (!authenticated) { login(); return }
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   const handleDismiss = () => {
     if (address) localStorage.setItem(`vaada_challenge_dismissed_${address}`, 'true')
     setDismissed(true)
