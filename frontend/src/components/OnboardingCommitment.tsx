@@ -242,9 +242,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
             <>
               {/* Welcome header */}
               <div className="text-center mb-4">
-                <div className="w-16 h-16 rounded-2xl bg-[#2EE59D] flex items-center justify-center mx-auto mb-3">
-                  <span className="text-white font-black text-3xl leading-none">v</span>
-                </div>
+                <img src="/vaada-v.png" alt="Vaada" className="w-14 h-14 mx-auto mb-3" />
                 <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
                 <p className="text-sm text-[var(--text-secondary)] mb-2">
                   Keep Your Promise
@@ -620,9 +618,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
           ) : (
             <>
               <div className="text-center mb-4">
-                <div className="w-16 h-16 rounded-2xl bg-[#2EE59D] flex items-center justify-center mx-auto mb-3">
-                  <span className="text-white font-black text-3xl leading-none">v</span>
-                </div>
+                <img src="/vaada-v.png" alt="Vaada" className="w-14 h-14 mx-auto mb-3" />
                 <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
                 <p className="text-sm text-[var(--text-secondary)] mb-2">Keep Your Promise</p>
               </div>
