@@ -187,6 +187,43 @@ a:active {
   box-shadow: 0 0 20px rgba(46, 229, 157, 0.3);
 }
 
+/* Green icon glow — soft radial behind icon containers */
+.icon-glow {
+  position: relative;
+}
+.icon-glow::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46, 229, 157, 0.15) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Dot grid background texture */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Green accent underline for stats */
+.stat-accent::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 2px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, #2EE59D, rgba(46, 229, 157, 0.2));
+  border-radius: 1px;
+}
+
+/* Connecting gradient line between steps */
+.step-connector {
+  background: linear-gradient(90deg, #2EE59D, #1AD6B0, #2EE59D);
+  opacity: 0.3;
+}
+
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, var(--accent) 0%, #26c987 100%);
