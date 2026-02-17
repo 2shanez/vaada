@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useChainId } from 'wagmi'
+import { useAccount, useWaitForTransactionReceipt, useReadContract, useChainId } from 'wagmi'
+import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { parseUnits, formatUnits } from 'viem'
 import { getStravaAuthUrl, isStravaConnected, getStravaAthleteId } from '@/lib/strava'
 import { CONTRACTS } from '@/lib/wagmi'
@@ -108,7 +109,7 @@ export function CreateChallenge() {
     data: approveHash, 
     isPending: isApprovePending,
     reset: resetApprove 
-  } = useWriteContract()
+  } = useSponsoredWrite()
   
   const { isLoading: isApproveConfirming, isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({ 
     hash: approveHash 
@@ -120,7 +121,7 @@ export function CreateChallenge() {
     data: createHash, 
     isPending: isCreatePending,
     reset: resetCreate
-  } = useWriteContract()
+  } = useSponsoredWrite()
   
   const { isLoading: isCreateConfirming, isSuccess: isCreateSuccess } = useWaitForTransactionReceipt({ 
     hash: createHash 

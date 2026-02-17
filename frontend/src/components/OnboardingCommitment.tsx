@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { usePrivy, useFundWallet } from '@privy-io/react-auth'
-import { useAccount, useBalance, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi'
+import { useAccount, useBalance, useReadContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi'
+import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { base } from 'wagmi/chains'
 import { formatUnits, maxUint256 } from 'viem'
 import { NEW_USER_CHALLENGE_ABI, USDC_ABI } from '@/lib/abis'
@@ -79,8 +80,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
   const needsApproval = !allowance || (allowance as bigint) < (stakeAmount as bigint || BigInt(0))
 
   // Contract writes
-  const { writeContract: approve, data: approveTxHash, error: approveError } = useWriteContract()
-  const { writeContract: join, data: joinTxHash, error: joinError } = useWriteContract()
+  const { writeContract: approve, data: approveTxHash, error: approveError } = useSponsoredWrite()
+  const { writeContract: join, data: joinTxHash, error: joinError } = useSponsoredWrite()
 
   const { isLoading: isApproving, isSuccess: approveSuccess } = useWaitForTransactionReceipt({ hash: approveTxHash })
   const { isLoading: isJoining, isSuccess: joinSuccess } = useWaitForTransactionReceipt({ hash: joinTxHash })

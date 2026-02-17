@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useReadContracts, useReadContract } from 'wagmi'
+import { useAccount, useWaitForTransactionReceipt, useSwitchChain, useReadContracts, useReadContract } from 'wagmi'
+import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { usePrivy } from '@privy-io/react-auth'
 import { parseUnits, formatUnits } from 'viem'
 import { base } from 'wagmi/chains'
@@ -117,16 +118,16 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const trackerConnected = isStepsGoal ? fitbitConnected : stravaConnected
 
   // Contract writes with error tracking
-  const { writeContract: writeApprove, data: approveHash, isPending: isApprovePending, error: approveError } = useWriteContract()
+  const { writeContract: writeApprove, data: approveHash, isPending: isApprovePending, error: approveError } = useSponsoredWrite()
   const { isLoading: isApproveConfirming, isSuccess: isApproveSuccess, error: approveConfirmError } = useWaitForTransactionReceipt({ hash: approveHash })
 
-  const { writeContract: writeJoin, data: joinHash, isPending: isJoinPending, error: joinError } = useWriteContract()
+  const { writeContract: writeJoin, data: joinHash, isPending: isJoinPending, error: joinError } = useSponsoredWrite()
   const { isLoading: isJoinConfirming, isSuccess: isJoinSuccess, error: joinConfirmError } = useWaitForTransactionReceipt({ hash: joinHash })
 
-  const { writeContract: writeStoreToken, data: storeTokenHash, isPending: isStorePending, error: storeError } = useWriteContract()
+  const { writeContract: writeStoreToken, data: storeTokenHash, isPending: isStorePending, error: storeError } = useSponsoredWrite()
   const { isLoading: isStoreConfirming, isSuccess: isStoreSuccess, error: storeConfirmError } = useWaitForTransactionReceipt({ hash: storeTokenHash })
 
-  const { writeContract: writeClaim, data: claimHash, isPending: isClaimPending, error: claimError } = useWriteContract()
+  const { writeContract: writeClaim, data: claimHash, isPending: isClaimPending, error: claimError } = useSponsoredWrite()
   const { isLoading: isClaimConfirming, isSuccess: isClaimSuccess, error: claimConfirmError } = useWaitForTransactionReceipt({ hash: claimHash })
 
   // Parse user-friendly error messages

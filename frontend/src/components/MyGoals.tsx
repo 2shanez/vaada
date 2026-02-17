@@ -1,6 +1,7 @@
 'use client'
 
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useChainId } from 'wagmi'
+import { useAccount, useReadContract, useWaitForTransactionReceipt, useChainId } from 'wagmi'
+import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
 import { base } from 'wagmi/chains'
@@ -187,7 +188,7 @@ function GoalCard({
     args: [goalId, userAddress],
   })
 
-  const { writeContract, data: claimHash, isPending } = useWriteContract()
+  const { writeContract, data: claimHash, isPending } = useSponsoredWrite()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash: claimHash })
 
   // Refetch after successful claim

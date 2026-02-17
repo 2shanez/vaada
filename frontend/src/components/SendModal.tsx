@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useAccount, useWaitForTransactionReceipt } from 'wagmi'
+import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { parseUnits } from 'viem'
 import { useUSDC, useContracts } from '@/lib/hooks'
 import { USDC_ABI } from '@/lib/abis'
@@ -21,7 +22,7 @@ export function SendModal({ onClose }: SendModalProps) {
   const [mounted, setMounted] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { writeContract, data: hash, error: writeError, isPending } = useWriteContract()
+  const { writeContract, data: hash, error: writeError, isPending } = useSponsoredWrite()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   useEffect(() => {

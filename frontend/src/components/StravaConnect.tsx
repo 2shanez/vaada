@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { usePrivy, useWallets } from '@privy-io/react-auth'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useSwitchChain, useChainId } from 'wagmi'
+import { useAccount, useWaitForTransactionReceipt, useReadContract, useSwitchChain, useChainId } from 'wagmi'
+import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { base } from 'wagmi/chains'
 import { CONTRACTS } from '@/lib/wagmi'
 
@@ -42,7 +43,7 @@ export function StravaConnect() {
 
   const isWrongNetwork = chainId !== base.id
 
-  const { writeContract, data: hash, error: writeError } = useWriteContract()
+  const { writeContract, data: hash, error: writeError } = useSponsoredWrite()
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash })
 
   // Check if user already has token stored on-chain
