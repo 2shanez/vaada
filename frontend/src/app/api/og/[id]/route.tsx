@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
 
-export const runtime = 'edge'
+// export const runtime = 'edge' // switched to nodejs
 
 const GOALS: Record<string, { emoji: string; title: string; desc: string; miles: number; min: number; max: number }> = {
   '10': { emoji: '🌅', title: 'Daily Mile', desc: 'Run 1 mile today', miles: 1, min: 5, max: 50 },
