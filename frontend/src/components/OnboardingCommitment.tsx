@@ -245,7 +245,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 </div>
                 <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
                 <p className="text-sm text-[var(--text-secondary)] mb-2">
-                  The promise market
+                  The Promise Market
                 </p>
                 <p className="text-xs text-[var(--text-secondary)] inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--surface)] rounded-full border border-[var(--border)]">
                   <span className="font-semibold text-[#2EE59D]">vaada</span>
@@ -630,7 +630,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                   <span className="text-white font-black text-3xl leading-none">v</span>
                 </div>
                 <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
-                <p className="text-sm text-[var(--text-secondary)] mb-2">The promise market</p>
+                <p className="text-sm text-[var(--text-secondary)] mb-2">The Promise Market</p>
               </div>
 
               <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
