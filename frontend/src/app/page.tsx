@@ -129,9 +129,8 @@ function IntegrationsDropdown() {
       <button
         ref={buttonRef}
         onClick={handleToggle}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all"
+        className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1"
       >
-        <span>🔗</span>
         <span className="hidden sm:inline">Integrations</span>
         <svg className={`w-3 h-3 ml-1 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -365,12 +364,12 @@ export default function Home() {
   return (
     <>
       {/* Header - outside main to avoid overflow clipping on iOS */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/80 backdrop-blur-xl">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--surface)]/90 backdrop-blur-xl border-b border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3 sm:gap-6">
           <a 
             href="/" 
             onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
-            className="flex items-center gap-2 text-xl font-bold text-[var(--foreground)] hover:opacity-80 transition-opacity cursor-pointer flex-shrink-0"
+            className="flex items-center gap-2 text-xl font-bold text-[#2EE59D] hover:opacity-80 transition-opacity cursor-pointer flex-shrink-0"
           >
             <VaadaLogo size={28} />
             vaada
