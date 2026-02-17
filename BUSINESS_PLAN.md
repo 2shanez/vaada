@@ -171,6 +171,7 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 2. **Human verification is gameable** — Forfeit uses referees/photos. Vaada uses Fitbit/Strava APIs.
 3. **Move-to-earn was backwards** — Printing tokens to reward activity is unsustainable. Vaada uses real money (USDC) and loss aversion.
 4. **No one combined all the pieces** — On-chain stakes + API verification + yield + consumer UX. Each competitor has 1-2 of these. Vaada has all of them.
+5. **No one is building toward agentic accountability** — As voice-enabled AI agents become mainstream, users will say "Hey, commit me to 10K steps today" and an agent will stake on their behalf, track progress, and coach them through it. Vaada's on-chain protocol is uniquely positioned for this — agents need programmable, trustless contracts to interact with, not Web2 dashboards behind login walls. The future is AI agents acting as personal accountability coaches with real financial teeth.
 
 ### Vaada's Moat
 
