@@ -257,7 +257,7 @@ function StatsCard({
         <p className="text-sm font-medium text-[var(--text-secondary)]">{label}</p>
         {icon}
       </div>
-      <p className="text-4xl font-bold tabular-nums tracking-tight stat-accent">{displayValue}</p>
+      <p className="text-4xl font-bold tabular-nums tracking-tight">{displayValue}</p>
     </div>
   )
 }
@@ -398,11 +398,10 @@ export default function Home() {
       <NetworkBanner />
 
       <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] scroll-smooth overflow-x-hidden">
-        {/* Subtle Background Pattern - dot grid + gradient orbs */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute inset-0 dot-grid" />
-          <div className="hidden sm:block absolute top-0 left-1/4 w-96 h-96 bg-[#2EE59D]/5 rounded-full blur-3xl" />
-          <div className="hidden sm:block absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#2EE59D]/3 rounded-full blur-3xl" />
+        {/* Subtle Background Pattern - hidden on mobile for performance */}
+        <div className="hidden sm:block fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#2EE59D]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#2EE59D]/3 rounded-full blur-3xl" />
         </div>
 
       {/* Hero - Compact with animation */}
@@ -537,8 +536,8 @@ export default function Home() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8 relative">
-            {/* Connecting gradient line */}
-            <div className="hidden md:block absolute top-10 left-[20%] right-[20%] h-0.5 step-connector" />
+            {/* Connecting line */}
+            <div className="hidden md:block absolute top-8 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
               { step: '01', icon: '💰', title: 'Make a promise', desc: 'Stake money on your promise. Put real skin in the game to back your word.' },
@@ -547,19 +546,17 @@ export default function Home() {
             ].map((item, i) => (
               <div 
                 key={item.step} 
-                className={`text-center group relative p-6 rounded-xl bg-[#13131D] border border-[var(--border)] hover:border-[#2EE59D]/30 transition-all duration-500 ${
-                  howView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}
-                style={{ transitionDelay: `${i * 150}ms` }}
+                className="text-center group relative"
+                style={{ animationDelay: `${i * 100}ms` }}
               >
-                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--background)] border border-[var(--border)] mb-4 icon-glow group-hover:scale-105 transition-transform duration-300">
-                  <span className="text-2xl relative z-10">{item.icon}</span>
-                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#2EE59D] text-[10px] font-bold text-black flex items-center justify-center z-10">
+                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--background)] shadow-sm border border-[var(--border)] mb-3 group-hover:shadow-md group-hover:border-[#2EE59D]/30 group-hover:scale-105 transition-all duration-300">
+                  <span className="text-2xl">{item.icon}</span>
+                  <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#2EE59D] text-[10px] font-bold text-black flex items-center justify-center">
                     {item.step.slice(-1)}
                   </span>
                 </div>
-                <h3 className="font-semibold text-sm mb-2 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed max-w-[220px] mx-auto">{item.desc}</p>
+                <h3 className="font-semibold text-sm mb-1 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed max-w-[200px] mx-auto">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -574,10 +571,7 @@ export default function Home() {
             <h2 className="text-2xl font-bold mt-2">Why It Works</h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 relative">
-            {/* Connecting gradient line */}
-            <div className="hidden md:block absolute top-10 left-[20%] right-[20%] h-0.5 step-connector" />
-            
+          <div className="grid md:grid-cols-3 gap-6">
             {[
               { icon: '🧠', title: 'Loss Aversion', desc: 'We work 2x harder to avoid losing money than to gain it.' },
               { icon: '📱', title: 'Automatic Verification', desc: 'Your fitness tracker syncs and verifies your progress automatically.' },
@@ -585,13 +579,10 @@ export default function Home() {
             ].map((item, i) => (
               <div 
                 key={item.title}
-                className={`group p-6 rounded-xl border border-[var(--border)] bg-[#13131D] hover:border-[#2EE59D]/50 hover:shadow-lg hover:shadow-[#2EE59D]/5 hover:-translate-y-1 transition-all duration-500 ${
-                  whyView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}
-                style={{ transitionDelay: `${i * 150}ms` }}
+                className="group p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[#2EE59D]/50 hover:shadow-lg hover:shadow-[#2EE59D]/5 hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2EE59D]/10 to-[#2EE59D]/5 flex items-center justify-center mb-4 icon-glow group-hover:scale-110 transition-transform">
-                  <span className="text-2xl relative z-10">{item.icon}</span>
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2EE59D]/10 to-[#2EE59D]/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-2xl">{item.icon}</span>
                 </div>
                 <h3 className="font-semibold mb-2 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
                 <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{item.desc}</p>
