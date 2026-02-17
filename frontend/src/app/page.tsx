@@ -540,7 +540,7 @@ export default function Home() {
             <div className="hidden md:block absolute top-8 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
-              { step: '01', icon: '💰', title: 'Make a promise', desc: 'Stake money on your goal. Put real skin in the game to back your word.' },
+              { step: '01', icon: '💰', title: 'Make a promise', desc: 'Stake money on your promise. Put real skin in the game to back your word.' },
               { step: '02', icon: '✅', title: 'Keep your promise', desc: 'We verify automatically. Connect your fitness app and we track your progress.' },
               { step: '03', icon: '🏆', title: 'Earn from your promise', desc: "Keep your stake + earn from those who don't. Winners split the pool." },
             ].map((item, i) => (
