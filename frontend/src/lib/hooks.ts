@@ -66,7 +66,7 @@ export function useGoalState(goalId?: number) {
     abi: GOALSTAKE_ABI,
     functionName: 'isEntryOpen',
     args: goalId !== undefined ? [BigInt(goalId)] : undefined,
-    query: { enabled: goalId !== undefined, refetchInterval: 3000 },
+    query: { enabled: goalId !== undefined, refetchInterval: 10000 },
   })
 
   const { data: goalPhase } = useReadContract({
@@ -74,7 +74,7 @@ export function useGoalState(goalId?: number) {
     abi: GOALSTAKE_ABI,
     functionName: 'getGoalPhase',
     args: goalId !== undefined ? [BigInt(goalId)] : undefined,
-    query: { enabled: goalId !== undefined, refetchInterval: 3000 },
+    query: { enabled: goalId !== undefined, refetchInterval: 10000 },
   })
 
   return {
@@ -94,7 +94,7 @@ export function useParticipant(goalId?: number) {
     abi: GOALSTAKE_ABI,
     functionName: 'getParticipant',
     args: goalId !== undefined && address ? [BigInt(goalId), address] : undefined,
-    query: { enabled: goalId !== undefined && !!address, refetchInterval: 3000 },
+    query: { enabled: goalId !== undefined && !!address, refetchInterval: 10000 },
   })
 
   const participant = participantData as Participant | undefined
@@ -137,7 +137,7 @@ export function useGoalDetails(goalId?: number) {
     abi: GOALSTAKE_ABI as any,
     functionName: 'getGoal',
     args: goalId !== undefined ? [BigInt(goalId)] : undefined,
-    query: { enabled: goalId !== undefined, refetchInterval: 3000 },
+    query: { enabled: goalId !== undefined, refetchInterval: 5000 },
   })
 
   const goal = goalData as any
@@ -172,7 +172,7 @@ export function usePlatformStats(relevantIds?: number[], totalDisplayed?: number
 
   const { data: goalsData } = useReadContracts({
     contracts: goalCalls as any,
-    query: { enabled: idsToFetch.length > 0, refetchInterval: 30000 },
+    query: { enabled: idsToFetch.length > 0, refetchInterval: 100000 },
   })
 
   useEffect(() => {

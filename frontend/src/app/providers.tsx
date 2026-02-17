@@ -13,9 +13,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 2000, // Data is fresh for 2 seconds
+        staleTime: 5000, // Data is fresh for 5 seconds (reduces redundant fetches)
         gcTime: 5 * 60 * 1000, // Keep unused data for 5 minutes
         refetchOnWindowFocus: true, // Refetch when user returns to tab
+        refetchOnReconnect: true, // Refetch on network reconnect
         refetchOnReconnect: true, // Refetch on network reconnect
         retry: 2, // Retry failed requests twice
       },
