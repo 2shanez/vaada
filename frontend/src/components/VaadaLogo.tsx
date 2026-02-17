@@ -9,14 +9,13 @@ export function VaadaLogo({ size = 28, className = '' }: { size?: number; classN
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <rect width="512" height="512" rx="64" fill="#111111" />
-      {/* Triple-stroke V: 3 nested hairpin curves */}
-      <path d="M 116,110 L 240,380 Q 256,412 272,380 L 396,110"
-        fill="none" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
-      <path d="M 160,110 L 246,348 Q 256,372 266,348 L 352,110"
-        fill="none" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
-      <path d="M 204,110 L 251,316 Q 256,332 261,316 L 308,110"
-        fill="none" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
+      {/* Triple-stroke V mark — no background */}
+      <path d="M 76,60 L 230,400 Q 256,450 282,400 L 436,60"
+        fill="none" stroke="#2EE59D" strokeWidth="32" strokeLinecap="round" />
+      <path d="M 130,60 L 238,360 Q 256,400 274,360 L 382,60"
+        fill="none" stroke="#2EE59D" strokeWidth="32" strokeLinecap="round" />
+      <path d="M 184,60 L 246,320 Q 256,350 266,320 L 328,60"
+        fill="none" stroke="#2EE59D" strokeWidth="32" strokeLinecap="round" />
     </svg>
   )
 }

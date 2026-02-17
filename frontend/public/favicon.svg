@@ -1,14 +1,9 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <rect width="512" height="512" rx="64" fill="#111111"/>
-  <!-- Triple-stroke V: 3 nested hairpin/U shapes -->
-  <!-- Each path: left arm down, smooth curve at bottom, right arm up -->
-  <!-- Outer V -->
-  <path d="M 116,110 L 240,380 Q 256,412 272,380 L 396,110" 
-        fill="none" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
-  <!-- Middle V -->
-  <path d="M 160,110 L 246,348 Q 256,372 266,348 L 352,110" 
-        fill="none" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
-  <!-- Inner V -->
-  <path d="M 204,110 L 251,316 Q 256,332 261,316 L 308,110" 
-        fill="none" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
+  <path d="M 76,60 L 230,400 Q 256,450 282,400 L 436,60"
+    fill="none" stroke="#2EE59D" stroke-width="32" stroke-linecap="round"/>
+  <path d="M 130,60 L 238,360 Q 256,400 274,360 L 382,60"
+    fill="none" stroke="#2EE59D" stroke-width="32" stroke-linecap="round"/>
+  <path d="M 184,60 L 246,320 Q 256,350 266,320 L 328,60"
+    fill="none" stroke="#2EE59D" stroke-width="32" stroke-linecap="round"/>
 </svg>
