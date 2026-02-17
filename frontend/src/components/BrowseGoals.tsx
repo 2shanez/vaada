@@ -115,24 +115,7 @@ function NotifyModal({
 }
 
 const FEATURED_GOALS: Goal[] = [
-  {
-    id: '10k-steps-challenge',
-    onChainId: 8,
-    title: '10K Steps Challenge',
-    description: 'Walk 10,000 steps today',
-    emoji: '🚶‍♂️',
-    category: 'Daily',
-    targetMiles: 10000,
-    targetUnit: 'steps',
-    durationDays: 1,
-    minStake: 5,
-    maxStake: 5,
-    participants: 0,
-    totalStaked: 0,
-    domain: 'Fitness',
-    subdomain: 'Steps',
-    live: true,
-  },
+  // No active goals — add new ones here when created
 ]
 
 const COMING_SOON = [
