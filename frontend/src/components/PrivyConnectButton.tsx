@@ -49,7 +49,7 @@ export function PrivyConnectButton() {
         </button>
         <button
           onClick={logout}
-          className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm hover:bg-[var(--surface-hover)] transition-colors"
+          className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm hover:border-[#2EE59D]/50 transition-all"
         >
           Sign Out
         </button>

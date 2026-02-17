@@ -99,7 +99,7 @@ export function ProfileNameButton() {
   // Compact display when not editing - combined name + copy button
   if (!isEditing) {
     return (
-      <div className="flex items-center rounded-xl bg-[var(--surface)] border border-[var(--border)] overflow-hidden">
+      <div className="flex items-center rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[#2EE59D]/50 transition-all overflow-hidden">
         {/* Main button - click to edit name */}
         <button
           onClick={() => setIsEditing(true)}
