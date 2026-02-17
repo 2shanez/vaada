@@ -419,7 +419,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 
 // Live 24-hour challenge card that shows on the main page
 export function LiveChallengeCard() {
-  const { address } = useAccount()
+  const { address, isConnecting } = useAccount()
   const contracts = useContracts()
   const [timeLeft, setTimeLeft] = useState('')
   const [dismissed, setDismissed] = useState(false)
@@ -505,8 +505,14 @@ export function LiveChallengeCard() {
 
   if (dismissed) return null
 
-  // Hide if user hasn't joined the challenge (not a new user, or not logged in)
-  if (!hasJoined) return null
+  // Hide if not logged in
+  if (!address) return null
+  
+  // Still connecting wallet or loading contract data — don't flash
+  if (isConnecting || hasJoined === undefined) return null
+  
+  // User hasn't joined the new user challenge
+  if (hasJoined === false) return null
 
   // Show win result (completed challenge — joined a goal in time)
   if (isCompleted) {
