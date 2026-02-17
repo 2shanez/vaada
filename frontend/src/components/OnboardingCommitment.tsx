@@ -62,7 +62,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     abi: USDC_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    query: { enabled: !!address },
+    query: { enabled: !!address, refetchInterval: 3000 }, // Poll every 3s to detect incoming funds
   })
 
   const { data: allowance } = useReadContract({
@@ -146,6 +146,17 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     }
   }, [isWrongNetwork, phase])
 
+  // Auto-advance: when USDC arrives (e.g. via Coinbase Onramp, transfer), start the stake flow
+  const [waitingForFunds, setWaitingForFunds] = useState(false)
+  useEffect(() => {
+    if (hasEnoughUSDC && waitingForFunds && phase === 'ready') {
+      setWaitingForFunds(false)
+      setError(null)
+      // Small delay so user sees their balance update before tx fires
+      setTimeout(() => handleCommitFlow(), 500)
+    }
+  }, [hasEnoughUSDC, waitingForFunds, phase])
+
   const stakeAmountFormatted = stakeAmount ? formatUnits(stakeAmount as bigint, 6) : '5'
 
   // One-click commit: handles network switch → approve → join automatically
@@ -170,6 +181,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     // Step 2: Check USDC balance (gas is sponsored — no ETH needed)
     if (!hasEnoughUSDC) {
       setError(`You need $${stakeAmountFormatted} USDC on Base. Tap "Fund Wallet" below.`)
+      setWaitingForFunds(true) // Will auto-advance when funds arrive
       return
     }
 
@@ -204,6 +216,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
   const handleFundWallet = async () => {
     if (!address) return
     analytics.onboardingFundWalletClicked()
+    setWaitingForFunds(true) // Start watching for incoming funds
     try {
       await fundWallet({ address, options: { chain: base } })
     } catch {
@@ -323,8 +336,16 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 </div>
               )}
 
+              {/* Waiting for funds indicator */}
+              {waitingForFunds && !hasEnoughUSDC && phase === 'ready' && (
+                <div className="mb-4 p-3 bg-[#2EE59D]/10 border border-[#2EE59D]/30 rounded-xl flex items-center gap-3">
+                  <div className="w-4 h-4 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                  <p className="text-sm text-[#2EE59D]">Waiting for funds — will auto-continue when USDC arrives</p>
+                </div>
+              )}
+
               {/* Error message */}
-              {error && (
+              {error && !waitingForFunds && (
                 <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
                   <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
                 </div>
