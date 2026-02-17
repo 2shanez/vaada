@@ -5,7 +5,7 @@ import Link from 'next/link'
 const faqs = [
   {
     q: 'What is Vaada?',
-    a: 'Vaada is The Promise Market — a platform where you stake real money on your fitness goals. Hit your target, keep your stake. Miss it, and your stake goes to the treasury.',
+    a: 'Vaada is The Promise Market — a platform where you stake real money on your fitness goals. Hit your target, keep your stake. Miss it, and your stake goes to those who kept their promise.',
   },
   {
     q: 'What is USDC?',
@@ -33,7 +33,7 @@ const faqs = [
   },
   {
     q: 'What happens if I lose?',
-    a: 'Your $5 stake goes to the Vaada treasury. Think of it as the cost of breaking your promise.',
+    a: 'Your $5 stake is redistributed to those who kept their promise. Think of it as the cost of breaking yours.',
   },
   {
     q: 'Can I withdraw my USDC?',
