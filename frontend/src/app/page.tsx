@@ -626,7 +626,7 @@ export default function Home() {
       <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--surface)]">
         <div className="max-w-6xl mx-auto">
           {/* Footer columns */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-6 text-center sm:text-left max-w-lg sm:max-w-none mx-auto">
             {/* Resources */}
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Resources</h4>
