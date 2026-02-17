@@ -208,7 +208,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       setStep('idle') // Go back to idle (skip 'done' screen)
       refetchParticipant()
       onJoined?.()
-      analytics.goalJoined(goal.onChainId ?? 0, goal.name, Number(stakeAmount))
+      analytics.goalJoined(goal.onChainId ?? 0, goal.title, Number(stakeAmount))
     }
   }, [isJoinSuccess, step, refetchParticipant, onJoined])
 
