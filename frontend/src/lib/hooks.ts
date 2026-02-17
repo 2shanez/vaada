@@ -132,7 +132,7 @@ export function useStravaToken() {
 export function useGoalDetails(goalId?: number) {
   const contracts = useContracts()
 
-  const { data: goalData, isLoading } = useReadContract({
+  const { data: goalData, isLoading, isPending } = useReadContract({
     address: contracts.goalStake,
     abi: GOALSTAKE_ABI as any,
     functionName: 'getGoal',
@@ -143,7 +143,7 @@ export function useGoalDetails(goalId?: number) {
   const goal = goalData as any
 
   return {
-    isLoading,
+    isLoading: isLoading || (isPending && !goalData),
     startTime: goal ? Number(goal.startTime) : undefined,
     entryDeadline: goal ? Number(goal.entryDeadline) : undefined,
     deadline: goal ? Number(goal.deadline) : undefined,

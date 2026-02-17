@@ -546,7 +546,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   }
 
   // Loading skeleton while on-chain data loads
-  if (goal.onChainId !== undefined && goalDetails.isLoading) {
+  if (goal.onChainId !== undefined && (goalDetails.isLoading || goalDetails.startTime === undefined)) {
     return (
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden animate-pulse">
         {/* Hero section skeleton */}
