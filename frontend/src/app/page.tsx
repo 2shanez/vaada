@@ -668,7 +668,7 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <VaadaLogo size={24} />
               <span className="font-bold text-[#2EE59D]">vaada</span>
-              <span className="text-xs text-[var(--text-secondary)]">· The Promise Market</span>
+              <span className="text-xs text-[var(--text-secondary)]">· Keep Your Promise</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
         </div>
