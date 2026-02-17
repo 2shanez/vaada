@@ -1,16 +1,14 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <rect width="512" height="512" rx="64" fill="#111111"/>
-  <!-- Triple-stroke V - tight parallel lines converging to a point -->
-  <!-- Left outer -->
-  <line x1="100" y1="130" x2="248" y2="400" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
-  <!-- Right outer -->
-  <line x1="412" y1="130" x2="264" y2="400" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
-  <!-- Left middle -->
-  <line x1="145" y1="130" x2="252" y2="375" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
-  <!-- Right middle -->
-  <line x1="367" y1="130" x2="260" y2="375" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
-  <!-- Left inner -->
-  <line x1="190" y1="130" x2="253" y2="350" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
-  <!-- Right inner -->
-  <line x1="322" y1="130" x2="259" y2="350" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
+  <!-- Triple-stroke V: 3 nested hairpin/U shapes -->
+  <!-- Each path: left arm down, smooth curve at bottom, right arm up -->
+  <!-- Outer V -->
+  <path d="M 116,110 L 240,380 Q 256,412 272,380 L 396,110" 
+        fill="none" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
+  <!-- Middle V -->
+  <path d="M 160,110 L 246,348 Q 256,372 266,348 L 352,110" 
+        fill="none" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
+  <!-- Inner V -->
+  <path d="M 204,110 L 251,316 Q 256,332 261,316 L 308,110" 
+        fill="none" stroke="#2EE59D" stroke-width="28" stroke-linecap="round"/>
 </svg>

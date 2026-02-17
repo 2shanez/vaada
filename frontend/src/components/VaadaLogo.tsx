@@ -10,13 +10,13 @@ export function VaadaLogo({ size = 28, className = '' }: { size?: number; classN
       className={className}
     >
       <rect width="512" height="512" rx="64" fill="#111111" />
-      {/* Triple-stroke V - tight parallel lines converging */}
-      <line x1="100" y1="130" x2="248" y2="400" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
-      <line x1="412" y1="130" x2="264" y2="400" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
-      <line x1="145" y1="130" x2="252" y2="375" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
-      <line x1="367" y1="130" x2="260" y2="375" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
-      <line x1="190" y1="130" x2="253" y2="350" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
-      <line x1="322" y1="130" x2="259" y2="350" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
+      {/* Triple-stroke V: 3 nested hairpin curves */}
+      <path d="M 116,110 L 240,380 Q 256,412 272,380 L 396,110"
+        fill="none" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
+      <path d="M 160,110 L 246,348 Q 256,372 266,348 L 352,110"
+        fill="none" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
+      <path d="M 204,110 L 251,316 Q 256,332 261,316 L 308,110"
+        fill="none" stroke="#2EE59D" strokeWidth="28" strokeLinecap="round" />
     </svg>
   )
 }
