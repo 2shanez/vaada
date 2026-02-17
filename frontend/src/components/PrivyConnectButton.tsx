@@ -36,13 +36,18 @@ export function PrivyConnectButton() {
   return (
     <>
       <div className="flex items-center gap-3">
+        <span className="text-sm text-[#2EE59D] font-medium px-1 py-1">
+          ${(balanceNum ?? 0).toFixed(2)}
+        </span>
         <button
           type="button"
           onClick={() => setShowSend(true)}
-          title="Click to send USDC"
-          className="text-sm text-[#2EE59D] font-medium hover:opacity-80 transition-opacity px-1 py-1"
+          title="Send USDC"
+          className="text-[var(--text-secondary)] hover:text-[#2EE59D] transition-colors p-1"
         >
-          ${(balanceNum ?? 0).toFixed(2)}
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
         </button>
         <button
           onClick={logout}
