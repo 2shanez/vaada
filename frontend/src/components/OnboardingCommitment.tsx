@@ -416,7 +416,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 
 // Live 24-hour challenge card that shows on the main page
 export function LiveChallengeCard() {
-  const { login, authenticated } = usePrivy()
   const { address } = useAccount()
   const contracts = useContracts()
   const [timeLeft, setTimeLeft] = useState('')
@@ -508,7 +507,13 @@ export function LiveChallengeCard() {
 
   if (dismissed) return null
 
-  // Show result state (expired challenge)
+  // Hide if user hasn't joined the challenge (not a new user, or not logged in)
+  if (!hasJoined) return null
+
+  // Hide if challenge is completed (joined a goal) or already claimed
+  if (isCompleted || claimed) return null
+
+  // Show result state (expired challenge — they failed)
   if (isExpired && hasJoined) {
     return (
       <div className={`rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto border ${
@@ -566,21 +571,10 @@ export function LiveChallengeCard() {
             <p className="text-xs text-[var(--text-secondary)]">Your first promise. Join a goal within 24h or your $5 goes to those who did.</p>
           </div>
         </div>
-        {hasJoined ? (
-          <div className="w-full flex items-center justify-center gap-2 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-sm border border-[#2EE59D]/30">
-            <span>✓</span>
-            <span>You&apos;re in!</span>
-          </div>
-        ) : (
-          <button
-            onClick={handleJoin}
-            className="w-full py-2.5 bg-[#2EE59D] text-white font-bold text-sm rounded-xl 
-              hover:bg-[#26c987] hover:shadow-md hover:shadow-[#2EE59D]/25
-              active:scale-[0.98] transition-all"
-          >
-            Take the challenge →
-          </button>
-        )}
+        <div className="w-full flex items-center justify-center gap-2 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-sm border border-[#2EE59D]/30">
+          <span>✓</span>
+          <span>Challenge accepted — join a goal to win!</span>
+        </div>
       </div>
     </div>
   )
