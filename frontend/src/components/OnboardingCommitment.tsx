@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { usePrivy, useFundWallet } from '@privy-io/react-auth'
-import { useAccount, useBalance, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain, useChainId } from 'wagmi'
+import { useAccount, useBalance, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi'
 import { base } from 'wagmi/chains'
 import { formatUnits, maxUint256 } from 'viem'
 import { NEW_USER_CHALLENGE_ABI, USDC_ABI } from '@/lib/abis'
@@ -29,12 +29,12 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
   const { fundWallet } = useFundWallet()
   const { address } = useAccount()
   const contracts = useContracts()
-  const chainId = useChainId()
+  const { chain } = useAccount()
   const { switchChain, isPending: isSwitching } = useSwitchChain()
   const [phase, setPhase] = useState<'ready' | 'switching' | 'approving' | 'joining' | 'done'>('ready')
   const [error, setError] = useState<string | null>(null)
   
-  const isWrongNetwork = chainId !== base.id
+  const isWrongNetwork = !chain || chain.id !== base.id
   const isContractDeployed = contracts.newUserChallenge !== '0x0000000000000000000000000000000000000000'
 
   // Contract reads
