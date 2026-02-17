@@ -545,14 +545,47 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     )
   }
 
-  // While on-chain data is loading, render nothing (avoids skeleton flash for settled goals)
+  // While on-chain data is loading, show skeleton
   if (goal.onChainId !== undefined && goalDetails.startTime === undefined) {
-    return null
+    return (
+      <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden animate-pulse">
+        <div className="bg-gradient-to-br from-[var(--background)] to-[var(--surface)] px-5 pt-6 pb-5">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-5 w-14 bg-[var(--border)] rounded-full" />
+            <div className="h-5 w-20 bg-[var(--border)] rounded-full" />
+          </div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-11 h-11 bg-[var(--border)] rounded-2xl flex-shrink-0" />
+            <div className="flex-1">
+              <div className="h-5 w-44 bg-[var(--border)] rounded mb-2" />
+              <div className="h-3 w-32 bg-[var(--border)] rounded" />
+            </div>
+          </div>
+        </div>
+        <div className="px-5 py-4">
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="text-center">
+              <div className="h-3 w-10 bg-[var(--border)] rounded mx-auto mb-2" />
+              <div className="h-6 w-14 bg-[var(--border)] rounded mx-auto" />
+            </div>
+            <div className="text-center">
+              <div className="h-3 w-12 bg-[var(--border)] rounded mx-auto mb-2" />
+              <div className="h-6 w-8 bg-[var(--border)] rounded mx-auto" />
+            </div>
+            <div className="text-center">
+              <div className="h-3 w-14 bg-[var(--border)] rounded mx-auto mb-2" />
+              <div className="h-6 w-16 bg-[var(--border)] rounded mx-auto" />
+            </div>
+          </div>
+          <div className="h-12 bg-[var(--border)] rounded-xl" />
+        </div>
+      </div>
+    )
   }
 
   // Hide settled goals from browse view (unless user can claim)
   // Active goals = not settled. Once settled, they're no longer "live"
-  if (isSettled && !canClaim) {
+  if (isSettled && !hasJoinedOnChain) {
     return null
   }
 
