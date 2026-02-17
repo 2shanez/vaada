@@ -124,18 +124,63 @@ Think Polymarket, but for personal commitments instead of world events. "Bet on 
 
 ## Competitive Landscape
 
-| Competitor | Model | Weakness |
-|------------|-------|----------|
-| **Beeminder** | Lose money to Beeminder | Niche, bad UX, no social, no upside |
-| **StickK** | Lose money to charity/friend | Not automated, no market dynamic |
-| **Stepbet/DietBet** | Pool-based challenges | Web2, centralized, fitness-only |
-| **Polymarket** | Prediction markets | Bet on world, not yourself |
+No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on-chain competitors exist.
 
-**Vaada's moat:**
-- First crypto-native commitment market
-- Trustless settlement (no company decides who won)
-- Composable (other apps can integrate)
-- Expandable beyond fitness
+### Direct Competitors (Money + Fitness/Habit Goals)
+
+| Competitor | Model | Founded | Status | Weakness |
+|------------|-------|---------|--------|----------|
+| **StepBet** (WayBetter) | Pool betting on steps | ~2015 | Active | Web2, centralized, dated UX, no transparency |
+| **DietBet** (WayBetter) | Pool betting on weight loss | ~2015 | Active | Weight-only, photo weigh-ins (gameable) |
+| **Forfeit** | Habit contracts, forfeit to charity | ~2020 | Active, native app | Human referee verification (gameable), subscription model |
+| **HealthyWage** | Weight loss cash prizes | 2009 | Active | Weight-only, video weigh-ins, old UX |
+| **StickK** | Commitment contracts, $ to charity | 2008 | Active (stale) | Ancient UX, self-report, no API verification, Yale-founded but never scaled |
+| **Beeminder** | Pledge $ if off track | ~2012 | Active (niche) | Quantified-self nerds only, bad UX, money goes to Beeminder |
+| **Pact (GymPact)** | Paid for gym check-ins | ~2012 | **Dead** (shut down 2017) | Validates the model, couldn't scale |
+
+### Crypto/Web3 Adjacent
+
+| Competitor | Model | Status | Weakness |
+|------------|-------|--------|----------|
+| **Receipts.xyz** | Earn points for workouts, redeem perks | Active, funded | Rewards not stakes — no loss aversion |
+| **STEPN** | Move-to-earn NFT sneakers | Collapsed from peak | GameFi ponzinomics, not commitment |
+| **Sweatcoin** | Earn tokens for walking | Active, 100M+ downloads | Earn model, no stakes, token is nearly worthless |
+| **Step.app** | Move-to-earn with NFTs | Fading | Same GameFi problems |
+| **Genopets** | Move-to-earn RPG (Solana) | Niche | Gaming-focused, not accountability |
+
+### Feature Competitors (Free Challenges, No Stakes)
+
+| Platform | Threat Level | Note |
+|----------|-------------|------|
+| **Strava Challenges** | ⚠️ High if they add money | 120M users, but free challenges = no behavior change |
+| **Nike Run Club** | ⚠️ Same | Massive distribution, but killed RTFKT / retreated from Web3 |
+| **Fitbit Premium** | 🟡 Medium | Built into Google ecosystem |
+| **Apple Fitness+** | 🟡 Medium | Activity ring sharing, no stakes |
+| **Habitica** | 🟢 Low | Gamified habits RPG, no real money |
+
+### YC-Backed Adjacent
+
+| Company | Batch | What | Threat |
+|---------|-------|------|--------|
+| **Overlord** | W23 | AI Accountability Partner | 🟢 Low — AI coaching, no financial stakes |
+| **Overfit** | S20 | Human coach + AI workouts | 🟢 Low — coaching model, not markets |
+
+### Why Nobody Has Won This Market
+
+1. **Web2 can't do trustless settlement** — StepBet decides who wins. Vaada's smart contracts decide automatically.
+2. **Human verification is gameable** — Forfeit uses referees/photos. Vaada uses Fitbit/Strava APIs.
+3. **Move-to-earn was backwards** — Printing tokens to reward activity is unsustainable. Vaada uses real money (USDC) and loss aversion.
+4. **No one combined all the pieces** — On-chain stakes + API verification + yield + consumer UX. Each competitor has 1-2 of these. Vaada has all of them.
+
+### Vaada's Moat
+
+- **First and only crypto-native commitment market**
+- **Trustless settlement** — Smart contracts decide, not the company
+- **Automated verification** — Fitbit/Strava API, not human referees
+- **Yield on locked stakes** — Morpho vault (~4.9% APY), competitors earn nothing on held funds
+- **Built on Base** — Coinbase's 110M user ecosystem, penny gas, Apple Pay onramp
+- **Composable** — Other apps can integrate Vaada's contracts as accountability infrastructure
+- **Expandable** — Protocol works for any verifiable commitment, not just fitness
 
 ---
 

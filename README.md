@@ -83,6 +83,26 @@ vaada/
 
 ---
 
+## Competitive Landscape
+
+Vaada is the **only on-chain commitment market** with automated fitness verification. No YC-backed company in 5,000+ startups builds this.
+
+| Category | Competitors | Vaada's Edge |
+|----------|------------|-------------|
+| **Fitness Betting (Web2)** | StepBet, DietBet, HealthyWage, Forfeit | Trustless smart contracts, auto-verification via API, transparent on-chain stakes |
+| **Commitment Contracts** | StickK (Yale, stale), Beeminder (niche) | Modern UX, real pool payouts, social competition |
+| **Move-to-Earn (Crypto)** | STEPN, Sweatcoin, Receipts.xyz | Loss aversion > earning tokens. Real money, not points |
+| **Platform Challenges** | Strava, Nike Run Club, Apple Fitness+ | No stakes = no skin in the game. Free challenges don't change behavior |
+
+**Key differentiators:**
+- 🔗 **On-chain transparency** — Stakes locked in auditable smart contracts, not company bank accounts
+- 🤖 **Automated verification** — Fitbit/Strava API, no human referees to game
+- 💰 **Yield on stakes** — Morpho vault earns ~4.9% APY while funds are locked
+- 🍎 **Apple Pay onramp** — Fiat → USDC → staked in 30 seconds via Coinbase Onramp
+- ⛓️ **Built on Base** — Coinbase L2, penny gas fees, 110M+ user ecosystem
+
+---
+
 ## Features
 
 - ✅ Stake USDC on fitness goals
@@ -95,6 +115,7 @@ vaada/
 - ✅ Profile names & leaderboards
 - ✅ Admin dashboard
 - ✅ Anti-cheat (device-recorded only)
+- ✅ Coinbase Onramp (Apple Pay → USDC)
 - ✅ **Live on Base Mainnet**
 
 ---
