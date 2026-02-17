@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 const SITE_PASSWORD = 'vaada2026' // Change this to whatever you want
 
@@ -9,6 +10,7 @@ export function PasswordGate({ children }: { children: React.ReactNode }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     setMounted(true)
@@ -18,6 +20,11 @@ export function PasswordGate({ children }: { children: React.ReactNode }) {
       setAuthorized(true)
     }
   }, [])
+
+  // Skip site-wide gate on /admin — it has its own password
+  if (mounted && pathname?.startsWith('/admin')) {
+    return <>{children}</>
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
