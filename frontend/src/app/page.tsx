@@ -53,18 +53,29 @@ function IntegrationsDropdown() {
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0 })
   
   const [fitbitConnected, setFitbitConnected] = useState(false)
+  const [stravaConnected, setStravaConnected] = useState(false)
   useEffect(() => {
-    const userId = document.cookie
+    const fitbitUserId = document.cookie
       .split('; ')
       .find(row => row.startsWith('fitbit_user_id='))
       ?.split('=')[1]
-    setFitbitConnected(!!userId)
+    setFitbitConnected(!!fitbitUserId)
+    const stravaUserId = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('strava_athlete_id='))
+      ?.split('=')[1]
+    setStravaConnected(!!stravaUserId)
   }, [])
   
   // Use absolute URL to bypass any routing interception
   const fitbitUrl = address 
     ? `https://www.vaada.io/api/fitbit/auth?wallet=${address}`
     : 'https://www.vaada.io/api/fitbit/auth'
+
+  const stravaClientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID || '199295'
+  const stravaRedirectUri = 'https://www.vaada.io/api/strava/callback'
+  const stravaState = address ? encodeURIComponent(JSON.stringify({ wallet: address })) : ''
+  const stravaUrl = `https://www.strava.com/oauth/authorize?client_id=${stravaClientId}&redirect_uri=${stravaRedirectUri}&response_type=code&scope=activity:read_all&state=${stravaState}`
 
   const updateMenuPosition = useCallback(() => {
     if (buttonRef.current) {
@@ -163,15 +174,40 @@ function IntegrationsDropdown() {
               )}
             </div>
             
-            {/* Strava Section - Coming Soon */}
-            <div className="px-4 py-3 opacity-40">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+            {/* Strava Section */}
+            <div className="px-4 py-3">
+              {stravaConnected ? (
+                <div className="flex items-center gap-3">
                   <span>🏃</span>
-                  <span className="text-sm">Strava</span>
+                  <span className="text-sm font-medium">Strava</span>
+                  <span className="text-xs text-[#FC4C02] bg-[#FC4C02]/10 px-2 py-0.5 rounded-full whitespace-nowrap">Connected</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      document.cookie = 'strava_athlete_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+                      setStravaConnected(false)
+                      setOpen(false)
+                    }}
+                    className="text-xs text-[var(--text-secondary)] hover:text-red-500 transition-colors whitespace-nowrap ml-auto"
+                  >
+                    Disconnect
+                  </button>
                 </div>
-                <span className="text-xs">Coming soon</span>
-              </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span>🏃</span>
+                    <span className="text-sm font-medium">Strava</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { window.location.href = stravaUrl; }}
+                    className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#FC4C02] text-white rounded-lg hover:bg-[#E34402] transition-colors cursor-pointer"
+                  >
+                    Connect Strava
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </>
