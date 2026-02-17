@@ -622,23 +622,53 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--background)]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
-            <VaadaLogo size={28} />
-            <span className="font-bold text-[#2EE59D] text-lg">vaada</span>
-            <span className="text-sm text-[var(--text-secondary)]">The Promise Market</span>
+      <footer className="border-t border-[var(--border)] py-12 px-6 bg-[var(--surface)]">
+        <div className="max-w-6xl mx-auto">
+          {/* Footer columns */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-10">
+            {/* Resources */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Resources</h4>
+              <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li><a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hover:text-[var(--foreground)] transition-colors">How It Works</a></li>
+                <li><a href="/faq" className="hover:text-[var(--foreground)] transition-colors">FAQ</a></li>
+                <li><a href="/support" className="hover:text-[var(--foreground)] transition-colors">Help & Support</a></li>
+              </ul>
+            </div>
+            {/* Built With */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Built With</h4>
+              <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li><a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Base</a></li>
+                <li><a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privy</a></li>
+                <li><a href="https://www.circle.com/usdc" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">USDC</a></li>
+              </ul>
+            </div>
+            {/* Company */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Company</h4>
+              <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li><a href="mailto:hello@vaada.io" className="hover:text-[var(--foreground)] transition-colors">Contact</a></li>
+                <li><a href="https://twitter.com/vaaborada" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Twitter / X</a></li>
+              </ul>
+            </div>
+            {/* Legal */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Legal</h4>
+              <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li><a href="/terms.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Terms of Service</a></li>
+                <li><a href="/privacy.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privacy Policy</a></li>
+              </ul>
+            </div>
           </div>
-          
-          <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)]">
-            <a href="/terms.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Terms</a>
-            <a href="/privacy.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privacy</a>
-            <span>
-              Built on{' '}
-              <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
-              {' '}×{' '}
-              <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Privy</a>
-            </span>
+          {/* Bottom bar */}
+          <div className="border-t border-[var(--border)] pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
+              <VaadaLogo size={24} />
+              <span className="font-bold text-[#2EE59D]">vaada</span>
+              <span className="text-xs text-[var(--text-secondary)]">· The Promise Market</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
           </div>
         </div>
       </footer>
