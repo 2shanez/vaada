@@ -447,7 +447,7 @@ export default function AdminPage() {
               Gas credits balance is only available in the Privy dashboard. At ~$0.001/tx on Base, $20 covers ~6,000+ transactions.
             </p>
             <a
-              href="https://dashboard.privy.io"
+              href="https://dashboard.privy.io/billing?tab=gas-sponsorship"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#2EE59D] bg-[#2EE59D]/10 border border-[#2EE59D]/30 rounded-lg hover:bg-[#2EE59D]/20 transition-colors"
