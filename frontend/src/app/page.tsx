@@ -664,7 +664,7 @@ export default function Home() {
           </div>
           {/* Bottom bar */}
         </div>
-        <div className="border-t border-[var(--border)] mx-0" />
+        <div className="border-t border-[var(--border)] -mx-6" />
         <div className="max-w-6xl mx-auto pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <VaadaLogo size={24} />
