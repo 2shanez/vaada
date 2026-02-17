@@ -461,22 +461,6 @@ export default function Home() {
           <span className="text-xs text-[var(--text-secondary)] uppercase tracking-widest whitespace-nowrap">Browse vaadas</span>
           <div className="flex-1 h-px bg-[var(--border)]" />
         </div>
-        {/* Filter Buttons */}
-        <div className="flex justify-center gap-2 mt-4 flex-wrap">
-          {['All', 'Fitness', 'Health', 'Creative', 'Educational'].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setBrowseFilter(cat)}
-              className={`px-4 py-1.5 rounded-full border text-sm transition-colors ${
-                browseFilter === cat
-                  ? 'border-[var(--foreground)] text-[var(--foreground)]'
-                  : 'border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground)]'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Promises Grid */}

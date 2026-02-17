@@ -197,96 +197,47 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
   const totalParticipants = FEATURED_GOALS.reduce((sum, g) => sum + g.participants, 0)
   const totalStaked = FEATURED_GOALS.reduce((sum, g) => sum + g.totalStaked, 0)
 
-  // Domain colors
-  const domainColors: Record<string, { bg: string; text: string; border: string }> = {
-    All: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-700 dark:text-gray-300', border: 'border-gray-300 dark:border-gray-600' },
-    Fitness: { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-700 dark:text-orange-400', border: 'border-orange-300 dark:border-orange-700' },
-    Health: { bg: 'bg-pink-100 dark:bg-pink-900/30', text: 'text-pink-700 dark:text-pink-400', border: 'border-pink-300 dark:border-pink-700' },
-    Creative: { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-700 dark:text-purple-400', border: 'border-purple-300 dark:border-purple-700' },
-    Educational: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-400', border: 'border-blue-300 dark:border-blue-700' },
-    Startup: { bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-emerald-300 dark:border-emerald-700' },
-  }
+  // Domain colors removed — using simple filter pills now
 
-  // Hide filters when there's only 1 goal
-  const showFilters = FEATURED_GOALS.length > 1
+  const FILTERS = ['Live', 'All', 'Daily', 'Weekly', 'Monthly'] as const
+  type Filter = typeof FILTERS[number]
+  const [activeFilter, setActiveFilter] = useState<Filter>('All')
+
+  // Apply filter logic
+  useEffect(() => {
+    if (activeFilter === 'Live') {
+      setActiveOnly(true)
+      setSelectedTimeframe('All')
+    } else if (activeFilter === 'All') {
+      setActiveOnly(false)
+      setSelectedTimeframe('All')
+    } else {
+      setActiveOnly(false)
+      setSelectedTimeframe(activeFilter as Timeframe)
+    }
+  }, [activeFilter])
 
   return (
     <div>
-      {/* Filter Section - only show when multiple goals */}
-      {showFilters && (
-        <>
-          <div className="mb-6 space-y-3">
-            {/* Row 1: Live toggle + Timeframes in single pill */}
-            <div className="flex justify-center">
-              <div className="inline-flex items-center gap-0.5 p-1 bg-[var(--surface)] rounded-2xl border border-[var(--border)]">
-                {/* Live Toggle */}
-                <button
-                  onClick={() => setActiveOnly(!activeOnly)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                    activeOnly
-                      ? 'bg-[#2EE59D] text-white'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
-                  }`}
-                >
-                  <span className={`w-1.5 h-1.5 rounded-full ${activeOnly ? 'bg-white animate-pulse' : 'bg-gray-400'}`} />
-                  Live
-                </button>
-                
-                {/* Divider */}
-                <div className="w-px h-5 bg-[var(--border)] mx-1" />
-                
-                {/* Timeframes */}
-                {TIMEFRAMES.map((tf) => (
-                  <button
-                    key={tf}
-                    onClick={() => setSelectedTimeframe(tf)}
-                    className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                      selectedTimeframe === tf
-                        ? 'bg-[var(--foreground)] text-[var(--background)]'
-                        : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
-                    }`}
-                  >
-                    {tf}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Row 2: Domain chips */}
-            <div className="flex justify-center">
-              <div className="flex items-center gap-2">
-                {(Object.keys(DOMAINS) as DomainKey[]).map((domain) => (
-                  <button
-                    key={domain}
-                    onClick={() => setSelectedDomain(selectedDomain === domain ? 'All' : domain)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all border ${
-                      selectedDomain === domain
-                        ? `${domainColors[domain]?.bg || 'bg-gray-100 dark:bg-gray-800'} ${domainColors[domain]?.text || 'text-gray-700'} ${domainColors[domain]?.border || 'border-transparent'}`
-                        : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--foreground)]/20'
-                    }`}
-                  >
-                    <span>{DOMAINS[domain].emoji}</span>
-                    <span>{domain}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Active filters indicator */}
-          {(selectedDomain !== 'All' || selectedTimeframe !== 'All' || !activeOnly) && (
-            <div className="mb-4 flex items-center justify-center gap-2 text-xs text-[var(--text-secondary)]">
-              <span>Showing {filteredGoals.length} {filteredGoals.length === 1 ? 'vaada' : 'vaadas'}</span>
-              <button 
-                onClick={() => { setSelectedDomain('All'); setSelectedTimeframe('All'); setActiveOnly(true); }}
-                className="text-[#2EE59D] hover:underline"
-              >
-                Clear filters
-              </button>
-            </div>
-          )}
-        </>
-      )}
+      {/* Filter Buttons */}
+      <div className="flex justify-center gap-2 mb-6 flex-wrap">
+        {FILTERS.map((f) => (
+          <button
+            key={f}
+            onClick={() => setActiveFilter(f)}
+            className={`px-4 py-1.5 rounded-full border text-sm transition-colors ${
+              activeFilter === f
+                ? 'border-[var(--foreground)] text-[var(--foreground)]'
+                : 'border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground)]'
+            }`}
+          >
+            {f === 'Live' && (
+              <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 align-middle ${activeFilter === 'Live' ? 'bg-[#2EE59D] animate-pulse' : 'bg-gray-400'}`} />
+            )}
+            {f}
+          </button>
+        ))}
+      </div>
 
       {/* Goals Grid with stagger animation */}
       <div className="flex flex-wrap justify-center gap-4">
