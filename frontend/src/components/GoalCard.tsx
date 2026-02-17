@@ -545,6 +545,11 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     )
   }
 
+  // If we know it's settled early, skip the skeleton entirely
+  if (goalDetails.settled === true && !hasJoinedOnChain) {
+    return null
+  }
+
   // Loading skeleton while on-chain data loads
   if (goal.onChainId !== undefined && (goalDetails.isLoading || goalDetails.startTime === undefined)) {
     return (
