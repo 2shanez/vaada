@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 // export const runtime = 'edge' // switched to nodejs
-export const alt = 'Vaada - The Promise Market'
+export const alt = 'Vaada - Keep Your Promise'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -54,7 +54,7 @@ export default async function Image() {
             marginBottom: '20px',
           }}
         >
-          The Promise Market
+          Keep Your Promise
         </div>
 
         {/* Description */}
