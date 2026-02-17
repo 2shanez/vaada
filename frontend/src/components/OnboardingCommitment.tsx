@@ -505,17 +505,43 @@ export function LiveChallengeCard() {
   // Hide if user hasn't joined the challenge (not a new user, or not logged in)
   if (!hasJoined) return null
 
-  // Hide if challenge is completed (joined a goal) or already claimed
-  if (isCompleted || claimed) return null
+  // Show win result (completed challenge — joined a goal in time)
+  if (isCompleted) {
+    // Check if they've already seen the win notification
+    const seenKey = address ? `vaada_challenge_result_seen_${address}` : null
+    if (seenKey && typeof window !== 'undefined' && localStorage.getItem(seenKey)) return null
 
-  // Show result state (expired challenge — they failed)
-  if (isExpired && hasJoined) {
     return (
-      <div className={`rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto border ${
-        isCompleted 
-          ? 'bg-gradient-to-br from-[#2EE59D]/20 via-[#2EE59D]/10 to-transparent border-[#2EE59D]/50' 
-          : 'bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent border-red-500/30'
-      }`}>
+      <div className="rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto border bg-gradient-to-br from-[#2EE59D]/20 via-[#2EE59D]/10 to-transparent border-[#2EE59D]/50">
+        <button
+          onClick={() => {
+            if (seenKey) localStorage.setItem(seenKey, 'true')
+            handleDismiss()
+          }}
+          className="absolute top-2 right-2 p-1.5 text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
+          aria-label="Dismiss"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div className="text-center py-2">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 bg-[#2EE59D]/20">
+            <span className="text-2xl">🎉</span>
+          </div>
+          <h3 className="font-bold text-base mb-1">Promise Kept!</h3>
+          <p className="text-sm text-[var(--text-secondary)]">
+            You joined a goal in time. Your $5 will be returned!
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show fail result (expired without joining a goal)
+  if (isExpired) {
+    return (
+      <div className="rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto border bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent border-red-500/30">
         <button
           onClick={handleDismiss}
           className="absolute top-2 right-2 p-1.5 text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
@@ -526,19 +552,12 @@ export function LiveChallengeCard() {
           </svg>
         </button>
         <div className="text-center py-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 ${
-            isCompleted ? 'bg-[#2EE59D]/20' : 'bg-red-500/20'
-          }`}>
-            <span className="text-2xl">{isCompleted ? '🎉' : '😢'}</span>
+          <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 bg-red-500/20">
+            <span className="text-2xl">😢</span>
           </div>
-          <h3 className="font-bold text-base mb-1">
-            {isCompleted ? 'Challenge Complete!' : 'Challenge Failed'}
-          </h3>
+          <h3 className="font-bold text-base mb-1">Promise Broken</h3>
           <p className="text-sm text-[var(--text-secondary)]">
-            {isCompleted 
-              ? 'You joined a goal in time. Your $5 will be returned!' 
-              : 'You didn\'t join a goal within 24h. Your $5 was split among those who did.'
-            }
+            You didn&apos;t join a goal within 24h. Your $5 was split among those who did.
           </p>
         </div>
       </div>
