@@ -135,7 +135,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     if (!error) return null
     const msg = error.message.toLowerCase()
     if (msg.includes('user rejected') || msg.includes('user denied')) return 'Transaction cancelled'
-    if (msg.includes('insufficient funds')) return 'Insufficient funds for gas'
+    if (msg.includes('insufficient funds')) return 'Insufficient USDC balance'
     if (msg.includes('insufficient allowance')) return 'Please approve USDC first'
     if (msg.includes('already joined') || msg.includes('already participant')) return 'Already joined this goal'
     if (msg.includes('entry closed') || msg.includes('entry deadline')) return 'Entry period has closed'

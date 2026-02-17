@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { usePrivy, useFundWallet } from '@privy-io/react-auth'
-import { useAccount, useBalance, useReadContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi'
+import { useAccount, useReadContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi'
 import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { base } from 'wagmi/chains'
 import { formatUnits, maxUint256 } from 'viem'
@@ -55,8 +55,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
     query: { enabled: isContractDeployed },
   })
 
-  const { data: ethBalance } = useBalance({ address })
-  const hasEnoughGas = ethBalance && ethBalance.value > BigInt(0)
+  // Gas is sponsored via Privy — no ETH needed
 
   const { data: usdcBalance } = useReadContract({
     address: contracts.usdc,
@@ -76,7 +75,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 
   const hasEnoughUSDC = usdcBalance !== undefined && stakeAmount !== undefined && 
     (usdcBalance as bigint) >= (stakeAmount as bigint)
-  const canStake = hasEnoughUSDC && hasEnoughGas
+  const canStake = hasEnoughUSDC
   const needsApproval = !allowance || (allowance as bigint) < (stakeAmount as bigint || BigInt(0))
 
   // Contract writes
@@ -168,11 +167,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
       return // useEffect will continue after switch
     }
 
-    // Step 2: Check balances
-    if (!hasEnoughGas) {
-      setError('You need ETH on Base for gas. Tap "Fund Wallet" below.')
-      return
-    }
+    // Step 2: Check USDC balance (gas is sponsored — no ETH needed)
     if (!hasEnoughUSDC) {
       setError(`You need $${stakeAmountFormatted} USDC on Base. Tap "Fund Wallet" below.`)
       return
@@ -202,7 +197,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
       setError(err instanceof Error ? err.message : 'Transaction failed')
       setPhase('ready')
     }
-  }, [address, stakeAmount, isContractDeployed, isWrongNetwork, hasEnoughGas, hasEnoughUSDC, needsApproval, contracts, stakeAmountFormatted])
+  }, [address, stakeAmount, isContractDeployed, isWrongNetwork, hasEnoughUSDC, needsApproval, contracts, stakeAmountFormatted])
 
   const [showFundLinks, setShowFundLinks] = useState(false)
 
@@ -374,7 +369,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               {/* Fallback fund links when Privy on-ramp not available */}
               {showFundLinks && !canStake && phase === 'ready' && (
                 <div className="mt-3 p-3 bg-[var(--surface)] border border-[var(--border)] rounded-xl space-y-2">
-                  <p className="text-xs text-[var(--text-secondary)] text-center mb-2">Get USDC + ETH on Base:</p>
+                  <p className="text-xs text-[var(--text-secondary)] text-center mb-2">Get USDC on Base:</p>
                   <div className="flex gap-2">
                     <a
                       href="https://www.coinbase.com/price/usdc"
@@ -383,14 +378,6 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                       className="flex-1 py-2 text-center text-sm font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
                     >
                       💵 Get USDC
-                    </a>
-                    <a
-                      href="https://www.coinbase.com/price/ethereum"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 py-2 text-center text-sm font-medium border border-[var(--border)] rounded-lg hover:bg-[var(--surface)] transition-colors"
-                    >
-                      ⛽ Get ETH
                     </a>
                   </div>
                   {address && (
