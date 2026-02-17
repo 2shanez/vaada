@@ -280,14 +280,17 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               </div>
 
               {/* New User Challenge */}
-              <div className="flex items-center gap-3 mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
-                <span className="text-2xl">⏰</span>
-                <div>
-                  <p className="text-sm font-bold">New User Challenge</p>
-                  <p className="text-xs text-[var(--text-secondary)]">
-                    By signing up, you&apos;re making your first promise. If you don&apos;t join a goal within 24 hours, your ${stakeAmountFormatted} is gone. Ready?
-                  </p>
+              <div className="mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30 space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">⏰</span>
+                  <p className="text-sm font-bold">Your First Promise</p>
                 </div>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Stake ${stakeAmountFormatted} now. Join a goal within 24 hours to get it back.
+                </p>
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Don&apos;t join in time? Your ${stakeAmountFormatted} is gone.
+                </p>
               </div>
 
               {/* Progress bar - only shown when processing */}
