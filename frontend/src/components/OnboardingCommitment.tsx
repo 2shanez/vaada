@@ -467,31 +467,22 @@ export function LiveChallengeCard() {
 
   useEffect(() => {
     if (!challenge) {
-      const updateTime = () => {
-        const now = new Date()
-        const midnight = new Date(now)
-        midnight.setUTCHours(24, 0, 0, 0)
-        const diff = midnight.getTime() - now.getTime()
-        const hours = Math.floor(diff / (1000 * 60 * 60))
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-        setTimeLeft(`${hours}h ${minutes}m`)
-      }
-      updateTime()
-      const interval = setInterval(updateTime, 60000)
-      return () => clearInterval(interval)
-    } else {
-      const updateTime = () => {
-        const now = Date.now()
-        const diff = deadline - now
-        if (diff <= 0) { setTimeLeft('Ended'); return }
-        const hours = Math.floor(diff / (1000 * 60 * 60))
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-        setTimeLeft(`${hours}h ${minutes}m`)
-      }
-      updateTime()
-      const interval = setInterval(updateTime, 60000)
-      return () => clearInterval(interval)
+      // Before joining: always show 24h (countdown starts when they join)
+      setTimeLeft('24h 0m')
+      return
     }
+    // After joining: count down from their personal deadline
+    const updateTime = () => {
+      const now = Date.now()
+      const diff = deadline - now
+      if (diff <= 0) { setTimeLeft('Ended'); return }
+      const hours = Math.floor(diff / (1000 * 60 * 60))
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      setTimeLeft(`${hours}h ${minutes}m`)
+    }
+    updateTime()
+    const interval = setInterval(updateTime, 60000)
+    return () => clearInterval(interval)
   }, [challenge, deadline])
 
   const handleDismiss = () => {
