@@ -1,8 +1,11 @@
 <svg width="640" height="640" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
   <rect width="640" height="640" rx="80" fill="#111111"/>
-  <g fill="none" stroke="#2EE59D" stroke-width="35" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M 115,141 L 320,499 L 525,141"/>
-    <path d="M 160,141 L 320,470 L 480,141"/>
-    <path d="M 205,141 L 320,441 L 435,141"/>
+  <g fill="none" stroke="#2EE59D" stroke-width="35" stroke-linecap="round">
+    <!-- Outer V - smooth hairpin -->
+    <path d="M 115,141 L 295,480 Q 320,530 345,480 L 525,141"/>
+    <!-- Middle V -->
+    <path d="M 160,141 L 300,455 Q 320,495 340,455 L 480,141"/>
+    <!-- Inner V -->
+    <path d="M 205,141 L 305,430 Q 320,460 335,430 L 435,141"/>
   </g>
 </svg>
