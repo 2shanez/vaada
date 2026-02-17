@@ -286,7 +286,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                   <p className="text-sm font-bold">Your First Promise</p>
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  Stake ${stakeAmountFormatted} now. Join a goal within 24 hours to get it back.
+                  By signing up, you&apos;re making your first promise. Stake ${stakeAmountFormatted} and join a goal within 24 hours to get it back.
                 </p>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   Don&apos;t join in time? Your ${stakeAmountFormatted} is gone.
