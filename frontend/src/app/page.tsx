@@ -589,11 +589,15 @@ export default function Home() {
             <span className="text-sm text-[var(--text-secondary)]">The Promise Market</span>
           </div>
           
-          <div className="text-sm text-[var(--text-secondary)]">
-            Built on{' '}
-            <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
-            {' '}×{' '}
-            <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Privy</a>
+          <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)]">
+            <a href="/terms.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Terms</a>
+            <a href="/privacy.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privacy</a>
+            <span>
+              Built on{' '}
+              <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Base</a>
+              {' '}×{' '}
+              <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline">Privy</a>
+            </span>
           </div>
         </div>
       </footer>
