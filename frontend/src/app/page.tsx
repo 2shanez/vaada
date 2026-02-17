@@ -365,22 +365,22 @@ export default function Home() {
   return (
     <>
       {/* Header - outside main to avoid overflow clipping on iOS */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)] border-b border-[var(--border)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3 sm:gap-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)]/80 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3 sm:gap-6">
           <a 
             href="/" 
             onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
-            className="flex items-center gap-2 text-xl font-bold text-[#2EE59D] hover:scale-105 transition-transform cursor-pointer flex-shrink-0"
+            className="flex items-center gap-2 text-xl font-bold text-[var(--foreground)] hover:opacity-80 transition-opacity cursor-pointer flex-shrink-0"
           >
             <VaadaLogo size={28} />
             vaada
           </a>
           <div className="flex-1 overflow-x-auto hide-scrollbar">
-            <div className="flex items-center gap-2 sm:gap-4 justify-end min-w-max">
-              <a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
+            <div className="flex items-center gap-1 sm:gap-5 justify-end min-w-max">
+              <a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hidden sm:block text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors cursor-pointer px-1 py-1">
                 How it works
               </a>
-              <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:flex items-center px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm hover:border-[#2EE59D]/50 transition-all cursor-pointer">
+              <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:block text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors cursor-pointer px-1 py-1">
                 Vaadas
               </a>
               {authenticated && <IntegrationsDropdown />}

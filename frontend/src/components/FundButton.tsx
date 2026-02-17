@@ -49,10 +49,9 @@ export function FundWalletButton() {
         type="button"
         onClick={handleToggle}
         style={{ touchAction: 'manipulation' }}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[#2EE59D]/50 active:scale-95 transition-all text-sm"
+        className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1"
       >
-        <span>💰</span>
-        <span>Fund</span>
+        Fund
       </button>
 
       {isOpen && mounted && createPortal(

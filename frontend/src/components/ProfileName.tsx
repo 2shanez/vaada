@@ -99,36 +99,29 @@ export function ProfileNameButton() {
   // Compact display when not editing - combined name + copy button
   if (!isEditing) {
     return (
-      <div className="flex items-center rounded-xl bg-[var(--surface)] border border-[var(--border)] hover:border-[#2EE59D]/50 transition-all overflow-hidden">
-        {/* Main button - click to edit name */}
+      <div className="flex items-center gap-1">
         <button
           onClick={() => setIsEditing(true)}
-          className="flex items-center gap-1.5 px-3 py-2 text-sm hover:bg-[var(--background)] transition-all"
+          className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1"
           title={displayName ? "Edit name" : "Set display name"}
         >
           {displayName ? (
-            <span className="font-medium text-[var(--foreground)]">{displayName}</span>
+            <span>{displayName}</span>
           ) : (
-            <span className="text-[var(--text-secondary)] font-mono text-xs">{shortAddress}</span>
+            <span className="font-mono text-xs">{shortAddress}</span>
           )}
-          <span className="text-[10px] opacity-60">✏️</span>
         </button>
-        
-        {/* Divider */}
-        <div className="w-px h-5 bg-[var(--border)]" />
-        
-        {/* Copy button */}
         <button
           onClick={handleCopy}
-          className="px-2.5 py-2 text-[var(--text-secondary)] hover:text-[#2EE59D] hover:bg-[var(--background)] transition-all"
+          className="text-[var(--text-secondary)] hover:text-[#2EE59D] transition-colors p-1"
           title="Copy wallet address"
         >
           {copied ? (
-            <svg className="w-4 h-4 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-3.5 h-3.5 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           ) : (
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
           )}

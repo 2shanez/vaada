@@ -25,7 +25,7 @@ export function PrivyConnectButton() {
     return (
       <button
         onClick={login}
-        className="px-4 py-2 bg-[#2EE59D] text-white rounded-xl text-sm font-semibold hover:bg-[#26c987] transition-all"
+        className="px-5 py-2 bg-[#2EE59D] text-white rounded-full text-sm font-semibold hover:bg-[#26c987] transition-all"
       >
         Sign In
       </button>
@@ -35,21 +35,18 @@ export function PrivyConnectButton() {
   // Authenticated - show balance + send, and logout
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => setShowSend(true)}
           title="Click to send USDC"
-          className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm hover:border-[#2EE59D]/50 active:scale-95 transition-all flex items-center gap-1.5"
+          className="text-sm text-[#2EE59D] font-medium hover:opacity-80 transition-opacity px-1 py-1"
         >
-          <span className="text-[#2EE59D] font-medium">${(balanceNum ?? 0).toFixed(2)}</span>
-          <svg className="w-3 h-3 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-          </svg>
+          ${(balanceNum ?? 0).toFixed(2)}
         </button>
         <button
           onClick={logout}
-          className="px-3 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm hover:border-[#2EE59D]/50 transition-all"
+          className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1"
         >
           Sign Out
         </button>
