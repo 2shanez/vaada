@@ -17,7 +17,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
         gcTime: 5 * 60 * 1000, // Keep unused data for 5 minutes
         refetchOnWindowFocus: true, // Refetch when user returns to tab
         refetchOnReconnect: true, // Refetch on network reconnect
-        refetchOnReconnect: true, // Refetch on network reconnect
         retry: 2, // Retry failed requests twice
       },
     },
