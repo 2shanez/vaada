@@ -453,7 +453,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
-            Make a promise. Keep your promise. Earn from your promise. Own your promise.
+            Make a Promise. Keep Your Promise. Earn From Your Promise. Own Your Promise.
           </p>
           
           <button 
@@ -567,10 +567,10 @@ export default function Home() {
             <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
-              { step: '01', icon: '💰', title: 'Make a promise', desc: 'Stake money on your promise. Put real skin in the game to back your word.' },
-              { step: '02', icon: '✅', title: 'Keep your promise', desc: 'We verify automatically. Connect your fitness app and we track your progress.' },
-              { step: '03', icon: '🏆', title: 'Earn from your promise', desc: "Keep your stake + earn from those who don't. Winners split the pool." },
-              { step: '04', icon: '🧾', title: 'Own your promise', desc: 'Every promise — kept or broken — is recorded onchain forever. Your history is permanent, provable, and yours.' },
+              { step: '01', icon: '💰', title: 'Make a Promise', desc: 'Stake money on your promise. Put real skin in the game to back your word.' },
+              { step: '02', icon: '✅', title: 'Keep Your Promise', desc: 'We verify automatically. Connect your fitness app and we track your progress.' },
+              { step: '03', icon: '🏆', title: 'Earn From Your Promise', desc: "Keep your stake + earn from those who don't. Winners split the pool." },
+              { step: '04', icon: '🧾', title: 'Own Your Promise', desc: 'Every promise — kept or broken — is recorded onchain forever. Your history is permanent, provable, and yours.' },
             ].map((item, i) => (
               <div 
                 key={item.step} 
