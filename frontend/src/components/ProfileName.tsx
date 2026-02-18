@@ -248,13 +248,13 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
     query: { enabled: !!hasJoinedChallenge },
   })
 
-  // VaadaV3 goals — check participation for goals 1-8
+  // VaadaV3 goals — check participation for goals 9+ (1-8 were test goals)
   const { data: goalParticipants } = useReadContracts({
-    contracts: Array.from({ length: 8 }, (_, i) => ({
+    contracts: Array.from({ length: 20 }, (_, i) => ({
       address: contracts.goalStake,
       abi: GOALSTAKE_ABI,
       functionName: 'getParticipant' as const,
-      args: [BigInt(i + 1), address],
+      args: [BigInt(i + 9), address],
     })),
   })
 
