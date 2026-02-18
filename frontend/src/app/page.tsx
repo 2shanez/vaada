@@ -635,7 +635,7 @@ export default function Home() {
               <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
                 <li><a href="/faq" className="hover:text-[var(--foreground)] transition-colors">FAQ</a></li>
                 <li><a href="/support" className="hover:text-[var(--foreground)] transition-colors">Help & Support</a></li>
-                <li><a href="/whitepaper.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Whitepaper</a></li>
+                {/* <li><a href="/whitepaper.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Whitepaper</a></li> */}
               </ul>
             </div>
             {/* Built With */}
