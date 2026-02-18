@@ -255,52 +255,52 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
             <>
               {/* Welcome header */}
               <div className="text-center mb-3">
-                <img src="/vaada-v.png" alt="Vaada" className="w-10 h-10 mx-auto mb-2" />
-                <h2 className="text-lg font-bold mb-0.5">Welcome to Vaada</h2>
-                <p className="text-xs text-[var(--text-secondary)]">
+                <img src="/vaada-v.png" alt="Vaada" className="w-12 h-12 mx-auto mb-2" />
+                <h2 className="text-xl font-bold mb-0.5">Welcome to Vaada</h2>
+                <p className="text-sm text-[var(--text-secondary)]">
                   Keep Your Promise
                 </p>
               </div>
 
               {/* How it works - compact */}
-              <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 mb-3 space-y-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">💰</div>
+              <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3.5 mb-3 space-y-2.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">💰</div>
                   <div>
-                    <p className="text-xs font-medium">Make a promise</p>
-                    <p className="text-[10px] text-[var(--text-secondary)]">Stake $$$ on your promise</p>
+                    <p className="text-sm font-medium">Make a promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Stake $$$ on your promise</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">✅</div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
                   <div>
-                    <p className="text-xs font-medium">Keep your promise</p>
-                    <p className="text-[10px] text-[var(--text-secondary)]">We verify automatically</p>
+                    <p className="text-sm font-medium">Keep your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">🏆</div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">🏆</div>
                   <div>
-                    <p className="text-xs font-medium">Earn from your promise</p>
-                    <p className="text-[10px] text-[var(--text-secondary)]">Keep stake + earn from those who don&apos;t</p>
+                    <p className="text-sm font-medium">Earn from your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don&apos;t</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">🧾</div>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">🧾</div>
                   <div>
-                    <p className="text-xs font-medium">Own your promise</p>
-                    <p className="text-[10px] text-[var(--text-secondary)]">Every promise recorded onchain forever</p>
+                    <p className="text-sm font-medium">Own your promise</p>
+                    <p className="text-xs text-[var(--text-secondary)]">Every promise recorded onchain forever</p>
                   </div>
                 </div>
               </div>
 
               {/* New User Challenge */}
-              <div className="mb-3 p-2.5 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
+              <div className="mb-3 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-base">⏰</span>
-                  <p className="text-xs font-bold">Your First Promise</p>
+                  <span className="text-lg">⏰</span>
+                  <p className="text-sm font-bold">Your First Promise</p>
                 </div>
-                <p className="text-[10px] text-[var(--text-secondary)] leading-relaxed">
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   Stake ${stakeAmountFormatted} and join a goal within 24h to get it back.
                   Don&apos;t join in time? Your ${stakeAmountFormatted} is gone.
                 </p>
