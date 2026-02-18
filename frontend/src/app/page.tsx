@@ -564,9 +564,7 @@ export default function Home() {
       </section>
 
       {/* Section divider */}
-      <div className="w-full">
-        <div className="h-px bg-[var(--border)]" />
-      </div>
+      <div className="border-t border-[var(--border)]" />
 
       {/* Footer CTA */}
       <section ref={ctaView.ref} className={`py-10 sm:py-16 px-4 sm:px-6 bg-[var(--surface)] relative overflow-hidden transition-all duration-700 ${ctaView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
