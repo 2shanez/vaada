@@ -227,7 +227,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 
   // Progress steps for the indicator
   const steps = [
-    { label: 'Network', done: !isWrongNetwork, active: phase === 'switching' },
+    { label: 'Start', done: !isWrongNetwork, active: phase === 'switching' },
     { label: 'Approve', done: approveSuccess || !needsApproval, active: phase === 'approving' },
     { label: 'Join', done: joinSuccess, active: phase === 'joining' },
   ]
@@ -385,7 +385,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 {phase === 'switching' ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Switching to Base...
+                    Setting up...
                   </span>
                 ) : phase === 'approving' ? (
                   <span className="flex items-center justify-center gap-2">
@@ -648,9 +648,6 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
               <p className="text-sm text-[var(--text-secondary)] mb-3">
                 Now join any goal within 24h to get your $5 back
               </p>
-              <button onClick={() => setStep('intro')} className="mt-4 text-sm text-[#2EE59D] hover:underline">
-                ← Back to start
-              </button>
             </div>
           ) : (
             <>
