@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useAccount, useReadContract } from 'wagmi'
+import { useAccount, useReadContract, useReadContracts } from 'wagmi'
 import { formatUnits } from 'viem'
-import { VAADA_RECEIPTS_ABI, type Receipt } from '@/lib/abis'
+import { VAADA_RECEIPTS_ABI, NEW_USER_CHALLENGE_ABI, GOALSTAKE_ABI, type Receipt } from '@/lib/abis'
 import { CONTRACTS } from '@/lib/wagmi'
 import { base } from 'wagmi/chains'
 
@@ -217,6 +217,7 @@ export function ProfileNameButton() {
 function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
   const contracts = CONTRACTS[base.id]
 
+  // Receipts data (onchain permanent record)
   const { data: reputation, isLoading: loadingRep } = useReadContract({
     address: contracts.vaadaReceipts,
     abi: VAADA_RECEIPTS_ABI,
@@ -231,7 +232,33 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
     args: [address],
   })
 
-  const isLoading = loadingRep || loadingReceipts
+  // NewUserChallenge data
+  const { data: hasJoinedChallenge, isLoading: loadingChallenge } = useReadContract({
+    address: contracts.newUserChallenge,
+    abi: NEW_USER_CHALLENGE_ABI,
+    functionName: 'hasJoinedChallenge',
+    args: [address],
+  })
+
+  const { data: challengeData } = useReadContract({
+    address: contracts.newUserChallenge,
+    abi: NEW_USER_CHALLENGE_ABI,
+    functionName: 'getChallenge',
+    args: [address],
+    query: { enabled: !!hasJoinedChallenge },
+  })
+
+  // VaadaV3 goals — check participation for goals 1-8
+  const { data: goalParticipants } = useReadContracts({
+    contracts: Array.from({ length: 8 }, (_, i) => ({
+      address: contracts.goalStake,
+      abi: GOALSTAKE_ABI,
+      functionName: 'getParticipant' as const,
+      args: [BigInt(i + 1), address],
+    })),
+  })
+
+  const isLoading = loadingRep || loadingReceipts || loadingChallenge
 
   if (isLoading) {
     return (
@@ -241,11 +268,57 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
     )
   }
 
-  const [attempted, completed, winRate, totalStaked, totalEarned, streak, bestStreak] = reputation || [BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0)]
+  // Base stats from receipts
+  const [repAttempted, repCompleted, repWinRate, repTotalStaked, repTotalEarned, repStreak, repBestStreak] = reputation || [BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0)]
   const receiptList = (receipts as Receipt[]) || []
-  const broken = Number(attempted) - Number(completed)
-  const stakedNum = Number(totalStaked)
-  const earnedNum = Number(totalEarned)
+
+  // Count goals from VaadaV3 participation (goals the user joined)
+  let v3Attempted = 0
+  let v3Completed = 0
+  let v3Staked = BigInt(0)
+  let v3Earned = BigInt(0)
+  if (goalParticipants) {
+    for (const gp of goalParticipants) {
+      if (gp.status === 'success' && gp.result) {
+        const p = gp.result as any
+        if (p.user && p.user !== '0x0000000000000000000000000000000000000000' && Number(p.stake) > 0) {
+          v3Attempted++
+          if (p.verified && p.succeeded) v3Completed++
+          v3Staked += BigInt(p.stake)
+          if (p.claimed) v3Earned += BigInt(p.stake) // approximate — claimed means they got payout
+        }
+      }
+    }
+  }
+
+  // Count NewUserChallenge
+  let nucAttempted = 0
+  let nucCompleted = 0
+  let nucStaked = BigInt(0)
+  let nucEarned = BigInt(0)
+  if (hasJoinedChallenge && challengeData) {
+    const [amount, , settled, won] = challengeData as [bigint, bigint, boolean, boolean, boolean]
+    nucAttempted = 1
+    if (settled) {
+      nucCompleted = won ? 1 : 0
+      nucEarned = won ? amount : BigInt(0)
+    }
+    nucStaked = amount
+  }
+
+  // Combine: receipts + v3 goals + NUC (avoid double counting — receipts will eventually cover everything, but for now they're empty)
+  const receiptGoalIds = new Set(receiptList.map(r => Number(r.goalId)))
+  // Only add v3/nuc stats if not already in receipts
+  const totalAttempted = Number(repAttempted) + (Number(repAttempted) === 0 ? v3Attempted + nucAttempted : 0)
+  const totalCompleted = Number(repCompleted) + (Number(repCompleted) === 0 ? v3Completed + nucCompleted : 0)
+  const totalStakedBig = repTotalStaked + (Number(repTotalStaked) === 0 ? v3Staked + nucStaked : BigInt(0))
+  const totalEarnedBig = repTotalEarned + (Number(repTotalEarned) === 0 ? v3Earned + nucEarned : BigInt(0))
+
+  const broken = totalAttempted - totalCompleted
+  const winRate = totalAttempted > 0 ? Math.round((totalCompleted / totalAttempted) * 100) : 0
+  const streak = Number(repStreak) // streak only from receipts for now
+  const stakedNum = Number(totalStakedBig)
+  const earnedNum = Number(totalEarnedBig)
   const netPnl = earnedNum - stakedNum
   const netFormatted = stakedNum > 0 || earnedNum > 0 ? (netPnl >= 0 ? `+$${formatUnits(BigInt(Math.abs(netPnl)), 6)}` : `-$${formatUnits(BigInt(Math.abs(netPnl)), 6)}`) : '$0'
 
@@ -254,11 +327,11 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
       {/* Stats Row 1 */}
       <div className="grid grid-cols-5 gap-2 mb-3">
         <div className="text-center">
-          <p className="text-lg font-bold">{Number(attempted)}</p>
+          <p className="text-lg font-bold">{totalAttempted}</p>
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Promises</p>
         </div>
         <div className="text-center">
-          <p className="text-lg font-bold text-[#2EE59D]">{Number(completed)}</p>
+          <p className="text-lg font-bold text-[#2EE59D]">{totalCompleted}</p>
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Kept</p>
         </div>
         <div className="text-center">
@@ -270,7 +343,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Streak</p>
         </div>
         <div className="text-center">
-          <p className="text-lg font-bold">{Number(attempted) > 0 ? `${(Number(winRate) / 100).toFixed(0)}%` : '—'}</p>
+          <p className="text-lg font-bold">{totalAttempted > 0 ? `${winRate}%` : '—'}</p>
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Win Rate</p>
         </div>
       </div>
@@ -278,11 +351,11 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
       {/* Stats Row 2 - Cash */}
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
-          <p className="text-sm font-semibold">${stakedNum > 0 ? formatUnits(totalStaked as bigint, 6) : '0'}</p>
+          <p className="text-sm font-semibold">${stakedNum > 0 ? formatUnits(totalStakedBig, 6) : '0'}</p>
           <p className="text-[10px] text-[var(--text-secondary)]">Total Staked</p>
         </div>
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
-          <p className="text-sm font-semibold">${earnedNum > 0 ? formatUnits(totalEarned as bigint, 6) : '0'}</p>
+          <p className="text-sm font-semibold">${earnedNum > 0 ? formatUnits(totalEarnedBig, 6) : '0'}</p>
           <p className="text-[10px] text-[var(--text-secondary)]">Total Earned</p>
         </div>
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
