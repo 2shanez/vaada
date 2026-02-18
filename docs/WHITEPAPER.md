@@ -1,6 +1,6 @@
 # Vaada: The Promise Market
 
-**Version 2.0 — February 2026**
+**Version 3.0 — February 2026**
 
 ---
 
@@ -53,6 +53,53 @@ No middleman. No refunds. No excuses.
 - Upside potential (you can *win* money, not just not-lose it)
 - Trustless payouts (smart contract, not company discretion)
 - Money works while locked (stakes earn yield via Morpho vault)
+
+---
+
+## Why Crypto — Five Properties That Make Vaada Impossible Without It
+
+### 1. Programmable Consequences
+
+You can't call Chase and say "hold my $50 and release it based on a Strava API call next Tuesday." They'd hang up. Smart contracts make this trivial.
+
+Vaada's killer feature isn't money — it's **programmable rules around money**. The contract encodes exactly what happens when you succeed or fail. No human in the loop. No dispute process. No customer service. The code is the judge.
+
+**Future applications:**
+- Progressive consequences — miss day 1, stake drops 10%. Miss day 2, another 20%. Real-time pain, not just end-of-week binary.
+- Consequence routing — "If I lose, my $50 goes to a cause I hate." Anti-charity motivation.
+- Conditional unlocks — "I can't access my own $500 until I've run 50 miles." Self-imposed, code-enforced savings.
+
+### 2. Instant Global Settlement
+
+When you win a Vaada goal, your winnings + yield settle instantly to your wallet. Not 3-5 business days. Not an ACH transfer. You run 20 miles on Sunday, you have your money Sunday.
+
+Someone in Lagos and someone in London can join the same goal. No currency conversion, no international transfer fees. USDC is USDC everywhere. This is a massive unlock for global expansion.
+
+### 3. Ownership Without Intermediaries
+
+Your money is held by code, not a company. No Vaada employee can touch user funds. No server to hack. No CEO who can run off with deposits. The contract is the custodian.
+
+**Future applications:**
+- Onchain goal receipts — non-transferable proof of completion. "Shane ran 20 miles, Feb 2026. Verified by Strava. Settled onchain." Your fitness diploma that nobody can fake or revoke.
+- Portable reputation — your commitment history follows your wallet, not your account. "This wallet has completed 47 goals with a 92% win rate."
+
+### 4. Composability
+
+Stakes already sit in Morpho earning ~4.9% APY while goals are active. Idle money isn't idle. But this goes further.
+
+Every crypto app can read and build on every other crypto app without permission. Vaada contracts are public infrastructure:
+- Fitness apps that display your active Vaada stakes
+- Health insurance apps that read your onchain commitment history and offer lower premiums
+- DeFi protocols that accept locked Vaada stakes as collateral
+- Other developers creating new goal types on top of the Vaada settlement layer
+
+### 5. Skin in the Game as a Design Pattern
+
+Vaada doesn't just use money — it uses money to **change who people become**. The stake isn't a payment. It's a psychological commitment device. You're not buying a service. You're buying accountability from yourself.
+
+This is the most elegant solution for accountability: no trust required, no courts, no arbitration. Just math.
+
+**Vaada is the only product that uses every unique property of crypto to solve a universal human problem.**
 
 ---
 
@@ -146,9 +193,15 @@ Your Bonus = (Your Stake / Total Winner Stakes) × Loser Pool
    - Not currently active — yield covers early costs
 
 3. **Premium features** (future)
+   - AI Coach (personalized nudges, progress tracking, strategy)
    - Custom/private challenges
    - Corporate dashboards
    - White-label licensing
+
+4. **B2B / Enterprise** (future)
+   - Corporate wellness programs (companies fund employee goal pools)
+   - Insurance partnerships (commitment score = lower premiums)
+   - Gym/health app integrations (white-label accountability)
 
 ### Yield Scales with TVL
 
@@ -158,6 +211,7 @@ Your Bonus = (Your Stake / Total Winner Stakes) × Loser Pool
 | $100K | $5,000 |
 | $1M | $50,000 |
 | $10M | $500,000 |
+| $100M | $5,000,000 |
 
 ### Unit Economics
 
@@ -240,57 +294,142 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 ## Go-to-Market
 
 ### Phase 1: Friends & Fitness (Now)
-- Seed with personal network, step challenges
-- Iterate on UX based on feedback
+- Seed with personal network — individual texts, $10 stake challenges
+- The win moment IS the marketing: "I won $73 by keeping my promise"
+- Iterate on UX based on real feedback
 
-### Phase 2: Crypto Twitter (Month 2-3)
-- "I staked $50 on 10K steps" threads
-- Farcaster community activation
+### Phase 2: Crypto Twitter & Farcaster (Month 2-3)
+- "I staked $50 on 10K steps" threads with shareable screenshots
+- Farcaster community activation — builders + fitness overlap
+- Base ecosystem partnerships and grants
 
 ### Phase 3: Fitness Communities (Month 4-6)
 - Reddit (r/fitness, r/running), Strava clubs, Fitbit groups
 - Running event partnerships
+- Fitness influencer collabs — "The app that pays you to work out"
 
-### Phase 4: Mainstream (Month 6-12)
+### Phase 4: Mainstream Consumer (Month 6-12)
 - TikTok/Instagram fitness creators
-- Mobile app (iOS/Android)
-- "The app that pays you to work out"
+- Mobile app (iOS)
+- Credit card onramp — user never sees USDC
+- "The app that pays you to work out" narrative
 
-### Phase 5: B2B (Year 2)
+### Phase 5: B2B & Partnerships (Year 2)
 - Corporate wellness programs
-- Insurance partnerships
+- Insurance partnerships (commitment score = lower premiums)
 - White-label for gyms, health apps
+- Employer-funded goal pools
 
 ---
 
 ## Product Roadmap
 
-### Done (Q1 2026)
-- [x] Core contracts deployed (Base mainnet)
-- [x] Fitbit + Strava integration
-- [x] Privy wallet integration (email/Google login)
-- [x] NewUserChallenge onboarding contract
-- [x] Morpho vault yield integration
-- [x] Gas sponsorship (gasless for embedded wallets)
-- [x] Coinbase Onramp (Apple Pay, debit card)
-- [x] Profile names & leaderboards
-- [x] Automated cron verification + settlement
+### ✅ Shipped (Q1 2026)
+- Core contracts deployed (Base mainnet)
+- Fitbit (steps) + Strava (miles) integration
+- Privy wallet integration (email/Google login, embedded wallets)
+- NewUserChallenge onboarding contract
+- Morpho vault yield integration (~4.9% APY)
+- Gas sponsorship (gasless for embedded wallets)
+- Coinbase Onramp (Apple Pay, debit card)
+- Profile names & leaderboards
+- Automated cron verification + settlement
+- Anti-cheat (manual activity filter)
 
-### Next (Q2 2026)
-- [ ] Mobile app (iOS/Android)
-- [ ] More goal types (weight, habits, learning)
-- [ ] Social features (friends, groups, leagues)
-- [ ] 100 users
+---
 
-### Later (Q3-Q4 2026)
-- [ ] API for third-party integrations
-- [ ] Corporate/B2B dashboard
-- [ ] Additional verification sources (Apple Health, Garmin, Whoop)
+### Phase 2: First 100 Users (Q1 2026)
 
-### Future (2027+)
-- [ ] Agentic AI accountability (voice-enabled staking)
-- [ ] Insurance partnerships
-- [ ] Protocol SDK for builders
+| Feature | Description | Impact |
+|---------|-------------|--------|
+| **AI Coach v1** | Daily progress nudges via Telegram/SMS. "You're 4 miles short, 3 days left." Uses existing Strava/Fitbit data. | Retention — keeps users engaged mid-goal |
+| **Anti-charity routing** | "If I lose, my $50 goes to a cause I hate." User picks consequence destination. | Viral — most shareable mechanic possible |
+| **Win moment screen** | Confetti, sound, shareable screenshot. "I won $73 by keeping my promise." | Growth — the screenshot IS the marketing |
+| **Referral mechanic** | Invite a friend to your goal. Both win = pool bonus. | Growth — organic invite loop |
+
+---
+
+### Phase 3: 100 → 1,000 Users (Q2 2026)
+
+| Feature | Description | Impact |
+|---------|-------------|--------|
+| **Onchain goal receipts** | Non-transferable proof of completion. "Shane ran 20 miles, Feb 2026. Verified." | Retention — your fitness diploma, building onchain reputation |
+| **Social feed** | See friends' active goals, completions, and streaks. | Retention + growth — FOMO + accountability |
+| **Suggested stake amount** | "Based on your history, we recommend $75." ML-optimized for completion. | Retention — higher stakes = higher engagement |
+| **More Fitbit goal types** | Active minutes, distance, calories. | Growth — broader appeal, same integration |
+| **Apple Health integration** | iPhone users don't need Fitbit or Strava. | Growth — massive unlock, 1B+ iOS devices |
+
+---
+
+### Phase 4: 1K → 10K Users (Q2-Q3 2026)
+
+| Feature | Description | Impact |
+|---------|-------------|--------|
+| **Streak system** | Goals 1→2→3 with escalating stakes. Compounding commitment. | Retention — longest-term engagement loop |
+| **Group goals** | 5 friends stake together. Social pressure + bigger pools. | Growth — viral invites, bigger pools |
+| **Progressive consequences** | Miss day 1 = 10% penalty. Miss day 2 = 20%. Real-time. | Retention — daily engagement, not just weekly |
+| **Dashboard v2** | Goal history, win rate, total earned, commitment score. | Retention — your onchain identity |
+| **Education goals** | Duolingo streak, Coursera completion. First non-fitness vertical. | Growth — new market, same mechanic |
+
+---
+
+### Phase 5: 10K → 100K Users (Q3-Q4 2026)
+
+| Feature | Description | Impact |
+|---------|-------------|--------|
+| **Vaada Protocol** | Open contract interface. Other devs build goal types and frontends. | Growth — become the settlement layer |
+| **Credit card onramp** | Stripe/MoonPay. Pay $50 with Visa, never see USDC. | Growth — removes last crypto friction |
+| **Self-lock vaults** | "Lock my $500 until I run 50 miles." Savings + fitness. | Retention — new use case, same contracts |
+| **Employer integrations** | Companies fund employee goal pools. B2B revenue. | Revenue — enterprise product line |
+| **Mobile app (iOS)** | Native push notifications, AI coach, daily engagement. | Retention + growth — real mobile experience |
+
+---
+
+### Phase 6: 100K+ Users (2027)
+
+| Feature | Description | Impact |
+|---------|-------------|--------|
+| **Portable reputation** | Wallet-based commitment score. Read by other apps: insurance, dating, hiring. | Moat — onchain identity that compounds |
+| **Multi-chain** | Solana, Arbitrum, Ethereum. Go where the users are. | Growth — new ecosystems |
+| **Prediction market hybrid** | "Will Shane run 30 miles?" Friends bet on your goals. | Growth — Polymarket meets Vaada |
+| **Vaada for Business** | Enterprise dashboard. Corporate wellness. Treasury yield. | Revenue — B2B product line |
+| **Insurance partnerships** | Lower premiums for high commitment scores. | Revenue — real-world value from onchain data |
+| **Agentic AI** | Voice-enabled staking. "Hey Siri, stake $50 I'll run 20 miles this week." | Growth — frictionless entry, future-proof |
+
+---
+
+### Build Priority Framework
+
+At every phase, every feature must answer at least one:
+
+1. **Does this get more users?** (Growth)
+2. **Does this keep users coming back?** (Retention)
+3. **Does this make users share?** (Virality)
+
+If a feature doesn't serve one of these three, it waits.
+
+---
+
+## Scaling Vision
+
+| Stage | Valuation | What Vaada Is |
+|-------|-----------|---------------|
+| Seed | $5-10M | Best commitment app |
+| Series A | $50-100M | Commitment market category owner |
+| Growth | $500M-1B | Commitment infrastructure / protocol |
+| Scale | $1B-10B | Global accountability layer |
+
+Each stage is an **abstraction shift**: App → Category → Protocol → Primitive.
+
+The headcount stays lean because each level, the protocol does more and humans do less. Smart contracts are employees that work 24/7 and never ask for equity.
+
+| Users | Team Size | Focus |
+|-------|-----------|-------|
+| 0-1K | 1 (founder) | Product, users, iteration |
+| 1K-10K | 2-3 | Engineering, growth |
+| 10K-100K | 5-8 | Mobile, integrations, community |
+| 100K-1M | 15-25 | Protocol, enterprise, international |
+| 1M+ | 25-40 | Platform, partnerships, compliance |
 
 ---
 
@@ -316,6 +455,8 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 | 2026 | 1,000 | $100K | $4K | $10K | -$6K |
 | 2027 | 10,000 | $1M | $40K | $50K | -$10K |
 | 2028 | 50,000 | $10M | $400K | $200K | $200K |
+| 2029 | 200,000 | $50M | $2.5M | $1M | $1.5M |
+| 2030 | 1,000,000 | $500M | $25M | $5M | $20M |
 
 ### Funding
 
@@ -323,16 +464,27 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 
 **Option B: Raise seed ($500K-$1M)** — Go full-time, hire 1-2 people, accelerate to PMF. Target: crypto-native VCs, angels from Coinbase/Polymarket ecosystem.
 
+### Exit Scenarios
+
+| Scenario | Valuation | Acquirer | Thesis |
+|----------|-----------|----------|--------|
+| Acqui-hire | $5-10M | Coinbase, Strava | Talent + product |
+| Category acquisition | $50-100M | Coinbase, health company | Own commitment market vertical |
+| Growth acquisition | $500M-1B | Major tech/fitness | Strategic platform play |
+| Independent | $1B+ | IPO / protocol token | Stand-alone category leader |
+
 ---
 
 ## Risks & Mitigations
 
 | Risk | Mitigation |
 |------|------------|
-| Regulatory (gambling) | Skill-based, user controls outcome. Legal review before scaling. |
-| Cheating | Anti-cheat filters (manual activities blocked), multi-source verification planned |
-| Low retention | Social features, streak rewards, new goal types |
-| Smart contract bugs | Audits before major scale. Capped pools. |
+| Regulatory (gambling classification) | Skill-based outcomes — user controls result through effort. Legal review before scaling. Comparable to DraftKings/StepBet. |
+| Cheating / data manipulation | Anti-cheat filters (manual activities blocked), multi-source verification, anomaly detection planned |
+| Low retention after first goal | AI Coach, streak system, social features, escalating stakes |
+| Smart contract bugs | Capped pools, incremental scaling, audit before major TVL |
+| Competitor enters (Strava, Fitbit, Nike) | First-mover advantage, onchain composability moat, protocol network effects |
+| Crypto market downturn | USDC-denominated (stable), not token-dependent, real utility not speculation |
 
 ---
 
@@ -357,6 +509,7 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 - **Auth**: Privy (email/Google login, embedded wallets, gas sponsorship)
 - **Onramp**: Coinbase (Apple Pay, Google Pay, debit card)
 - **Token Storage**: Supabase (encrypted refresh tokens)
+- **Oracles**: Chainlink Functions (Subscription ID 132)
 
 ### Security
 
@@ -372,10 +525,11 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 
 **Shane Sarin** — Solo Founder
 - UNC Chapel Hill, Economics
-- Product @ Consensys (2023-2025)
-- Analyst @ RECUR (2021-2022)
+- Product @ Consensys (2023-2025) — Growth across product suite including MetaMask
+- Founding Business Analyst @ RECUR (2021-2022) — $50M-funded NFT platform, zero to launch
+- Analyst @ Infosys (2020-2021)
 
-Building solo + AI assistance. Smart contracts + AI tooling = one person can build what used to take a team.
+Building solo with AI tooling. Smart contracts + AI = one person ships what used to take ten.
 
 ---
 
@@ -386,6 +540,8 @@ Building solo + AI assistance. Smart contracts + AI tooling = one person can bui
 **Medium-term:** The protocol for all personal commitments — fitness, habits, learning, finances, career.
 
 **Long-term:** The infrastructure layer for accountability. Every app that wants "stake money on X" uses Vaada under the hood.
+
+**The primitive:** Helping people keep their promises is as fundamental a human problem as it gets. Every human makes promises to themselves. Every human struggles to keep them. Every human would put money on it if the experience was frictionless enough.
 
 Polymarket let people bet on the world. Vaada lets people bet on themselves.
 
