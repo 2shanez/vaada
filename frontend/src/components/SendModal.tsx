@@ -110,7 +110,7 @@ export function SendModal({ onClose }: SendModalProps) {
           <>
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 rounded-full bg-[#2EE59D]/10 flex items-center justify-center flex-shrink-0">
-                <span className="text-xl">💸</span>
+                <svg className="w-5 h-5 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
               </div>
               <div>
                 <h3 className="font-semibold text-lg">Send USDC</h3>
