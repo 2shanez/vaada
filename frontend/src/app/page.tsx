@@ -564,8 +564,8 @@ export default function Home() {
       </section>
 
       {/* Section divider */}
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+      <div className="w-full">
+        <div className="h-px bg-[var(--border)]" />
       </div>
 
       {/* Footer CTA */}
