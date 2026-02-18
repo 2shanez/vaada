@@ -58,7 +58,7 @@ export function FundWalletButton() {
         style={{ touchAction: 'manipulation' }}
         className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1"
       >
-        <span className="text-xs sm:text-sm">${balance}</span>
+        <span className="text-xs sm:text-sm text-[#2EE59D]">${balance}</span>
         <svg className={`w-3 h-3 ml-1 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
