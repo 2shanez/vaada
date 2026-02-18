@@ -40,8 +40,8 @@ export function UserRepBadge({ address }: UserRepBadgeProps) {
   const { data: goalParticipants } = useReadContracts({
     contracts: Array.from({ length: 20 }, (_, i) => ({
       address: contracts.goalStake,
-      abi: GOALSTAKE_ABI,
-      functionName: 'getParticipant' as const,
+      abi: GOALSTAKE_ABI as any,
+      functionName: 'getParticipant',
       args: [BigInt(i + 9), address],
     })),
   })
