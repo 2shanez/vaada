@@ -573,7 +573,7 @@ export default function Home() {
             {[
               { step: '01', icon: '💰', title: 'Make a Promise', desc: 'Stake money on your promise. Put real skin in the game to back your word.' },
               { step: '02', icon: '✅', title: 'Keep Your Promise', desc: 'We verify automatically. Connect your fitness app and we track your progress.' },
-              { step: '03', icon: '🏆', title: 'Earn From Your Promise', desc: "Keep your stake + earn from those who don't. Winners split the pool." },
+              { step: '03', icon: '🏆', title: 'Earn From Your Promise', desc: "Keep your promise, keep your money — and earn from broken ones." },
               { step: '04', icon: '🧾', title: 'Own Your Promise', desc: 'Every promise — kept or broken — is recorded onchain forever.' },
             ].map((item, i) => (
               <div 
