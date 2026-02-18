@@ -150,7 +150,7 @@ function IntegrationsDropdown() {
             <div className="px-4 py-3 border-b border-[var(--border)]">
               {fitbitConnected ? (
                 <div className="flex items-center gap-3">
-                  <span>⌚</span>
+                  <svg className="w-4 h-4 text-[#00B0B9]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   <span className="text-sm font-medium">Fitbit</span>
                   <span className="text-xs text-[#00B0B9] bg-[#00B0B9]/10 px-2 py-0.5 rounded-full whitespace-nowrap">Connected</span>
                   <button
@@ -164,7 +164,7 @@ function IntegrationsDropdown() {
               ) : (
                 <>
                   <div className="flex items-center gap-2 mb-2">
-                    <span>⌚</span>
+                    <svg className="w-4 h-4 text-[#00B0B9]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     <span className="text-sm font-medium">Fitbit</span>
                   </div>
                   <button
@@ -182,7 +182,7 @@ function IntegrationsDropdown() {
             <div className="px-4 py-3">
               {stravaConnected ? (
                 <div className="flex items-center gap-3">
-                  <span>🏃</span>
+                  <svg className="w-4 h-4 text-[#FC4C02]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z" /></svg>
                   <span className="text-sm font-medium">Strava</span>
                   <span className="text-xs text-[#FC4C02] bg-[#FC4C02]/10 px-2 py-0.5 rounded-full whitespace-nowrap">Connected</span>
                   <button
@@ -200,7 +200,7 @@ function IntegrationsDropdown() {
               ) : (
                 <>
                   <div className="flex items-center gap-2 mb-2">
-                    <span>🏃</span>
+                    <svg className="w-4 h-4 text-[#FC4C02]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z" /></svg>
                     <span className="text-sm font-medium">Strava</span>
                   </div>
                   <button
