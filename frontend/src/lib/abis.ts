@@ -4,6 +4,7 @@ export const USDC_ABI = [
   {
     name: 'approve',
     type: 'function',
+    stateMutability: 'nonpayable',
     inputs: [
       { name: 'spender', type: 'address' },
       { name: 'amount', type: 'uint256' },
@@ -33,6 +34,7 @@ export const GOALSTAKE_ABI = [
   {
     name: 'joinGoal',
     type: 'function',
+    stateMutability: 'nonpayable',
     inputs: [
       { name: 'goalId', type: 'uint256' },
       { name: 'stake', type: 'uint256' },
@@ -78,6 +80,7 @@ export const GOALSTAKE_ABI = [
   {
     name: 'claimPayout',
     type: 'function',
+    stateMutability: 'nonpayable',
     inputs: [{ name: 'goalId', type: 'uint256' }],
     outputs: [],
   },
@@ -207,6 +210,7 @@ export const NEW_USER_CHALLENGE_ABI = [
   {
     name: 'join',
     type: 'function',
+    stateMutability: 'nonpayable',
     inputs: [],
     outputs: [],
   },
