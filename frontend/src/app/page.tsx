@@ -639,7 +639,7 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <VaadaLogo size={24} />
               <span className="font-bold text-[#2EE59D] leading-none">vaada</span>
-              <span className="text-sm text-[var(--text-secondary)] leading-none">· Own Your Promise</span>
+              <span className="text-sm text-[var(--text-secondary)] leading-none">· Keep Your Promise</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
         </div>
