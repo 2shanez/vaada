@@ -56,7 +56,10 @@ export default function Dashboard() {
           <Link href="/" className="text-xl font-bold text-[#2EE59D]">vaada</Link>
           <div className="flex items-center gap-4">
             <Link href="/" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors">
-              Browse vaadas
+              Browse
+            </Link>
+            <Link href="/profile" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors">
+              Profile
             </Link>
             <ThemeToggle />
             <PrivyConnectButton />
