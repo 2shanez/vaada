@@ -243,11 +243,16 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
 
   const [attempted, completed, winRate, totalStaked, totalEarned, streak, bestStreak] = reputation || [BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0)]
   const receiptList = (receipts as Receipt[]) || []
+  const broken = Number(attempted) - Number(completed)
+  const stakedNum = Number(totalStaked)
+  const earnedNum = Number(totalEarned)
+  const netPnl = earnedNum - stakedNum
+  const netFormatted = stakedNum > 0 || earnedNum > 0 ? (netPnl >= 0 ? `+$${formatUnits(BigInt(Math.abs(netPnl)), 6)}` : `-$${formatUnits(BigInt(Math.abs(netPnl)), 6)}`) : '$0'
 
   return (
     <div className="p-4">
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      {/* Stats Row 1 */}
+      <div className="grid grid-cols-4 gap-2 mb-3">
         <div className="text-center">
           <p className="text-lg font-bold">{Number(attempted)}</p>
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Promises</p>
@@ -257,19 +262,32 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Kept</p>
         </div>
         <div className="text-center">
+          <p className="text-lg font-bold text-red-400">{broken}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Broken</p>
+        </div>
+        <div className="text-center">
           <p className="text-lg font-bold">{Number(attempted) > 0 ? `${(Number(winRate) / 100).toFixed(0)}%` : '—'}</p>
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Win Rate</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <div className="text-center px-2 py-1.5 rounded-lg bg-[var(--background)]">
+      {/* Stats Row 2 */}
+      <div className="grid grid-cols-4 gap-2 mb-3">
+        <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className="text-sm font-semibold">{Number(streak) > 0 ? `${Number(streak)} 🔥` : '0'}</p>
           <p className="text-[10px] text-[var(--text-secondary)]">Streak</p>
         </div>
-        <div className="text-center px-2 py-1.5 rounded-lg bg-[var(--background)]">
-          <p className="text-sm font-semibold">${Number(totalStaked) > 0 ? formatUnits(totalStaked as bigint, 6) : '0'}</p>
-          <p className="text-[10px] text-[var(--text-secondary)]">Staked</p>
+        <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
+          <p className="text-sm font-semibold">${stakedNum > 0 ? formatUnits(totalStaked as bigint, 6) : '0'}</p>
+          <p className="text-[10px] text-[var(--text-secondary)]">Total Staked</p>
+        </div>
+        <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
+          <p className="text-sm font-semibold">${earnedNum > 0 ? formatUnits(totalEarned as bigint, 6) : '0'}</p>
+          <p className="text-[10px] text-[var(--text-secondary)]">Total Earned</p>
+        </div>
+        <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
+          <p className={`text-sm font-semibold ${netPnl > 0 ? 'text-[#2EE59D]' : netPnl < 0 ? 'text-red-400' : ''}`}>{netFormatted}</p>
+          <p className="text-[10px] text-[var(--text-secondary)]">Net P&L</p>
         </div>
       </div>
 
