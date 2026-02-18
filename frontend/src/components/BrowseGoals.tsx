@@ -117,7 +117,7 @@ function NotifyModal({
 const FEATURED_GOALS: Goal[] = [
   {
     id: 'e2e-1k-steps-v3',
-    onChainId: 12,
+    onChainId: 11,
     title: '1K Steps',
     description: 'Walk 1,000 steps. Stake $3, keep your promise.',
     emoji: '👟',
