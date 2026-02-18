@@ -573,18 +573,22 @@ export default function Home() {
             <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
-              { step: '01', icon: '💰', title: 'Make a Promise', desc: 'Stake money on your promise. Skin in the game makes it real.' },
-              { step: '02', icon: '✅', title: 'Keep Your Promise', desc: 'We verify automatically. Connect your app and we track the rest.' },
-              { step: '03', icon: '🏆', title: 'Earn From Your Promise', desc: "Keep your promise, keep your money — and earn from broken ones." },
-              { step: '04', icon: '🧾', title: 'Own Your Promise', desc: 'Every promise — kept or broken — is recorded onchain forever.' },
+              { step: '01', title: 'Make a Promise', desc: 'Stake money on your promise. Skin in the game makes it real.', color: '#2EE59D',
+                svg: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
+              { step: '02', title: 'Keep Your Promise', desc: 'We verify automatically. Connect your app and we track the rest.', color: '#3B82F6',
+                svg: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
+              { step: '03', title: 'Earn From Your Promise', desc: "Keep your promise, keep your money — and earn from broken ones.", color: '#F59E0B',
+                svg: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.003 6.003 0 01-5.54 0" /></svg> },
+              { step: '04', title: 'Own Your Promise', desc: 'Every promise — kept or broken — is recorded onchain forever.', color: '#A855F7',
+                svg: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a48.667 48.667 0 00-1.114 5.07m3.16.65a48.29 48.29 0 01-1.653-.823c-.296-.168-.534-.452-.534-.79v-.002c0-.337.237-.621.534-.79a48.333 48.333 0 016.607-3.07m3.16.65a48.29 48.29 0 001.653-.823c.296-.168.534-.452.534-.79v-.002c0-.337-.237-.621-.534-.79a48.333 48.333 0 00-6.607-3.07" /></svg> },
             ].map((item, i) => (
               <div 
                 key={item.step} 
                 className="text-center group relative"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
-                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--background)] shadow-sm border border-[var(--border)] mb-3 group-hover:shadow-md group-hover:border-[#2EE59D]/30 group-hover:scale-105 transition-all duration-300">
-                  <span className="text-2xl">{item.icon}</span>
+                <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--background)] shadow-sm border border-[var(--border)] mb-3 group-hover:shadow-md group-hover:border-[#2EE59D]/30 group-hover:scale-105 transition-all duration-300" style={{ color: item.color }}>
+                  {item.svg}
                   <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#2EE59D] text-[10px] font-bold text-black flex items-center justify-center">
                     {item.step.slice(-1)}
                   </span>
