@@ -107,8 +107,7 @@ export function Leaderboard() {
     fetchLeaderboard()
   }, [publicClient, totalSupply, contracts.vaadaReceipts])
 
-  // Hide section when no data
-  if (!loading && entries.length === 0) return null
+  // Show section even when empty
 
   const rankEmoji = (i: number) => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`
 
@@ -123,6 +122,10 @@ export function Leaderboard() {
         {loading ? (
           <div className="flex justify-center py-8">
             <div className="w-6 h-6 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : entries.length === 0 ? (
+          <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
+            <p className="text-sm text-[var(--text-secondary)]">No promises settled yet. Be the first!</p>
           </div>
         ) : (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
