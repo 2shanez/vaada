@@ -54,7 +54,8 @@ vaada/
 │   ├── src/
 │   │   ├── VaadaV3.sol               # Core protocol
 │   │   ├── GoalStakeAutomationV3.sol # Verification bridge
-│   │   └── NewUserChallenge.sol      # Onboarding contract
+│   │   ├── NewUserChallenge.sol      # Onboarding contract
+│   │   └── VaadaReceipts.sol         # Soulbound proof of commitment
 │   └── script/       # Deploy scripts
 │
 ├── frontend/         # Next.js web app
@@ -76,7 +77,8 @@ vaada/
 |----------|---------|
 | VaadaV3 | `0xAc67E863221B703CEE9B440a7beFe71EA8725434` |
 | AutomationV3 | `0xA6BcEcA41fCF743324a864F47dd03F0D3806341D` |
-| NewUserChallenge | `0x7a2959ff82aeF587A6B8491A1816bb4BA7aEE554` |
+| NewUserChallenge V3 | `0xdC9ee5e9E99e3568D2B5eA9409222fbFeCB56373` |
+| VaadaReceipts | `0x2743327fa1EeDF92793608d659b7eEC428252dA2` |
 | Morpho Vault | `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` |
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 
@@ -115,6 +117,8 @@ Vaada is the **only on-chain commitment market** with automated fitness verifica
 - ✅ Admin dashboard
 - ✅ Anti-cheat (device-recorded only)
 - ✅ Coinbase Onramp (Apple Pay → USDC)
+- ✅ Soulbound onchain receipts (proof of commitment)
+- ✅ Onchain reputation (win rate, streaks, lifetime stats)
 - ✅ **Live on Base Mainnet**
 
 ---

@@ -535,14 +535,15 @@ export default function Home() {
             <h2 className="text-2xl font-bold mt-2">How It Works</h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 relative">
+          <div className="grid md:grid-cols-4 gap-6 sm:gap-8 relative">
             {/* Connecting line */}
-            <div className="hidden md:block absolute top-8 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+            <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
             
             {[
               { step: '01', icon: '💰', title: 'Make a promise', desc: 'Stake money on your promise. Put real skin in the game to back your word.' },
               { step: '02', icon: '✅', title: 'Keep your promise', desc: 'We verify automatically. Connect your fitness app and we track your progress.' },
               { step: '03', icon: '🏆', title: 'Earn from your promise', desc: "Keep your stake + earn from those who don't. Winners split the pool." },
+              { step: '04', icon: '🧾', title: 'Own your record', desc: 'Get a soulbound onchain receipt. Your commitment history lives forever — no one can fake or revoke it.' },
             ].map((item, i) => (
               <div 
                 key={item.step} 
@@ -667,8 +668,8 @@ export default function Home() {
         <div className="max-w-6xl mx-auto pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <VaadaLogo size={24} />
-              <span className="font-bold text-[#2EE59D]">vaada</span>
-              <span className="text-xs text-[var(--text-secondary)]">· Keep Your Promise</span>
+              <span className="font-bold text-[#2EE59D] leading-none">vaada</span>
+              <span className="text-sm text-[var(--text-secondary)] leading-none">· Keep Your Promise</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
         </div>
