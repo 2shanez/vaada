@@ -40,11 +40,13 @@ export function ProfileNameButton() {
   const { address, isConnected } = useAccount()
   const { displayName, setDisplayName } = useProfileName(address)
   const [isEditing, setIsEditing] = useState(false)
+  const [showDropdown, setShowDropdown] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -55,11 +57,21 @@ export function ProfileNameButton() {
   useEffect(() => {
     if (displayName) setInputValue(displayName)
   }, [displayName])
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+    if (showDropdown) document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showDropdown])
   
   if (!isConnected || !address) return null
   
-  const handleCopy = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleCopy = () => {
     navigator.clipboard.writeText(address)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
@@ -96,36 +108,47 @@ export function ProfileNameButton() {
     }
   }
   
-  // Compact display when not editing - combined name + copy button
+  // Compact display when not editing - name with dropdown
   if (!isEditing) {
     return (
-      <div className="flex items-center gap-1">
+      <div className="relative" ref={dropdownRef}>
         <button
-          onClick={() => setIsEditing(true)}
-          className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1"
-          title={displayName ? "Edit name" : "Set display name"}
+          onClick={() => setShowDropdown(!showDropdown)}
+          className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1 flex items-center gap-1"
         >
           {displayName ? (
             <span>{displayName}</span>
           ) : (
             <span className="font-mono text-xs">{shortAddress}</span>
           )}
+          <svg className={`w-3 h-3 transition-transform ${showDropdown ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </button>
-        <button
-          onClick={handleCopy}
-          className="text-[var(--text-secondary)] hover:text-[#2EE59D] transition-colors p-1"
-          title="Copy wallet address"
-        >
-          {copied ? (
-            <svg className="w-3.5 h-3.5 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          ) : (
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-          )}
-        </button>
+
+        {showDropdown && (
+          <div className="absolute right-0 top-full mt-2 w-48 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg overflow-hidden z-50">
+            <a
+              href="/profile"
+              className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors"
+              onClick={() => setShowDropdown(false)}
+            >
+              <span>👤</span> View Profile
+            </a>
+            <button
+              onClick={() => { setShowDropdown(false); setIsEditing(true) }}
+              className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left"
+            >
+              <span>✏️</span> {displayName ? 'Edit Name' : 'Set Name'}
+            </button>
+            <button
+              onClick={() => { handleCopy(); setShowDropdown(false) }}
+              className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left border-t border-[var(--border)]"
+            >
+              <span>{copied ? '✓' : '📋'}</span> {copied ? 'Copied!' : 'Copy Address'}
+            </button>
+          </div>
+        )}
       </div>
     )
   }

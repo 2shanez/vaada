@@ -58,9 +58,6 @@ export default function Dashboard() {
             <Link href="/" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors">
               Browse
             </Link>
-            <Link href="/profile" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors">
-              Profile
-            </Link>
             <ThemeToggle />
             <PrivyConnectButton />
           </div>

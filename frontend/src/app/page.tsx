@@ -382,7 +382,6 @@ export default function Home() {
               <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:block text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors cursor-pointer px-1 py-1">
                 Vaadas
               </a>
-              {authenticated && <a href="/profile" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors cursor-pointer px-1 py-1">Profile</a>}
               {authenticated && <IntegrationsDropdown />}
               {authenticated && <ProfileNameButton />}
               {authenticated && <FundWalletButton />}
