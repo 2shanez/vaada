@@ -279,7 +279,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
                   <div>
-                    <p className="text-sm font-medium">Own your promise</p>
+                    <p className="text-sm font-medium">Keep your promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
@@ -664,7 +664,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
                   <div>
-                    <p className="text-sm font-medium">Own your promise</p>
+                    <p className="text-sm font-medium">Keep your promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
