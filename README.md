@@ -6,7 +6,7 @@ The promise market. Stake money on your goals, keep your promise → keep your s
 
 🔗 **Live:** [vaada.io](https://vaada.io) (Base Mainnet)  
 📖 **Whitepaper:** [docs/WHITEPAPER.md](docs/WHITEPAPER.md)  
-📊 **Business Plan:** [BUSINESS_PLAN.md](BUSINESS_PLAN.md)
+📄 **Whitepaper:** [docs/WHITEPAPER.md](docs/WHITEPAPER.md)
 
 ---
 
