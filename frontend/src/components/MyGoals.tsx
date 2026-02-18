@@ -142,7 +142,7 @@ export function MyGoals() {
             href="/#promises"
             className="inline-flex px-6 py-3 bg-[#2EE59D] text-white font-semibold rounded-xl hover:bg-[#26c987] transition-all"
           >
-            Browse vaadas
+            Browse promises
           </Link>
         </div>
       </div>

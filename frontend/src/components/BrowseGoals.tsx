@@ -227,7 +227,7 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
         {filteredGoals.length === 0 ? (
           <div className="w-full text-center py-16">
             <div className="text-5xl mb-4">🎯</div>
-            <h3 className="text-lg font-semibold mb-2">No active vaadas right now</h3>
+            <h3 className="text-lg font-semibold mb-2">No active promises right now</h3>
             <p className="text-sm text-[var(--text-secondary)] max-w-sm mx-auto">
               New challenges drop regularly. Check back soon or connect your tracker to get notified!
             </p>

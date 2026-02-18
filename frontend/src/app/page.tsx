@@ -409,7 +409,7 @@ export default function Home() {
                 How it works
               </a>
               <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:block text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors cursor-pointer px-1 py-1">
-                Vaadas
+                Promises
               </a>
               {authenticated && <ProfileNameButton />}
               {authenticated && <IntegrationsDropdown />}
@@ -486,7 +486,7 @@ export default function Home() {
       <div className="py-6 sm:py-8">
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-[var(--border)]" />
-          <span className="text-xs text-[var(--text-secondary)] uppercase tracking-widest whitespace-nowrap">Browse vaadas</span>
+          <span className="text-xs text-[var(--text-secondary)] uppercase tracking-widest whitespace-nowrap">Browse promises</span>
           <div className="flex-1 h-px bg-[var(--border)]" />
         </div>
       </div>
@@ -530,7 +530,7 @@ export default function Home() {
             delay={100}
           />
           <StatsCard
-            label="Active Vaadas"
+            label="Active Promises"
             value={platformStats.activeGoals}
             icon={
               <svg className="w-6 h-6 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -541,7 +541,7 @@ export default function Home() {
             delay={200}
           />
           <StatsCard
-            label="Total Vaadas"
+            label="Total Promises"
             value={platformStats.totalGoals}
             icon={
               <svg className="w-6 h-6 text-[var(--text-secondary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
