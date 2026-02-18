@@ -300,11 +300,14 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                   <span className="text-lg">⏰</span>
                   <p className="text-sm font-bold">Your First Promise</p>
                 </div>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  By joining Vaada, you&apos;re making your first promise.<br />
-                  Stake ${stakeAmountFormatted} and join a goal within 24h to get it back.<br />
-                  Don&apos;t keep it? Your ${stakeAmountFormatted} is gone.
+                <p className="text-xs text-[var(--text-secondary)] mb-2">
+                  By joining Vaada, you&apos;re making your first promise.
                 </p>
+                <div className="space-y-1 text-xs text-[var(--text-secondary)]">
+                  <p>1. Stake ${stakeAmountFormatted} to join</p>
+                  <p>2. Join a goal within 24h → get your ${stakeAmountFormatted} back</p>
+                  <p>3. Miss the deadline → your ${stakeAmountFormatted} is gone</p>
+                </div>
               </div>
 
               {/* Progress bar - only shown when processing */}
