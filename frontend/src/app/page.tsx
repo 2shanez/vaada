@@ -650,6 +650,7 @@ export default function Home() {
                 <li><a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privy</a></li>
                 <li><a href="https://www.circle.com/usdc" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">USDC</a></li>
                 <li><a href="https://morpho.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Morpho</a></li>
+                <li><a href="https://www.alchemy.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Alchemy</a></li>
               </ul>
             </div>
             {/* Community */}

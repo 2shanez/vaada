@@ -125,7 +125,7 @@ export function Leaderboard() {
           </div>
         ) : entries.length === 0 ? (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
-            <p className="text-sm text-[var(--text-secondary)]">No promises settled yet. Be the first!</p>
+            <p className="text-sm text-[var(--text-secondary)]">No vaadas settled yet. Be the first!</p>
           </div>
         ) : (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
