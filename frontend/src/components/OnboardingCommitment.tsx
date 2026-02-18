@@ -27,7 +27,7 @@ interface OnboardingCommitmentProps {
 
 // Streamlined single-screen onboarding modal
 export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) {
-  const { user } = usePrivy()
+  const { user, logout } = usePrivy()
   const { fundWallet } = useFundWallet()
   const { address } = useAccount()
   const contracts = useContracts()
@@ -427,6 +427,16 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                     </button>
                   )}
                 </div>
+              )}
+
+              {/* Not ready - log out and go home */}
+              {!isProcessing && (
+                <button
+                  onClick={() => { logout(); onComplete(); }}
+                  className="w-full mt-3 py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
+                >
+                  I&apos;m not ready yet
+                </button>
               )}
             </>
           )}
