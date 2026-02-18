@@ -151,11 +151,8 @@ export function ProfileNameButton() {
             {/* Backdrop */}
             <div className="fixed inset-0 z-[99]" onClick={() => setShowDropdown(false)} />
             <div ref={dropdownRef} style={{ top: dropdownPos.top, right: dropdownPos.right }} className="fixed w-80 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
-              {/* Profile Stats */}
-              <ProfileDropdownStats address={address} />
-
-              {/* Actions */}
-              <div className="border-t border-[var(--border)]">
+              {/* Account Actions */}
+              <div className="border-b border-[var(--border)]">
                 <button
                   onClick={() => { setShowDropdown(false); setIsEditing(true) }}
                   className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left"
@@ -168,14 +165,10 @@ export function ProfileNameButton() {
                 >
                   <span>{copied ? '✓' : '📋'}</span> {copied ? 'Copied!' : 'Copy Address'}
                 </button>
-                <a
-                  href={`/profile/${address}`}
-                  className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors border-t border-[var(--border)]"
-                  onClick={() => setShowDropdown(false)}
-                >
-                  <span>🔗</span> Full Profile Page
-                </a>
               </div>
+
+              {/* Profile Stats + History */}
+              <ProfileDropdownStats address={address} />
             </div>
           </>,
           document.body
@@ -316,12 +309,12 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
         </div>
       </div>
 
-      {/* Recent Receipts */}
+      {/* Promise History */}
       {receiptList.length > 0 ? (
         <div>
-          <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider mb-2">Recent</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider mb-2">Promise History</p>
           <div className="space-y-1.5">
-            {[...receiptList].reverse().slice(0, 3).map((r, i) => (
+            {[...receiptList].reverse().map((r, i) => (
               <div key={i} className={`flex items-center justify-between px-2.5 py-2 rounded-lg text-xs ${r.succeeded ? 'bg-[#2EE59D]/5' : 'bg-red-500/5'}`}>
                 <div className="flex items-center gap-1.5">
                   <span>{r.succeeded ? '✅' : '❌'}</span>
