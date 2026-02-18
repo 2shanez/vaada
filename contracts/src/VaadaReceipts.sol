@@ -102,70 +102,7 @@ contract VaadaReceipts {
     // ============ Mint ============
     
     /**
-     * @notice Mint a receipt for a settled goal participant
-     * @dev Called by backend after goal settlement. Both winners AND losers get receipts.
-     *      Winners get proof they kept their promise. Losers get proof they tried.
-     */
-    function mintReceipt(
-        uint256 goalId,
-        address participant,
-        uint8 goalType,
-        uint256 target,
-        uint256 actual,
-        uint256 stakeAmount,
-        uint256 payout,
-        bool succeeded,
-        uint256 startTime,
-        uint256 endTime,
-        string calldata goalName
-    ) external onlyMinter returns (uint256 tokenId) {
-        // Prevent duplicate receipts
-        if (receiptForGoal[goalId][participant] != 0) revert AlreadyMinted();
-        
-        totalSupply++;
-        tokenId = totalSupply;
-        
-        receipts[tokenId] = Receipt({
-            goalId: goalId,
-            participant: participant,
-            goalType: goalType,
-            target: target,
-            actual: actual,
-            stakeAmount: stakeAmount,
-            payout: payout,
-            succeeded: succeeded,
-            startTime: startTime,
-            endTime: endTime,
-            mintedAt: block.timestamp,
-            goalName: goalName
-        });
-        
-        _owners[tokenId] = participant;
-        _balances[participant]++;
-        _ownedTokens[participant].push(tokenId);
-        receiptForGoal[goalId][participant] = tokenId;
-        
-        // Update reputation stats
-        goalsAttempted[participant]++;
-        totalStakedLifetime[participant] += stakeAmount;
-        
-        if (succeeded) {
-            goalsCompleted[participant]++;
-            totalEarnedLifetime[participant] += payout;
-            currentStreak[participant]++;
-            if (currentStreak[participant] > longestStreak[participant]) {
-                longestStreak[participant] = currentStreak[participant];
-            }
-        } else {
-            currentStreak[participant] = 0;
-        }
-        
-        emit Transfer(address(0), participant, tokenId);
-        emit ReceiptMinted(tokenId, goalId, participant, succeeded, target, actual);
-    }
-    
-    /**
-     * @notice Input struct for batch minting (avoids stack-too-deep)
+     * @notice Input struct for minting (avoids stack-too-deep)
      */
     struct MintInput {
         uint256 goalId;
@@ -182,56 +119,67 @@ contract VaadaReceipts {
     }
 
     /**
+     * @notice Mint a single receipt
+     */
+    function mintReceipt(MintInput calldata inp) external onlyMinter returns (uint256 tokenId) {
+        if (receiptForGoal[inp.goalId][inp.participant] != 0) revert AlreadyMinted();
+        tokenId = _mint(inp);
+    }
+
+    /**
      * @notice Batch mint receipts for all participants in a settled goal
      */
     function batchMintReceipts(MintInput[] calldata inputs) external onlyMinter {
         for (uint256 i = 0; i < inputs.length; i++) {
-            MintInput calldata inp = inputs[i];
-            
-            // Skip if already minted
-            if (receiptForGoal[inp.goalId][inp.participant] != 0) continue;
-            
-            totalSupply++;
-            uint256 tokenId = totalSupply;
-            
-            receipts[tokenId] = Receipt({
-                goalId: inp.goalId,
-                participant: inp.participant,
-                goalType: inp.goalType,
-                target: inp.target,
-                actual: inp.actual,
-                stakeAmount: inp.stakeAmount,
-                payout: inp.payout,
-                succeeded: inp.succeeded,
-                startTime: inp.startTime,
-                endTime: inp.endTime,
-                mintedAt: block.timestamp,
-                goalName: inp.goalName
-            });
-            
-            _owners[tokenId] = inp.participant;
-            _balances[inp.participant]++;
-            _ownedTokens[inp.participant].push(tokenId);
-            receiptForGoal[inp.goalId][inp.participant] = tokenId;
-            
-            // Update reputation stats
-            goalsAttempted[inp.participant]++;
-            totalStakedLifetime[inp.participant] += inp.stakeAmount;
-            
-            if (inp.succeeded) {
-                goalsCompleted[inp.participant]++;
-                totalEarnedLifetime[inp.participant] += inp.payout;
-                currentStreak[inp.participant]++;
-                if (currentStreak[inp.participant] > longestStreak[inp.participant]) {
-                    longestStreak[inp.participant] = currentStreak[inp.participant];
-                }
-            } else {
-                currentStreak[inp.participant] = 0;
-            }
-            
-            emit Transfer(address(0), inp.participant, tokenId);
-            emit ReceiptMinted(tokenId, inp.goalId, inp.participant, inp.succeeded, inp.target, inp.actual);
+            if (receiptForGoal[inputs[i].goalId][inputs[i].participant] != 0) continue;
+            _mint(inputs[i]);
         }
+    }
+
+    /**
+     * @dev Internal mint logic
+     */
+    function _mint(MintInput calldata inp) internal returns (uint256 tokenId) {
+        totalSupply++;
+        tokenId = totalSupply;
+        
+        receipts[tokenId] = Receipt({
+            goalId: inp.goalId,
+            participant: inp.participant,
+            goalType: inp.goalType,
+            target: inp.target,
+            actual: inp.actual,
+            stakeAmount: inp.stakeAmount,
+            payout: inp.payout,
+            succeeded: inp.succeeded,
+            startTime: inp.startTime,
+            endTime: inp.endTime,
+            mintedAt: block.timestamp,
+            goalName: inp.goalName
+        });
+        
+        _owners[tokenId] = inp.participant;
+        _balances[inp.participant]++;
+        _ownedTokens[inp.participant].push(tokenId);
+        receiptForGoal[inp.goalId][inp.participant] = tokenId;
+        
+        // Update reputation stats
+        goalsAttempted[inp.participant]++;
+        totalStakedLifetime[inp.participant] += inp.stakeAmount;
+        
+        if (inp.succeeded) {
+            goalsCompleted[inp.participant]++;
+            totalEarnedLifetime[inp.participant] += inp.payout;
+            currentStreak[inp.participant]++;
+            if (currentStreak[inp.participant] > longestStreak[inp.participant]) {
+                longestStreak[inp.participant] = currentStreak[inp.participant];
+            }
+        } else {
+            currentStreak[inp.participant] = 0;
+        }
+        
+        emit Transfer(address(0), inp.participant, tokenId);
+        emit ReceiptMinted(tokenId, inp.goalId, inp.participant, inp.succeeded, inp.target, inp.actual);
     }
     
     // ============ ERC-721 Views ============
@@ -333,30 +281,21 @@ contract VaadaReceipts {
     
     // ============ Metadata ============
     
+    // Base URI for metadata (set to your API endpoint)
+    string public baseURI;
+    
     /**
-     * @notice Returns onchain JSON metadata for each token
-     * @dev Fully onchain — no IPFS, no external server
+     * @notice Returns metadata URI for a token
+     * @dev Points to API: baseURI + tokenId. All receipt data is onchain
+     *      via getReceipt() — the API just formats it as JSON for marketplaces.
      */
     function tokenURI(uint256 tokenId) external view returns (string memory) {
         if (_owners[tokenId] == address(0)) revert TokenDoesNotExist();
-        
-        Receipt memory r = receipts[tokenId];
-        
-        // Build JSON onchain (simplified — frontend can render rich version)
-        return string(abi.encodePacked(
-            '{"name":"Vaada Receipt #', _toString(tokenId),
-            '","description":"', r.succeeded ? "Promise Kept" : "Promise Broken",
-            ' - ', r.goalName,
-            '","attributes":[',
-            '{"trait_type":"Goal","value":"', r.goalName, '"},',
-            '{"trait_type":"Outcome","value":"', r.succeeded ? "Kept" : "Broken", '"},',
-            '{"trait_type":"Goal ID","value":', _toString(r.goalId), '},',
-            '{"trait_type":"Target","value":', _toString(r.target), '},',
-            '{"trait_type":"Actual","value":', _toString(r.actual), '},',
-            '{"trait_type":"Stake USDC","value":', _toString(r.stakeAmount), '},',
-            '{"trait_type":"Payout USDC","value":', _toString(r.payout), '}',
-            ']}'
-        ));
+        return string(abi.encodePacked(baseURI, _toString(tokenId)));
+    }
+    
+    function setBaseURI(string calldata _baseURI) external onlyOwner {
+        baseURI = _baseURI;
     }
     
     /**
