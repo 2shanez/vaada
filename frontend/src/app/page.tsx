@@ -646,11 +646,14 @@ export default function Home() {
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Built With</h4>
               <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
-                <li><a href="https://morpho.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Morpho</a></li>
-                <li><a href="https://www.alchemy.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Alchemy</a></li>
                 <li><a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Base</a></li>
                 <li><a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privy</a></li>
                 <li><a href="https://www.circle.com/usdc" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">USDC</a></li>
+              </ul>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4 mt-6">Powered By</h4>
+              <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li><a href="https://morpho.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Morpho</a></li>
+                <li><a href="https://www.alchemy.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Alchemy</a></li>
               </ul>
             </div>
             {/* Community */}
