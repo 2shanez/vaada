@@ -405,12 +405,6 @@ export default function Home() {
           </a>
           <div className="flex-1 overflow-x-auto hide-scrollbar">
             <div className="flex items-center gap-1 sm:gap-5 justify-end min-w-max">
-              <a href="#how-it-works" onClick={(e) => scrollToSection(e, 'how-it-works')} className="hidden sm:block text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors cursor-pointer px-1 py-1">
-                How it works
-              </a>
-              <a href="#promises" onClick={(e) => scrollToSection(e, 'promises')} className="hidden sm:block text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors cursor-pointer px-1 py-1">
-                Promises
-              </a>
               {authenticated && <ProfileNameButton />}
               {authenticated && <IntegrationsDropdown />}
               {authenticated && <FundWalletButton />}
