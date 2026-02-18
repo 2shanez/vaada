@@ -252,37 +252,31 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
   return (
     <div className="p-4">
       {/* Stats Row 1 */}
-      {Number(attempted) === 0 ? (
-        <div className="text-center py-4 mb-3">
-          <p className="text-sm text-[var(--text-secondary)]">Make your first promise to start tracking stats</p>
+      <div className="grid grid-cols-5 gap-2 mb-3">
+        <div className="text-center">
+          <p className="text-lg font-bold">{Number(attempted)}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Promises</p>
         </div>
-      ) : (
-        <div className="grid grid-cols-5 gap-2 mb-3">
-          <div className="text-center">
-            <p className="text-lg font-bold">{Number(attempted)}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase">Promises</p>
-          </div>
-          <div className="text-center">
-            <p className="text-lg font-bold text-[#2EE59D]">{Number(completed)}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase">Kept</p>
-          </div>
-          <div className="text-center">
-            <p className={`text-lg font-bold ${broken > 0 ? 'text-red-400' : 'text-[var(--text-secondary)]'}`}>{broken}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase">Broken</p>
-          </div>
-          <div className="text-center">
-            <p className="text-lg font-bold">{Number(streak)} {Number(streak) > 0 ? '🔥' : ''}</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase">Streak</p>
-          </div>
-          <div className="text-center">
-            <p className="text-lg font-bold">{(Number(winRate) / 100).toFixed(0)}%</p>
-            <p className="text-[10px] text-[var(--text-secondary)] uppercase">Win Rate</p>
-          </div>
+        <div className="text-center">
+          <p className="text-lg font-bold text-[#2EE59D]">{Number(completed)}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Kept</p>
         </div>
-      )}
+        <div className="text-center">
+          <p className="text-lg font-bold text-red-400">{broken}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Broken</p>
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-bold text-orange-400">{Number(streak) > 0 ? `${Number(streak)} 🔥` : '0'}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Streak</p>
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-bold">{Number(attempted) > 0 ? `${(Number(winRate) / 100).toFixed(0)}%` : '—'}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Win Rate</p>
+        </div>
+      </div>
 
-      {/* Stats Row 2 - Cash (only show when there's data) */}
-      <div className={`grid grid-cols-3 gap-2 mb-3 ${Number(attempted) === 0 ? 'hidden' : ''}`}>
+      {/* Stats Row 2 - Cash */}
+      <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className="text-sm font-semibold">${stakedNum > 0 ? formatUnits(totalStaked as bigint, 6) : '0'}</p>
           <p className="text-[10px] text-[var(--text-secondary)]">Total Staked</p>
