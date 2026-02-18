@@ -1,7 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
+import { formatUnits } from 'viem'
+import { VAADA_RECEIPTS_ABI, type Receipt } from '@/lib/abis'
+import { CONTRACTS } from '@/lib/wagmi'
+import { base } from 'wagmi/chains'
 
 export function useProfileName(wallet?: string) {
   const [displayName, setDisplayName] = useState<string | null>(null)
@@ -127,27 +131,37 @@ export function ProfileNameButton() {
         </button>
 
         {showDropdown && (
-          <div className="fixed right-4 top-16 w-48 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg overflow-hidden z-[100]">
-            <a
-              href="/profile"
-              className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors"
-              onClick={() => setShowDropdown(false)}
-            >
-              <span>👤</span> View Profile
-            </a>
-            <button
-              onClick={() => { setShowDropdown(false); setIsEditing(true) }}
-              className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left"
-            >
-              <span>✏️</span> {displayName ? 'Edit Name' : 'Set Name'}
-            </button>
-            <button
-              onClick={() => { handleCopy(); setShowDropdown(false) }}
-              className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left border-t border-[var(--border)]"
-            >
-              <span>{copied ? '✓' : '📋'}</span> {copied ? 'Copied!' : 'Copy Address'}
-            </button>
-          </div>
+          <>
+            {/* Backdrop */}
+            <div className="fixed inset-0 z-[99]" onClick={() => setShowDropdown(false)} />
+            <div className="fixed right-4 top-16 w-80 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
+              {/* Profile Stats */}
+              <ProfileDropdownStats address={address} />
+
+              {/* Actions */}
+              <div className="border-t border-[var(--border)]">
+                <button
+                  onClick={() => { setShowDropdown(false); setIsEditing(true) }}
+                  className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left"
+                >
+                  <span>✏️</span> {displayName ? 'Edit Name' : 'Set Name'}
+                </button>
+                <button
+                  onClick={() => { handleCopy(); setTimeout(() => setShowDropdown(false), 500) }}
+                  className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left"
+                >
+                  <span>{copied ? '✓' : '📋'}</span> {copied ? 'Copied!' : 'Copy Address'}
+                </button>
+                <a
+                  href={`/profile/${address}`}
+                  className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors border-t border-[var(--border)]"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <span>🔗</span> Full Profile Page
+                </a>
+              </div>
+            </div>
+          </>
         )}
       </div>
     )
@@ -221,5 +235,91 @@ export function ProfileNameButton() {
         </div>
       </div>
     </>
+  )
+}
+
+// ── Inline Profile Stats for Dropdown ──
+
+function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
+  const contracts = CONTRACTS[base.id]
+
+  const { data: reputation, isLoading: loadingRep } = useReadContract({
+    address: contracts.vaadaReceipts,
+    abi: VAADA_RECEIPTS_ABI,
+    functionName: 'getReputation',
+    args: [address],
+  })
+
+  const { data: receipts, isLoading: loadingReceipts } = useReadContract({
+    address: contracts.vaadaReceipts,
+    abi: VAADA_RECEIPTS_ABI,
+    functionName: 'getWalletReceipts',
+    args: [address],
+  })
+
+  const isLoading = loadingRep || loadingReceipts
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="w-5 h-5 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  const [attempted, completed, winRate, totalStaked, totalEarned, streak, bestStreak] = reputation || [BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0)]
+  const receiptList = (receipts as Receipt[]) || []
+
+  return (
+    <div className="p-4">
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        <div className="text-center">
+          <p className="text-lg font-bold">{Number(attempted)}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Promises</p>
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-bold text-[#2EE59D]">{Number(completed)}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Kept</p>
+        </div>
+        <div className="text-center">
+          <p className="text-lg font-bold">{Number(attempted) > 0 ? `${(Number(winRate) / 100).toFixed(0)}%` : '—'}</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Win Rate</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 mb-3">
+        <div className="text-center px-2 py-1.5 rounded-lg bg-[var(--background)]">
+          <p className="text-sm font-semibold">{Number(streak) > 0 ? `${Number(streak)} 🔥` : '0'}</p>
+          <p className="text-[10px] text-[var(--text-secondary)]">Streak</p>
+        </div>
+        <div className="text-center px-2 py-1.5 rounded-lg bg-[var(--background)]">
+          <p className="text-sm font-semibold">${Number(totalStaked) > 0 ? formatUnits(totalStaked as bigint, 6) : '0'}</p>
+          <p className="text-[10px] text-[var(--text-secondary)]">Staked</p>
+        </div>
+      </div>
+
+      {/* Recent Receipts */}
+      {receiptList.length > 0 ? (
+        <div>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider mb-2">Recent</p>
+          <div className="space-y-1.5">
+            {[...receiptList].reverse().slice(0, 3).map((r, i) => (
+              <div key={i} className={`flex items-center justify-between px-2.5 py-2 rounded-lg text-xs ${r.succeeded ? 'bg-[#2EE59D]/5' : 'bg-red-500/5'}`}>
+                <div className="flex items-center gap-1.5">
+                  <span>{r.succeeded ? '✅' : '❌'}</span>
+                  <span className="font-medium truncate max-w-[120px]">{r.goalName || `Goal #${Number(r.goalId)}`}</span>
+                </div>
+                <span className={`font-medium ${r.succeeded ? 'text-[#2EE59D]' : 'text-red-400'}`}>
+                  ${formatUnits(r.payout, 6)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p className="text-xs text-[var(--text-secondary)] text-center py-2">No promises yet</p>
+      )}
+    </div>
   )
 }
