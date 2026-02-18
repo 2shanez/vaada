@@ -390,7 +390,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
           </div>
         </div>
       ) : (
-        <p className="text-xs text-[var(--text-secondary)] text-center py-2">No promises yet</p>
+        <p className="text-xs text-[var(--text-secondary)] text-center py-2">No settled promises yet</p>
       )}
     </div>
   )
