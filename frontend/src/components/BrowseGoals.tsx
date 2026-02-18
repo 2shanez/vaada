@@ -115,7 +115,24 @@ function NotifyModal({
 }
 
 const FEATURED_GOALS: Goal[] = [
-  // No active goals — add new ones here when created
+  {
+    id: 'e2e-1k-steps',
+    onChainId: 10,
+    title: '1K Steps E2E',
+    description: 'Walk 1,000 steps in 30 minutes. Quick test promise.',
+    emoji: '👟',
+    targetMiles: 1000,
+    targetUnit: 'steps',
+    durationDays: 0,
+    minStake: 5,
+    maxStake: 10,
+    participants: 0,
+    totalStaked: 0,
+    category: 'Daily',
+    domain: 'Fitness',
+    subdomain: 'Steps',
+    live: true,
+  },
 ]
 
 const COMING_SOON = [
