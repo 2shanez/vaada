@@ -7,12 +7,12 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Vaada | Own Your Promise',
+  title: 'Vaada | Keep Your Promise',
   description: 'Stake money on your goals. Hit your target, earn rewards. Miss it, lose your stake. Secured on the blockchain.',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
   metadataBase: new URL('https://vaada.io'),
   openGraph: {
-    title: 'Vaada | Own Your Promise',
+    title: 'Vaada | Keep Your Promise',
     description: 'Stake money on your goals. Hit your target, earn rewards. Miss it, lose your stake. Secured on the blockchain.',
     url: 'https://vaada.io',
     siteName: 'Vaada',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vaada | Own Your Promise',
+    title: 'Vaada | Keep Your Promise',
     description: 'Stake money on your goals. Hit your target, earn rewards. Miss it, lose your stake. Secured on the blockchain.',
   },
   icons: {
