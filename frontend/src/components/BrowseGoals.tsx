@@ -226,10 +226,12 @@ export function BrowseGoals({ filter = 'Active' }: BrowseGoalsProps) {
       <div className="flex flex-wrap justify-center gap-4">
         {filteredGoals.length === 0 ? (
           <div className="w-full text-center py-16">
-            <div className="text-5xl mb-4">🎯</div>
+            <div className="w-14 h-14 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-7 h-7 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
             <h3 className="text-lg font-semibold mb-2">No active promises right now</h3>
             <p className="text-sm text-[var(--text-secondary)] max-w-sm mx-auto">
-              New challenges drop regularly. Check back soon or connect your tracker to get notified!
+              New promises drop regularly. Check back soon or connect your tracker to get notified!
             </p>
           </div>
         ) : (
