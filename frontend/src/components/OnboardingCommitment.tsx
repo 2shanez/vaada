@@ -301,8 +301,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                   <p className="text-sm font-bold">Your First Promise</p>
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  By joining Vaada, you&apos;re making your first promise.
-                  Stake ${stakeAmountFormatted} and join a goal within 24h to get it back.
+                  By joining Vaada, you&apos;re making your first promise.<br />
+                  Stake ${stakeAmountFormatted} and join a goal within 24h to get it back.<br />
                   Don&apos;t keep it? Your ${stakeAmountFormatted} is gone.
                 </p>
               </div>
