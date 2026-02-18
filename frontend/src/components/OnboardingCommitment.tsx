@@ -609,12 +609,12 @@ export function LiveChallengeCard() {
           </div>
           <div className="min-w-0">
             <h3 className="font-bold text-sm leading-tight">New User Challenge</h3>
-            <p className="text-xs text-[var(--text-secondary)]">Your first promise. Join a promise within 24h or your $5 is gone.</p>
+            <p className="text-xs text-[var(--text-secondary)]">Your first promise. Join one within 24h to keep your $5.</p>
           </div>
         </div>
         <div className="w-full flex items-center justify-center gap-2 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-sm border border-[#2EE59D]/30">
           <span>✓</span>
-          <span>Challenge accepted — join a goal to win!</span>
+          <span>You're in — now join a promise to win!</span>
         </div>
       </div>
     </div>
