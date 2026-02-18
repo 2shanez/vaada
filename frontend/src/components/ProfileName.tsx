@@ -275,6 +275,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
   // Count goals from VaadaV3 participation (goals the user joined)
   let v3Attempted = 0
   let v3Completed = 0
+  let v3Settled = 0
   let v3Staked = BigInt(0)
   let v3Earned = BigInt(0)
   if (goalParticipants) {
@@ -283,6 +284,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
         const p = gp.result as any
         if (p.user && p.user !== '0x0000000000000000000000000000000000000000' && Number(p.stake) > 0) {
           v3Attempted++
+          if (p.verified) v3Settled++
           if (p.verified && p.succeeded) v3Completed++
           v3Staked += BigInt(p.stake)
           if (p.claimed) v3Earned += BigInt(p.stake) // approximate — claimed means they got payout
@@ -294,12 +296,14 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
   // Count NewUserChallenge
   let nucAttempted = 0
   let nucCompleted = 0
+  let nucSettled = 0
   let nucStaked = BigInt(0)
   let nucEarned = BigInt(0)
   if (hasJoinedChallenge && challengeData) {
     const [amount, , settled, won] = challengeData as [bigint, bigint, boolean, boolean, boolean]
     nucAttempted = 1
     if (settled) {
+      nucSettled = 1
       nucCompleted = won ? 1 : 0
       nucEarned = won ? amount : BigInt(0)
     }
@@ -314,13 +318,16 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
   const totalStakedBig = repTotalStaked + (Number(repTotalStaked) === 0 ? v3Staked + nucStaked : BigInt(0))
   const totalEarnedBig = repTotalEarned + (Number(repTotalEarned) === 0 ? v3Earned + nucEarned : BigInt(0))
 
-  const broken = totalAttempted - totalCompleted
-  const winRate = totalAttempted > 0 ? Math.round((totalCompleted / totalAttempted) * 100) : 0
+  const totalSettled = Number(repAttempted) + (Number(repAttempted) === 0 ? v3Settled + nucSettled : 0)
+  const broken = totalSettled - totalCompleted
+  const winRate = totalSettled > 0 ? Math.round((totalCompleted / totalSettled) * 100) : 0
   const streak = Number(repStreak) // streak only from receipts for now
   const stakedNum = Number(totalStakedBig)
   const earnedNum = Number(totalEarnedBig)
-  const netPnl = earnedNum - stakedNum
-  const netFormatted = stakedNum > 0 || earnedNum > 0 ? (netPnl >= 0 ? `+$${formatUnits(BigInt(Math.abs(netPnl)), 6)}` : `-$${formatUnits(BigInt(Math.abs(netPnl)), 6)}`) : '$0'
+  // P&L only for settled goals — active stakes aren't losses yet
+  const settledStaked = totalSettled > 0 ? stakedNum : 0
+  const netPnl = earnedNum - settledStaked
+  const netFormatted = settledStaked > 0 || earnedNum > 0 ? (netPnl >= 0 ? `+$${formatUnits(BigInt(Math.abs(netPnl)), 6)}` : `-$${formatUnits(BigInt(Math.abs(netPnl)), 6)}`) : '$0'
 
   return (
     <div className="p-4">
