@@ -425,7 +425,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
-            Stake money on your goals. Hit your target, earn rewards. Miss it, lose your stake. Secured on the blockchain.
+            Keep your promise. Keep your stake. Earn from those who don't.
           </p>
           
           <button 
