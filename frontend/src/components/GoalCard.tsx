@@ -10,6 +10,7 @@ import { isStravaConnected, getStravaAuthUrl } from '@/lib/strava'
 import { useContracts, useNetworkCheck, useUSDC, useGoalState, useGoalDetails, useParticipant, useStravaToken } from '@/lib/hooks'
 import { USDC_ABI, GOALSTAKE_ABI, AUTOMATION_ABI, NEW_USER_CHALLENGE_ABI, PHASE_LABELS, CATEGORY_STYLES, GoalPhase, type Goal } from '@/lib/abis'
 import { analytics } from '@/lib/analytics'
+import { UserRepBadge } from './UserRepBadge'
 import { DuolingoConnect, useDuolingoConnection } from './DuolingoConnect'
 import { WithingsConnect, useWithingsConnection } from './WithingsConnect'
 import { RescueTimeConnect, useRescueTimeConnection } from './RescueTimeConnect'
@@ -824,17 +825,18 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                     <div key={i} className={`flex items-center justify-between py-1.5 px-2 rounded-lg ${
                       i === 0 && isStepsGoal && leaderboardData.length > 0 ? 'bg-[#2EE59D]/10' : 'hover:bg-[var(--background)]'
                     }`}>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
                         {isStepsGoal && leaderboardData.length > 0 && (
-                          <span className={`text-xs font-bold ${i === 0 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
+                          <span className={`text-xs font-bold flex-shrink-0 ${i === 0 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
                             {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
                           </span>
                         )}
-                        <span className="text-[11px] text-[var(--text-secondary)]">
+                        <span className="text-[11px] text-[var(--text-secondary)] truncate">
                           {p.name || playerProfiles[p.address.toLowerCase()] || `${p.address.slice(0, 6)}...${p.address.slice(-4)}`}
                         </span>
+                        <UserRepBadge address={p.address as `0x${string}`} />
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {isStepsGoal && leaderboardData.length > 0 && (
                           <span className={`text-[11px] font-bold ${p.steps >= goal.targetMiles ? 'text-[#2EE59D]' : 'text-[var(--foreground)]'}`}>
                             {p.steps.toLocaleString()}
