@@ -68,7 +68,7 @@ export function Leaderboard() {
                 address: contracts.vaadaReceipts,
                 abi: VAADA_RECEIPTS_ABI,
                 functionName: 'getReputation',
-                args: [addr],
+                args: [addr as `0x${string}`],
               }) as [bigint, bigint, bigint, bigint, bigint, bigint, bigint]
 
               return {
