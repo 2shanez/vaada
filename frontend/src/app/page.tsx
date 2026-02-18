@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useAccount, useReadContract } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
@@ -262,6 +263,32 @@ function StatsCard({
   )
 }
 
+function AuthErrorToast() {
+  const searchParams = useSearchParams()
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const strava = searchParams.get('strava')
+    const fitbit = searchParams.get('fitbit')
+    if (strava === 'error') setError('Strava connection failed. Please try again.')
+    else if (strava === 'missing_code') setError('Strava authorization was cancelled.')
+    else if (fitbit === 'error') setError('Fitbit connection failed. Please try again.')
+    if (strava || fitbit) {
+      // Clean URL
+      window.history.replaceState({}, '', '/')
+      const timer = setTimeout(() => setError(null), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [searchParams])
+
+  if (!error) return null
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[200] bg-red-500/90 text-white px-4 py-2 rounded-xl text-sm font-medium shadow-lg animate-in slide-in-from-top-2">
+      {error}
+    </div>
+  )
+}
+
 export default function Home() {
   const { isConnected, address } = useAccount()
   const contracts = useContracts()
@@ -363,6 +390,7 @@ export default function Home() {
 
   return (
     <>
+      <Suspense fallback={null}><AuthErrorToast /></Suspense>
       {/* Header - outside main to avoid overflow clipping on iOS */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--surface)]/90 backdrop-blur-xl border-b border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3 sm:gap-6">

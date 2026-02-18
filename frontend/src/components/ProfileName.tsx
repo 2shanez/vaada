@@ -83,7 +83,7 @@ export function ProfileNameButton() {
       const rect = buttonRef.current.getBoundingClientRect()
       setDropdownPos({
         top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
+        right: Math.max(16, window.innerWidth - rect.right),
       })
     }
   }, [showDropdown])
@@ -149,7 +149,7 @@ export function ProfileNameButton() {
           <>
             {/* Backdrop */}
             <div className="fixed inset-0 z-[99]" onClick={() => setShowDropdown(false)} />
-            <div ref={dropdownRef} style={{ top: dropdownPos.top, right: dropdownPos.right }} className="fixed w-80 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
+            <div ref={dropdownRef} style={{ top: dropdownPos.top, right: dropdownPos.right }} className="fixed w-[min(320px,calc(100vw-32px))] bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
               {/* Account Actions / Edit Name */}
               {isEditing ? (
                 <div className="p-3 border-b border-[var(--border)]">
@@ -335,7 +335,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Kept</p>
         </div>
         <div className="text-center">
-          <p className="text-lg font-bold text-red-400">{broken}</p>
+          <p className={`text-lg font-bold ${broken > 0 ? 'text-red-400' : ''}`}>{broken}</p>
           <p className="text-[10px] text-[var(--text-secondary)] uppercase">Broken</p>
         </div>
         <div className="text-center">
@@ -352,15 +352,15 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className="text-sm font-semibold">${stakedNum > 0 ? formatUnits(totalStakedBig, 6) : '0'}</p>
-          <p className="text-[10px] text-[var(--text-secondary)]">Total Staked</p>
+          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Staked</p>
         </div>
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className="text-sm font-semibold">${earnedNum > 0 ? formatUnits(totalEarnedBig, 6) : '0'}</p>
-          <p className="text-[10px] text-[var(--text-secondary)]">Total Earned</p>
+          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Earned</p>
         </div>
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className={`text-sm font-semibold ${netPnl > 0 ? 'text-[#2EE59D]' : netPnl < 0 ? 'text-red-400' : ''}`}>{netFormatted}</p>
-          <p className="text-[10px] text-[var(--text-secondary)]">Profit / Loss</p>
+          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Profit / Loss</p>
         </div>
       </div>
 
