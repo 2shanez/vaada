@@ -27,6 +27,7 @@ const PrivyConnectButton = dynamic(() => import('@/components/PrivyConnectButton
 const FundWalletButton = dynamic(() => import('@/components/FundButton').then(m => ({ default: m.FundWalletButton })), { ssr: false })
 const ProfileNameButton = dynamic(() => import('@/components/ProfileName').then(m => ({ default: m.ProfileNameButton })), { ssr: false })
 const DevResetButton = dynamic(() => import('@/components/DevResetButton').then(m => ({ default: m.DevResetButton })), { ssr: false })
+const Leaderboard = dynamic(() => import('@/components/Leaderboard').then(m => ({ default: m.Leaderboard })), { ssr: false })
 // Network warning banner - shows when user is on wrong network
 function NetworkBanner() {
   const { isConnected } = useAccount()
@@ -553,6 +554,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Leaderboard - auto-hides when empty */}
+      <Leaderboard />
 
       {/* How It Works - Compact horizontal */}
       <section ref={howView.ref} id="how-it-works" className={`py-12 px-6 bg-[var(--surface)] border-t border-[var(--border)] transition-all duration-700 ${howView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
