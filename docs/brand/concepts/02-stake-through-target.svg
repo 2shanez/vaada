@@ -1,6 +1,0 @@
-<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Stake (vertical line) through target circle -->
-  <circle cx="100" cy="100" r="70" stroke="#2EE59D" stroke-width="8" fill="none"/>
-  <line x1="100" y1="20" x2="100" y2="180" stroke="#2EE59D" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="100" cy="100" r="12" fill="#2EE59D"/>
-</svg>

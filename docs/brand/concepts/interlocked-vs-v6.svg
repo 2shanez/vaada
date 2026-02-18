@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Two Vs sharing middle point at top -->
-  <g fill="none" stroke="#2EE59D" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-    <!-- First V -->
-    <path d="M18 25 L38 70 L58 25"/>
-    <!-- Second V (shares start point with first V's end) -->
-    <path d="M42 25 L62 70 L82 25"/>
-  </g>
-</svg>

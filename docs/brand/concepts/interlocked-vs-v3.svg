@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Two Vs linked like chain - one threads through the other -->
-  <g fill="none" stroke="#2EE59D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-    <!-- First V (complete) -->
-    <path d="M15 25 L35 65 L55 25"/>
-    <!-- Second V - left arm goes behind, right arm in front -->
-    <path d="M45 25 L65 65 L85 25"/>
-  </g>
-</svg>

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Two Vs very tight - almost merged -->
-  <g fill="none" stroke="#2EE59D" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-    <!-- First V -->
-    <path d="M22 25 L40 70 L58 25"/>
-    <!-- Second V (overlapping) -->
-    <path d="M42 25 L60 70 L78 25"/>
-  </g>
-</svg>
