@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useAccount, useReadContract } from 'wagmi'
 import { formatUnits } from 'viem'
 import { VAADA_RECEIPTS_ABI, type Receipt } from '@/lib/abis'
@@ -51,6 +52,8 @@ export function ProfileNameButton() {
   const [copied, setCopied] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 })
   
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -65,12 +68,24 @@ export function ProfileNameButton() {
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node) &&
+          buttonRef.current && !buttonRef.current.contains(e.target as Node)) {
         setShowDropdown(false)
       }
     }
     if (showDropdown) document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showDropdown])
+
+  // Update dropdown position when opened
+  useEffect(() => {
+    if (showDropdown && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect()
+      setDropdownPos({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      })
+    }
   }, [showDropdown])
   
   if (!isConnected || !address) return null
@@ -115,8 +130,9 @@ export function ProfileNameButton() {
   // Compact display when not editing - name with dropdown
   if (!isEditing) {
     return (
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative">
         <button
+          ref={buttonRef}
           onClick={() => setShowDropdown(!showDropdown)}
           className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors px-1 py-1 flex items-center gap-1"
         >
@@ -130,11 +146,11 @@ export function ProfileNameButton() {
           </svg>
         </button>
 
-        {showDropdown && (
+        {showDropdown && createPortal(
           <>
             {/* Backdrop */}
             <div className="fixed inset-0 z-[99]" onClick={() => setShowDropdown(false)} />
-            <div className="fixed right-4 top-16 w-80 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
+            <div ref={dropdownRef} style={{ top: dropdownPos.top, right: dropdownPos.right }} className="fixed w-80 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
               {/* Profile Stats */}
               <ProfileDropdownStats address={address} />
 
@@ -161,7 +177,8 @@ export function ProfileNameButton() {
                 </a>
               </div>
             </div>
-          </>
+          </>,
+          document.body
         )}
       </div>
     )
