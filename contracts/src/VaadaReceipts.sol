@@ -165,67 +165,72 @@ contract VaadaReceipts {
     }
     
     /**
+     * @notice Input struct for batch minting (avoids stack-too-deep)
+     */
+    struct MintInput {
+        uint256 goalId;
+        address participant;
+        uint8 goalType;
+        uint256 target;
+        uint256 actual;
+        uint256 stakeAmount;
+        uint256 payout;
+        bool succeeded;
+        uint256 startTime;
+        uint256 endTime;
+        string goalName;
+    }
+
+    /**
      * @notice Batch mint receipts for all participants in a settled goal
      */
-    function batchMintReceipts(
-        uint256[] calldata goalIds,
-        address[] calldata participantAddrs,
-        uint8[] calldata goalTypeArr,
-        uint256[] calldata targets,
-        uint256[] calldata actuals,
-        uint256[] calldata stakeAmounts,
-        uint256[] calldata payouts,
-        bool[] calldata succeededArr,
-        uint256[] calldata startTimes,
-        uint256[] calldata endTimes,
-        string[] calldata goalNames
-    ) external onlyMinter {
-        require(goalIds.length == participantAddrs.length, "Length mismatch");
-        
-        for (uint256 i = 0; i < goalIds.length; i++) {
+    function batchMintReceipts(MintInput[] calldata inputs) external onlyMinter {
+        for (uint256 i = 0; i < inputs.length; i++) {
+            MintInput calldata inp = inputs[i];
+            
             // Skip if already minted
-            if (receiptForGoal[goalIds[i]][participantAddrs[i]] != 0) continue;
+            if (receiptForGoal[inp.goalId][inp.participant] != 0) continue;
             
             totalSupply++;
             uint256 tokenId = totalSupply;
             
             receipts[tokenId] = Receipt({
-                goalId: goalIds[i],
-                participant: participantAddrs[i],
-                goalType: goalTypeArr[i],
-                target: targets[i],
-                actual: actuals[i],
-                stakeAmount: stakeAmounts[i],
-                payout: payouts[i],
-                succeeded: succeededArr[i],
-                startTime: startTimes[i],
-                endTime: endTimes[i],
+                goalId: inp.goalId,
+                participant: inp.participant,
+                goalType: inp.goalType,
+                target: inp.target,
+                actual: inp.actual,
+                stakeAmount: inp.stakeAmount,
+                payout: inp.payout,
+                succeeded: inp.succeeded,
+                startTime: inp.startTime,
+                endTime: inp.endTime,
                 mintedAt: block.timestamp,
-                goalName: goalNames[i]
+                goalName: inp.goalName
             });
             
-            _owners[tokenId] = participantAddrs[i];
-            _balances[participantAddrs[i]]++;
-            _ownedTokens[participantAddrs[i]].push(tokenId);
-            receiptForGoal[goalIds[i]][participantAddrs[i]] = tokenId;
+            _owners[tokenId] = inp.participant;
+            _balances[inp.participant]++;
+            _ownedTokens[inp.participant].push(tokenId);
+            receiptForGoal[inp.goalId][inp.participant] = tokenId;
             
             // Update reputation stats
-            goalsAttempted[participantAddrs[i]]++;
-            totalStakedLifetime[participantAddrs[i]] += stakeAmounts[i];
+            goalsAttempted[inp.participant]++;
+            totalStakedLifetime[inp.participant] += inp.stakeAmount;
             
-            if (succeededArr[i]) {
-                goalsCompleted[participantAddrs[i]]++;
-                totalEarnedLifetime[participantAddrs[i]] += payouts[i];
-                currentStreak[participantAddrs[i]]++;
-                if (currentStreak[participantAddrs[i]] > longestStreak[participantAddrs[i]]) {
-                    longestStreak[participantAddrs[i]] = currentStreak[participantAddrs[i]];
+            if (inp.succeeded) {
+                goalsCompleted[inp.participant]++;
+                totalEarnedLifetime[inp.participant] += inp.payout;
+                currentStreak[inp.participant]++;
+                if (currentStreak[inp.participant] > longestStreak[inp.participant]) {
+                    longestStreak[inp.participant] = currentStreak[inp.participant];
                 }
             } else {
-                currentStreak[participantAddrs[i]] = 0;
+                currentStreak[inp.participant] = 0;
             }
             
-            emit Transfer(address(0), participantAddrs[i], tokenId);
-            emit ReceiptMinted(tokenId, goalIds[i], participantAddrs[i], succeededArr[i], targets[i], actuals[i]);
+            emit Transfer(address(0), inp.participant, tokenId);
+            emit ReceiptMinted(tokenId, inp.goalId, inp.participant, inp.succeeded, inp.target, inp.actual);
         }
     }
     
