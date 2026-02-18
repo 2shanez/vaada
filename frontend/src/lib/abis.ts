@@ -257,3 +257,84 @@ export const NEW_USER_CHALLENGE_ABI = [
     stateMutability: 'view',
   },
 ] as const
+
+// ═══════════════════════════════════════════════════════════════════
+// VAADA RECEIPTS (SOULBOUND)
+// ═══════════════════════════════════════════════════════════════════
+
+export const VAADA_RECEIPTS_ABI = [
+  {
+    name: 'getReputation',
+    type: 'function',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [
+      { name: 'attempted', type: 'uint256' },
+      { name: 'completed', type: 'uint256' },
+      { name: 'winRate', type: 'uint256' },
+      { name: 'totalStaked', type: 'uint256' },
+      { name: 'totalEarned', type: 'uint256' },
+      { name: 'streak', type: 'uint256' },
+      { name: 'bestStreak', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    name: 'tokensOf',
+    type: 'function',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [{ type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    name: 'getWalletReceipts',
+    type: 'function',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [{
+      type: 'tuple[]',
+      components: [
+        { name: 'goalId', type: 'uint256' },
+        { name: 'participant', type: 'address' },
+        { name: 'goalType', type: 'uint8' },
+        { name: 'target', type: 'uint256' },
+        { name: 'actual', type: 'uint256' },
+        { name: 'stakeAmount', type: 'uint256' },
+        { name: 'payout', type: 'uint256' },
+        { name: 'succeeded', type: 'bool' },
+        { name: 'startTime', type: 'uint256' },
+        { name: 'endTime', type: 'uint256' },
+        { name: 'mintedAt', type: 'uint256' },
+        { name: 'goalName', type: 'string' },
+      ],
+    }],
+    stateMutability: 'view',
+  },
+  {
+    name: 'balanceOf',
+    type: 'function',
+    inputs: [{ name: 'account', type: 'address' }],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    name: 'totalSupply',
+    type: 'function',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+  },
+] as const
+
+export interface Receipt {
+  goalId: bigint
+  participant: string
+  goalType: number
+  target: bigint
+  actual: bigint
+  stakeAmount: bigint
+  payout: bigint
+  succeeded: boolean
+  startTime: bigint
+  endTime: bigint
+  mintedAt: bigint
+  goalName: string
+}

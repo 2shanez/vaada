@@ -18,5 +18,6 @@ export const CONTRACTS = {
     usdc: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' as `0x${string}`, // Base USDC
     morphoVault: '0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61' as `0x${string}`, // Gauntlet USDC Prime
     newUserChallenge: '0xdC9ee5e9E99e3568D2B5eA9409222fbFeCB56373' as `0x${string}`, // NewUserChallenge V3 (fresh deploy 2026-02-17)
+    vaadaReceipts: '0x2743327fa1EeDF92793608d659b7eEC428252dA2' as `0x${string}`, // VaadaReceipts (soulbound)
   },
 }
