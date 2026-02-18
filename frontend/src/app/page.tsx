@@ -635,6 +635,7 @@ export default function Home() {
               <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
                 <li><a href="/faq" className="hover:text-[var(--foreground)] transition-colors">FAQ</a></li>
                 <li><a href="/support" className="hover:text-[var(--foreground)] transition-colors">Help & Support</a></li>
+                <li><a href="/whitepaper.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Whitepaper</a></li>
               </ul>
             </div>
             {/* Built With */}
@@ -644,12 +645,15 @@ export default function Home() {
                 <li><a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Base</a></li>
                 <li><a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privy</a></li>
                 <li><a href="https://www.circle.com/usdc" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">USDC</a></li>
+                <li><a href="https://chain.link" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Chainlink</a></li>
+                <li><a href="https://morpho.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Morpho</a></li>
               </ul>
             </div>
             {/* Community */}
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Community</h4>
               <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+                <li><a href="https://x.com/vaaborhood" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">X / Twitter</a></li>
                 <li><a href="mailto:hello@vaada.io" className="hover:text-[var(--foreground)] transition-colors">Contact</a></li>
                 <li><a href="/support" className="hover:text-[var(--foreground)] transition-colors">Bug Reports</a></li>
               </ul>
