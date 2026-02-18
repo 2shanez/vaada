@@ -563,8 +563,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Section divider */}
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+      </div>
+
       {/* Footer CTA */}
-      <section ref={ctaView.ref} className={`py-10 sm:py-16 px-4 sm:px-6 bg-[var(--surface)] relative overflow-hidden transition-all duration-700 ${ctaView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+      <section ref={ctaView.ref} className={`py-10 sm:py-16 px-4 sm:px-6 bg-[#0E0E18] relative overflow-hidden transition-all duration-700 ${ctaView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         {/* Background decoration - hidden on mobile for performance */}
         <div className="hidden sm:block absolute inset-0 opacity-30">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#2EE59D]/20 rounded-full blur-3xl" />
@@ -573,7 +578,7 @@ export default function Home() {
         
         <div className="max-w-3xl mx-auto text-center relative">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
-            Ready to keep your promise?
+            Ready to make a promise?
           </h2>
           <p className="text-[var(--text-secondary)] mb-6 sm:mb-8 text-base sm:text-lg">
             Join the Promise Market.
