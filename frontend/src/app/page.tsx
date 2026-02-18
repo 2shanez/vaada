@@ -275,7 +275,6 @@ export default function Home() {
 
   const statsView = useInView(0.2)
   const howView = useInView(0.1)
-  const whyView = useInView(0.1)
   const ctaView = useInView(0.2)
 
   // Check if user has completed the new user challenge (contract state)
@@ -558,35 +557,6 @@ export default function Home() {
                 </div>
                 <h3 className="font-semibold text-sm mb-1 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed max-w-[200px] mx-auto">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why It Works - Compact */}
-      <section ref={whyView.ref} className={`py-12 px-6 transition-all duration-700 ${whyView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8">
-            <span className="text-xs font-semibold text-[#2EE59D] uppercase tracking-wider">The Science</span>
-            <h2 className="text-2xl font-bold mt-2">Why It Works</h2>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { icon: '🧠', title: 'Loss Aversion', desc: 'We work 2x harder to avoid losing money than to gain it.' },
-              { icon: '📱', title: 'Automatic Verification', desc: 'Your fitness tracker syncs and verifies your progress automatically.' },
-              { icon: '💸', title: 'Real Consequences', desc: 'Break your promise = stake goes to winners. No excuses.' },
-            ].map((item, i) => (
-              <div 
-                key={item.title}
-                className="group p-6 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[#2EE59D]/50 hover:shadow-lg hover:shadow-[#2EE59D]/5 hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2EE59D]/10 to-[#2EE59D]/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <span className="text-2xl">{item.icon}</span>
-                </div>
-                <h3 className="font-semibold mb-2 group-hover:text-[#2EE59D] transition-colors">{item.title}</h3>
-                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
