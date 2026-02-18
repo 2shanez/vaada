@@ -116,10 +116,10 @@ function NotifyModal({
 
 const FEATURED_GOALS: Goal[] = [
   {
-    id: 'e2e-1k-steps',
-    onChainId: 10,
-    title: '1K Steps E2E',
-    description: 'Walk 1,000 steps in 30 minutes. Quick test promise.',
+    id: 'e2e-1k-steps-v2',
+    onChainId: 11,
+    title: '1K Steps E2E v2',
+    description: 'Walk 1,000 steps in 2 hours. Quick test promise.',
     emoji: '👟',
     targetMiles: 1000,
     targetUnit: 'steps',
