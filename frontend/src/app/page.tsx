@@ -645,16 +645,13 @@ export default function Home() {
             {/* Built With */}
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Built With</h4>
-              <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
-                <li><a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Base</a></li>
-                <li><a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privy</a></li>
-                <li><a href="https://www.circle.com/usdc" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">USDC</a></li>
-              </ul>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4 mt-6">Powered By</h4>
-              <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
-                <li><a href="https://morpho.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Morpho</a></li>
-                <li><a href="https://www.alchemy.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Alchemy</a></li>
-              </ul>
+              <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm text-[var(--text-secondary)]">
+                <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Base</a>
+                <a href="https://morpho.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Morpho</a>
+                <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privy</a>
+                <a href="https://www.alchemy.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Alchemy</a>
+                <a href="https://www.circle.com/usdc" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">USDC</a>
+              </div>
             </div>
             {/* Community */}
             <div>
