@@ -59,7 +59,7 @@ export function ProfileView({ address }: ProfileViewProps) {
     )
   }
 
-  const [attempted, completed, winRate, totalStaked, totalEarned, streak, bestStreak] = reputation || [0n, 0n, 0n, 0n, 0n, 0n, 0n]
+  const [attempted, completed, winRate, totalStaked, totalEarned, streak, bestStreak] = reputation || [BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0), BigInt(0)]
   const receiptList = (receipts as Receipt[]) || []
 
   const handleShare = () => {
