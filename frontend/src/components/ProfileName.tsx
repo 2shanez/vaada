@@ -335,7 +335,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
       <div className="grid grid-cols-5 gap-2 mb-3">
         <div className="text-center">
           <p className="text-lg font-bold">{totalAttempted}</p>
-          <p className="text-[10px] text-[var(--text-secondary)] uppercase">Promises</p>
+          <p className="text-[10px] text-[var(--text-secondary)] uppercase">{totalAttempted === 1 ? 'Promise' : 'Promises'}</p>
         </div>
         <div className="text-center">
           <p className="text-lg font-bold text-[#2EE59D]">{totalCompleted}</p>
