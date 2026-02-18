@@ -152,16 +152,17 @@ export function ProfileNameButton() {
             <div className="fixed inset-0 z-[99]" onClick={() => setShowDropdown(false)} />
             <div ref={dropdownRef} style={{ top: dropdownPos.top, right: dropdownPos.right }} className="fixed w-80 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
               {/* Account Actions */}
-              <div className="border-b border-[var(--border)]">
+              <div className="flex items-center border-b border-[var(--border)]">
                 <button
                   onClick={() => { setShowDropdown(false); setIsEditing(true) }}
-                  className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left"
+                  className="flex items-center gap-2 flex-1 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors justify-center"
                 >
                   <span>✏️</span> {displayName ? 'Edit Name' : 'Set Name'}
                 </button>
+                <div className="w-px h-8 bg-[var(--border)]" />
                 <button
                   onClick={() => { handleCopy(); setTimeout(() => setShowDropdown(false), 500) }}
-                  className="flex items-center gap-2 w-full px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors text-left"
+                  className="flex items-center gap-2 flex-1 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors justify-center"
                 >
                   <span>{copied ? '✓' : '📋'}</span> {copied ? 'Copied!' : 'Copy Address'}
                 </button>
