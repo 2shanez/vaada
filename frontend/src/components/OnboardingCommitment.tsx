@@ -237,14 +237,14 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
       <div 
-        className="bg-[var(--background)] border border-[var(--border)] rounded-t-2xl sm:rounded-2xl w-full max-w-sm max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-200 relative"
+        className="bg-[var(--background)] border border-[var(--border)] rounded-t-2xl sm:rounded-2xl w-full max-w-sm animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-200 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]">
+        <div className="p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
           {phase === 'done' ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl">✓</span>
+            <div className="text-center py-6">
+              <div className="w-14 h-14 rounded-full bg-[#2EE59D]/20 flex items-center justify-center mx-auto mb-3">
+                <span className="text-3xl">✓</span>
               </div>
               <h2 className="text-xl font-bold mb-2">You&apos;re in!</h2>
               <p className="text-sm text-[var(--text-secondary)] mb-3">
@@ -254,60 +254,54 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
           ) : (
             <>
               {/* Welcome header */}
-              <div className="text-center mb-4">
-                <img src="/vaada-v.png" alt="Vaada" className="w-14 h-14 mx-auto mb-3" />
-                <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
-                <p className="text-sm text-[var(--text-secondary)] mb-2">
+              <div className="text-center mb-3">
+                <img src="/vaada-v.png" alt="Vaada" className="w-10 h-10 mx-auto mb-2" />
+                <h2 className="text-lg font-bold mb-0.5">Welcome to Vaada</h2>
+                <p className="text-xs text-[var(--text-secondary)]">
                   Keep Your Promise
-                </p>
-                <p className="text-xs text-[var(--text-secondary)] inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--surface)] rounded-full border border-[var(--border)]">
-                  <span className="font-semibold text-[#2EE59D]">vaada</span>
-                  <span>=</span>
-                  <span>promise</span>
                 </p>
               </div>
 
               {/* How it works - compact */}
-              <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">💰</div>
+              <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 mb-3 space-y-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">💰</div>
                   <div>
-                    <p className="text-sm font-medium">Make a promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Stake $$$ on your promise</p>
+                    <p className="text-xs font-medium">Make a promise</p>
+                    <p className="text-[10px] text-[var(--text-secondary)]">Stake $$$ on your promise</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">✅</div>
                   <div>
-                    <p className="text-sm font-medium">Keep your promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
+                    <p className="text-xs font-medium">Keep your promise</p>
+                    <p className="text-[10px] text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">🏆</div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">🏆</div>
                   <div>
-                    <p className="text-sm font-medium">Earn from your promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Keep stake + earn from those who don&apos;t</p>
+                    <p className="text-xs font-medium">Earn from your promise</p>
+                    <p className="text-[10px] text-[var(--text-secondary)]">Keep stake + earn from those who don&apos;t</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">🧾</div>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-base flex-shrink-0">🧾</div>
                   <div>
-                    <p className="text-sm font-medium">Own your promise</p>
-                    <p className="text-xs text-[var(--text-secondary)]">Every promise recorded onchain forever</p>
+                    <p className="text-xs font-medium">Own your promise</p>
+                    <p className="text-[10px] text-[var(--text-secondary)]">Every promise recorded onchain forever</p>
                   </div>
                 </div>
               </div>
 
               {/* New User Challenge */}
-              <div className="mb-4 p-3 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-lg">⏰</span>
-                  <p className="text-sm font-bold">Your First Promise</p>
+              <div className="mb-3 p-2.5 bg-[#2EE59D]/10 rounded-xl border border-[#2EE59D]/30">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-base">⏰</span>
+                  <p className="text-xs font-bold">Your First Promise</p>
                 </div>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  By signing up, you&apos;re making your first promise.<br />
-                  Stake ${stakeAmountFormatted} and join a goal within 24h to get it back.<br />
+                <p className="text-[10px] text-[var(--text-secondary)] leading-relaxed">
+                  Stake ${stakeAmountFormatted} and join a goal within 24h to get it back.
                   Don&apos;t join in time? Your ${stakeAmountFormatted} is gone.
                 </p>
               </div>
@@ -360,9 +354,9 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
 
               {/* Balance indicator */}
               {address && (
-                <div className="flex items-center justify-between mb-3 px-1">
-                  <span className="text-xs text-[var(--text-secondary)]">Your balance</span>
-                  <span className={`text-sm font-semibold ${canStake ? 'text-[#2EE59D]' : 'text-red-400'}`}>
+                <div className="flex items-center justify-between mb-2 px-1">
+                  <span className="text-[11px] text-[var(--text-secondary)]">Your balance</span>
+                  <span className={`text-xs font-semibold ${canStake ? 'text-[#2EE59D]' : 'text-red-400'}`}>
                     {usdcBalance !== undefined 
                       ? `$${Number(formatUnits(usdcBalance as bigint, 6)).toFixed(2)} USDC` 
                       : 'Loading...'}
