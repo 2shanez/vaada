@@ -497,6 +497,7 @@ The headcount stays lean because each level, the protocol does more and humans d
 | VaadaV3 | `0xAc67E863221B703CEE9B440a7beFe71EA8725434` |
 | GoalStakeAutomationV3 | `0xA6BcEcA41fCF743324a864F47dd03F0D3806341D` |
 | NewUserChallenge V3 | `0xdC9ee5e9E99e3568D2B5eA9409222fbFeCB56373` |
+| VaadaReceipts | `0x2743327fa1EeDF92793608d659b7eEC428252dA2` |
 | Morpho Vault | `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` |
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 
