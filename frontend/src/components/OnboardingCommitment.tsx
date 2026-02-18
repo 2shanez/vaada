@@ -359,8 +359,8 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
               {/* Balance indicator */}
               {address && (
                 <div className="flex items-center justify-between mb-2 px-1">
-                  <span className="text-[11px] text-[var(--text-secondary)]">Your balance</span>
-                  <span className={`text-xs font-semibold ${canStake ? 'text-[#2EE59D]' : 'text-red-400'}`}>
+                  <span className="text-xs text-[var(--text-secondary)]">Your balance</span>
+                  <span className={`text-sm font-semibold ${canStake ? 'text-[#2EE59D]' : 'text-red-400'}`}>
                     {usdcBalance !== undefined 
                       ? `$${Number(formatUnits(usdcBalance as bigint, 6)).toFixed(2)} USDC` 
                       : 'Loading...'}
