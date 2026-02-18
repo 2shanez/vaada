@@ -426,7 +426,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
-            Keep your promise. Keep your stake. Earn from those who don't.
+            Stake money on your goals. Hit your target, earn rewards. Miss it, lose your stake. Secured on the blockchain.
           </p>
           
           <button 
@@ -541,7 +541,7 @@ export default function Home() {
             
             {[
               { step: '01', icon: '💰', title: 'Make a promise', desc: 'Stake money on your promise. Put real skin in the game to back your word.' },
-              { step: '02', icon: '✅', title: 'Keep your promise', desc: 'We verify automatically. Connect your fitness app and we track your progress.' },
+              { step: '02', icon: '✅', title: 'Own your promise', desc: 'We verify automatically. Connect your fitness app and we track your progress.' },
               { step: '03', icon: '🏆', title: 'Earn from your promise', desc: "Keep your stake + earn from those who don't. Winners split the pool." },
               { step: '04', icon: '🧾', title: 'Own your record', desc: 'Get a soulbound onchain receipt. Your commitment history lives forever — no one can fake or revoke it.' },
             ].map((item, i) => (
@@ -669,7 +669,7 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <VaadaLogo size={24} />
               <span className="font-bold text-[#2EE59D] leading-none">vaada</span>
-              <span className="text-sm text-[var(--text-secondary)] leading-none">· Keep Your Promise</span>
+              <span className="text-sm text-[var(--text-secondary)] leading-none">· Own Your Promise</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
         </div>

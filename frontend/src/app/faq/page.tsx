@@ -5,7 +5,7 @@ import Link from 'next/link'
 const faqs = [
   {
     q: 'What is Vaada?',
-    a: 'Vaada is Keep Your Promise — a platform where you stake real money on your fitness goals. Hit your target, keep your stake. Miss it, and your stake goes to those who kept their promise.',
+    a: 'Vaada is a platform where you stake real money on your fitness goals, secured on the blockchain. Hit your target, keep your stake and earn rewards. Miss it, and your stake goes to those who kept their promise.',
   },
   {
     q: 'What is USDC?',

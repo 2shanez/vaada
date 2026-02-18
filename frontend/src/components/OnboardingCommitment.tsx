@@ -258,7 +258,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <img src="/vaada-v.png" alt="Vaada" className="w-14 h-14 mx-auto mb-3" />
                 <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
                 <p className="text-sm text-[var(--text-secondary)] mb-2">
-                  Keep Your Promise
+                  Own Your Promise
                 </p>
                 <p className="text-xs text-[var(--text-secondary)] inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--surface)] rounded-full border border-[var(--border)]">
                   <span className="font-semibold text-[#2EE59D]">vaada</span>
@@ -279,7 +279,7 @@ export function OnboardingCommitment({ onComplete }: OnboardingCommitmentProps) 
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
                   <div>
-                    <p className="text-sm font-medium">Keep your promise</p>
+                    <p className="text-sm font-medium">Own your promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
@@ -650,7 +650,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
               <div className="text-center mb-4">
                 <img src="/vaada-v.png" alt="Vaada" className="w-14 h-14 mx-auto mb-3" />
                 <h2 className="text-xl font-bold mb-1">Welcome to Vaada</h2>
-                <p className="text-sm text-[var(--text-secondary)] mb-2">Keep Your Promise</p>
+                <p className="text-sm text-[var(--text-secondary)] mb-2">Own Your Promise</p>
               </div>
 
               <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
@@ -664,7 +664,7 @@ export function OnboardingPreview({ onClose }: { onClose: () => void }) {
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[#2EE59D]/10 flex items-center justify-center text-lg flex-shrink-0">✅</div>
                   <div>
-                    <p className="text-sm font-medium">Keep your promise</p>
+                    <p className="text-sm font-medium">Own your promise</p>
                     <p className="text-xs text-[var(--text-secondary)]">We verify automatically</p>
                   </div>
                 </div>
