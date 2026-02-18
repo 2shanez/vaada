@@ -127,9 +127,8 @@ export function ProfileNameButton() {
     }
   }
   
-  // Compact display when not editing - name with dropdown
-  if (!isEditing) {
-    return (
+  return (
+    <>
       <div className="relative">
         <button
           ref={buttonRef}
@@ -151,22 +150,56 @@ export function ProfileNameButton() {
             {/* Backdrop */}
             <div className="fixed inset-0 z-[99]" onClick={() => setShowDropdown(false)} />
             <div ref={dropdownRef} style={{ top: dropdownPos.top, right: dropdownPos.right }} className="fixed w-80 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg z-[100] max-h-[80vh] overflow-y-auto">
-              {/* Account Actions */}
-              <div className="flex items-center border-b border-[var(--border)]">
-                <button
-                  onClick={() => { setShowDropdown(false); setIsEditing(true) }}
-                  className="flex items-center gap-2 flex-1 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors justify-center"
-                >
-                  <span>✏️</span> {displayName ? 'Edit Name' : 'Set Name'}
-                </button>
-                <div className="w-px h-8 bg-[var(--border)]" />
-                <button
-                  onClick={() => { handleCopy(); setTimeout(() => setShowDropdown(false), 500) }}
-                  className="flex items-center gap-2 flex-1 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors justify-center"
-                >
-                  <span>{copied ? '✓' : '📋'}</span> {copied ? 'Copied!' : 'Copy Address'}
-                </button>
-              </div>
+              {/* Account Actions / Edit Name */}
+              {isEditing ? (
+                <div className="p-3 border-b border-[var(--border)]">
+                  <div className="flex gap-2">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      placeholder="Display name"
+                      maxLength={20}
+                      className="flex-1 px-3 py-2 rounded-lg border border-[var(--border)] bg-[var(--background)] text-sm
+                        focus:outline-none focus:border-[#2EE59D] focus:ring-1 focus:ring-[#2EE59D]/50
+                        placeholder:text-[var(--text-secondary)] transition-all"
+                      onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+                    />
+                    <button
+                      onClick={handleSave}
+                      disabled={saving || !inputValue.trim() || inputValue.length < 2}
+                      className="px-3 py-2 bg-[#2EE59D] text-white text-sm font-semibold rounded-lg
+                        hover:bg-[#26c987] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {saving ? '...' : 'Save'}
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="px-2 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+                </div>
+              ) : (
+                <div className="flex items-center border-b border-[var(--border)]">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="flex items-center gap-2 flex-1 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors justify-center"
+                  >
+                    <span>✏️</span> {displayName ? 'Edit Name' : 'Set Name'}
+                  </button>
+                  <div className="w-px h-8 bg-[var(--border)]" />
+                  <button
+                    onClick={() => { handleCopy(); setTimeout(() => setShowDropdown(false), 500) }}
+                    className="flex items-center gap-2 flex-1 px-4 py-3 text-sm hover:bg-[var(--border)] transition-colors justify-center"
+                  >
+                    <span>{copied ? '✓' : '📋'}</span> {copied ? 'Copied!' : 'Copy Address'}
+                  </button>
+                </div>
+              )}
 
               {/* Profile Stats + History */}
               <ProfileDropdownStats address={address} />
@@ -174,76 +207,6 @@ export function ProfileNameButton() {
           </>,
           document.body
         )}
-      </div>
-    )
-  }
-  
-  // Editing modal
-  return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-        onClick={() => setIsEditing(false)}
-      />
-      
-      {/* Modal */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-[var(--background)] border border-[var(--border)] rounded-2xl p-6 w-full max-w-sm shadow-xl animate-in fade-in zoom-in-95 duration-200">
-        <button
-          onClick={() => setIsEditing(false)}
-          className="absolute top-4 right-4 text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        
-        <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">👤</span>
-          </div>
-          <h3 className="font-semibold text-lg">Set your name</h3>
-          <p className="text-sm text-[var(--text-secondary)] mt-1">
-            This will show on leaderboards instead of your wallet address.
-          </p>
-        </div>
-        
-        <div className="space-y-4">
-          <div>
-            <input
-              ref={inputRef}
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Enter a display name"
-              maxLength={20}
-              className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] 
-                focus:outline-none focus:border-[#2EE59D] focus:ring-1 focus:ring-[#2EE59D]/50
-                placeholder:text-[var(--text-secondary)] transition-all"
-              onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-            />
-            <p className="text-[10px] text-[var(--text-secondary)] mt-1 text-right">
-              {inputValue.length}/20 characters
-            </p>
-          </div>
-          
-          {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
-          )}
-          
-          <button
-            onClick={handleSave}
-            disabled={saving || !inputValue.trim() || inputValue.length < 2}
-            className="w-full py-3 bg-[#2EE59D] text-white font-semibold rounded-xl
-              hover:bg-[#26c987] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {saving ? 'Saving...' : 'Save'}
-          </button>
-          
-          <p className="text-[10px] text-[var(--text-secondary)] text-center">
-            Wallet: {address.slice(0, 6)}...{address.slice(-4)}
-          </p>
-        </div>
       </div>
     </>
   )
