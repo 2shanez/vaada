@@ -92,6 +92,13 @@ export const GOALSTAKE_ABI = [
     stateMutability: 'view',
   },
   {
+    name: 'goalTypes',
+    type: 'function',
+    inputs: [{ name: 'goalId', type: 'uint256' }],
+    outputs: [{ type: 'uint8' }],
+    stateMutability: 'view',
+  },
+  {
     name: 'getGoal',
     type: 'function',
     inputs: [{ name: 'goalId', type: 'uint256' }],
