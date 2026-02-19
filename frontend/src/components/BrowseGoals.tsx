@@ -210,11 +210,11 @@ export function BrowseGoals() {
                 Showing promises from the last 30 days
               </p>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto overflow-visible">
               {filteredGoals.map((goal, index) => (
                 <div
                   key={goal.id}
-                  className={`transition-all duration-500 ${
+                  className={`transition-all duration-500 overflow-visible ${
                     mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
                   style={{ transitionDelay: `${index * 50}ms` }}
