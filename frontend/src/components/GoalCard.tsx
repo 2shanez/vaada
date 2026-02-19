@@ -579,25 +579,37 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             </span>
             {phaseInfo && (
               <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 ${phaseInfo.color}`}>
-                {phase === GoalPhase.AwaitingSettlement ? (
+                {phase === GoalPhase.Entry && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2EE59D] animate-pulse" />
+                )}
+                {phase === GoalPhase.Competition && (
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                )}
+                {phase === GoalPhase.AwaitingSettlement && (
                   <svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                   </svg>
-                ) : (
-                  <span>{phaseInfo.emoji}</span>
+                )}
+                {phase === GoalPhase.Settled && (
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
                 )}
                 {phaseInfo.label}
               </span>
             )}
             {/* WIN/LOSE badge after verification */}
             {hasJoined && participantData?.verified && (
-              <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${
+              <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1 ${
                 userWon 
-                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
-                  : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                  ? 'bg-[#2EE59D]/10 text-[#2EE59D]' 
+                  : 'bg-red-500/10 text-red-500'
               }`}>
-                {userWon ? '🏆 WON' : '❌ LOST'}
+                {userWon ? (
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                ) : (
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                )}
+                {userWon ? 'KEPT' : 'BROKEN'}
               </span>
             )}
           </div>
@@ -610,7 +622,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   e.stopPropagation()
                   const goalId = goal.onChainId || goal.id
                   const shareUrl = `https://vaada.io/goal/${goalId}`
-                  const text = `${goal.emoji} ${goal.title} - betting on myself`
+                  const text = `${goal.emoji} ${goal.title} — keeping my promise on Vaada`
                   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank')
                 }}
                 className="p-1.5 rounded-lg hover:bg-[var(--background)] active:scale-95 transition-all"
@@ -626,7 +638,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   e.stopPropagation()
                   const goalId = goal.onChainId || goal.id
                   const shareUrl = `https://vaada.io/goal/${goalId}`
-                  const text = `${goal.emoji} ${goal.title} - stake $${goal.minStake}-$${goal.maxStake} on your promise`
+                  const text = `${goal.emoji} ${goal.title} — keep your promise on Vaada`
                   if (navigator.share) {
                     navigator.share({ title: goal.title, text, url: shareUrl }).catch(() => {})
                   } else {

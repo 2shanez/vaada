@@ -180,10 +180,10 @@ export enum GoalPhase {
 }
 
 export const PHASE_LABELS: Record<GoalPhase, { label: string; emoji: string; color: string }> = {
-  [GoalPhase.Entry]: { label: 'ENTRY OPEN', emoji: '🟢', color: 'bg-green-50 text-green-600' },
-  [GoalPhase.Competition]: { label: 'IN PROGRESS', emoji: '🏃', color: 'bg-yellow-50 text-yellow-600' },
-  [GoalPhase.AwaitingSettlement]: { label: 'VERIFYING', emoji: '⏳', color: 'bg-orange-50 text-orange-600' },
-  [GoalPhase.Settled]: { label: 'SETTLED', emoji: '✓', color: 'bg-gray-50 text-gray-600' },
+  [GoalPhase.Entry]: { label: 'OPEN', emoji: '', color: 'bg-[#2EE59D]/10 text-[#2EE59D]' },
+  [GoalPhase.Competition]: { label: 'IN PROGRESS', emoji: '', color: 'bg-amber-500/10 text-amber-500' },
+  [GoalPhase.AwaitingSettlement]: { label: 'VERIFYING', emoji: '', color: 'bg-orange-500/10 text-orange-500' },
+  [GoalPhase.Settled]: { label: 'SETTLED', emoji: '', color: 'bg-[var(--border)]/50 text-[var(--text-secondary)]' },
 }
 
 export const CATEGORY_STYLES: Record<string, { bg: string; text: string }> = {
