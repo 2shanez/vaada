@@ -395,7 +395,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
                 <div className="flex items-center gap-1.5">
                   <span>{r.succeeded ? '✅' : '❌'}</span>
                   <span className="font-medium truncate max-w-[120px]">{r.goalName || `Goal #${Number(r.goalId)}`}</span>
-                  {tokenIds && (tokenIds as bigint[])[i] && <a href={`https://opensea.io/assets/base/${contracts.vaadaReceipts}/${Number((tokenIds as bigint[])[i])}`} target="_blank" rel="noopener noreferrer" className="text-[9px] font-medium px-1.5 py-0.5 rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:border-[var(--text-secondary)] transition-colors ml-1.5 whitespace-nowrap">View Proof</a>}
+                  {tokenIds && (tokenIds as bigint[])[receiptList.length - 1 - i] && <a href={`https://opensea.io/assets/base/${contracts.vaadaReceipts}/${Number((tokenIds as bigint[])[receiptList.length - 1 - i])}`} target="_blank" rel="noopener noreferrer" className="text-[9px] font-medium px-1.5 py-0.5 rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:border-[var(--text-secondary)] transition-colors ml-1.5 whitespace-nowrap">View Proof</a>}
                 </div>
                 <span className={`font-medium ${r.succeeded ? 'text-[#2EE59D]' : 'text-red-400'}`}>
                   {r.succeeded ? `+$${formatUnits(r.payout, 6)}` : `-$${formatUnits(r.stakeAmount, 6)}`}
