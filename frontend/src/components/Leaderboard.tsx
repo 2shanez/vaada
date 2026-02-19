@@ -2,11 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import { usePublicClient, useReadContract } from 'wagmi'
-import { formatUnits } from 'viem'
+import { createPublicClient, http, formatUnits } from 'viem'
+import { base } from 'viem/chains'
 import { useContracts } from '@/lib/hooks'
 import { VAADA_RECEIPTS_ABI } from '@/lib/abis'
 import { fetchProfiles } from './ProfileName'
 import { useInView } from '@/lib/useInView'
+
+const fallbackClient = createPublicClient({
+  chain: base,
+  transport: http(process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://base.publicnode.com'),
+})
 
 interface LeaderboardEntry {
   address: string
@@ -25,22 +31,26 @@ export function Leaderboard() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
 
-  const { data: totalSupply } = useReadContract({
-    address: contracts.vaadaReceipts,
-    abi: VAADA_RECEIPTS_ABI,
-    functionName: 'totalSupply',
-  })
-
   useEffect(() => {
-    if (!publicClient || !totalSupply || Number(totalSupply) === 0) {
-      setLoading(false)
-      return
-    }
+    if (!contracts.vaadaReceipts) return
+    const client = publicClient || fallbackClient
 
     const fetchLeaderboard = async () => {
       try {
+        // Check total supply first
+        const supply = await client.readContract({
+          address: contracts.vaadaReceipts,
+          abi: VAADA_RECEIPTS_ABI,
+          functionName: 'totalSupply',
+        }) as bigint
+
+        if (Number(supply) === 0) {
+          setLoading(false)
+          return
+        }
+
         // Get all Transfer events (mints) from receipts contract — from address(0) = mint
-        const logs = await publicClient.getLogs({
+        const logs = await client.getLogs({
           address: contracts.vaadaReceipts,
           event: {
             type: 'event',
@@ -64,7 +74,7 @@ export function Leaderboard() {
         const reputations = await Promise.all(
           uniqueAddresses.map(async (addr) => {
             try {
-              const rep = await publicClient.readContract({
+              const rep = await client.readContract({
                 address: contracts.vaadaReceipts,
                 abi: VAADA_RECEIPTS_ABI,
                 functionName: 'getReputation',
@@ -105,7 +115,7 @@ export function Leaderboard() {
     }
 
     fetchLeaderboard()
-  }, [publicClient, totalSupply, contracts.vaadaReceipts])
+  }, [publicClient, contracts.vaadaReceipts])
 
   // Show section even when empty
 
