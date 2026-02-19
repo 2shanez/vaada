@@ -6,6 +6,7 @@ import { formatUnits } from 'viem'
 import { CONTRACTS } from '@/lib/wagmi'
 import { base } from 'wagmi/chains'
 import { OnboardingPreview } from '@/components/OnboardingCommitment'
+import { AdminGoals } from '@/components/AdminGoals'
 
 const ADMIN_PASSWORD = 'ripplepigdetect098'
 
@@ -472,6 +473,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
+
+            {/* Created Promises */}
+            <AdminGoals />
 
             {/* Treasury Wallet */}
             <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
