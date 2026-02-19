@@ -108,9 +108,22 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     document.addEventListener('mousedown', handleClickOutside)
     document.addEventListener('touchstart', handleClickOutside)
     
+    // Update position on scroll/resize
+    const updatePos = () => {
+      if (playersButtonRef.current) {
+        const rect = playersButtonRef.current.getBoundingClientRect()
+        setDropdownPos({ top: rect.bottom + 4, left: rect.right - 280, width: 280 })
+      }
+    }
+    updatePos()
+    window.addEventListener('scroll', updatePos, true)
+    window.addEventListener('resize', updatePos)
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('touchstart', handleClickOutside)
+      window.removeEventListener('scroll', updatePos, true)
+      window.removeEventListener('resize', updatePos)
     }
   }, [showPlayers])
   
@@ -792,7 +805,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 const shouldShow = !showPlayers
                 if (shouldShow && playersButtonRef.current) {
                   const rect = playersButtonRef.current.getBoundingClientRect()
-                  setDropdownPos({ top: rect.bottom + 4 + window.scrollY, left: rect.right - 280, width: 280 })
+                  setDropdownPos({ top: rect.bottom + 4, left: rect.right - 280, width: 280 })
                 }
                 setShowPlayers(shouldShow)
                 // Auto-fetch leaderboard for steps goals when opening
@@ -816,7 +829,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <div 
               ref={playersDropdownRef}
               className="fixed bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 shadow-xl"
-              style={{ top: dropdownPos.top - window.scrollY, left: Math.max(16, dropdownPos.left), width: dropdownPos.width, zIndex: 9999 }}
+              style={{ top: dropdownPos.top, left: Math.max(16, dropdownPos.left), width: dropdownPos.width, zIndex: 9999 }}
             >
               {/* Header with refresh for steps goals */}
               {isStepsGoal && (
