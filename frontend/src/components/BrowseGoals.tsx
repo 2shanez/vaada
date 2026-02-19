@@ -103,6 +103,7 @@ export function BrowseGoals() {
             subdomain: isSteps ? 'Steps' : 'Running',
             live: true,
             settled: goal.settled,
+            deadlineTimestamp: Number(goal.deadline),
           })
         } catch {
           // Skip goals that error
@@ -141,11 +142,14 @@ export function BrowseGoals() {
     fetchGoals()
   }, [fetchGoals])
 
-  // Filter: Live = unsettled only, All = everything
+  // Filter: Live = unsettled only, All = last 30 days
+  const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400
   const filteredGoals = goals.filter(g => {
     if (activeFilter === 'Live') {
       return !g.settled
     }
+    // All: show unsettled + settled within last 30 days
+    if (g.settled && g.deadlineTimestamp && g.deadlineTimestamp < thirtyDaysAgo) return false
     return true
   }).sort((a, b) => {
     // Unsettled first, then kept, then broken, then newest
@@ -213,6 +217,11 @@ export function BrowseGoals() {
                 </div>
               ))}
             </div>
+          )}
+          {activeFilter === 'All' && filteredGoals.length > 0 && (
+            <p className="text-center text-xs text-[var(--text-secondary)] mt-6">
+              Showing promises from the last 30 days
+            </p>
           )}
         </div>
       )}
