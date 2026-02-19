@@ -668,7 +668,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 ${catStyle.bg} ${catStyle.text}`}>
               {goal.category.toUpperCase()}
             </span>
-            {phaseInfo && (
+            {phaseInfo && !(hasJoined && participantData?.verified) && (
               <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 ${phaseInfo.color}`}>
                 {phase === GoalPhase.Entry && (
                   <span className="w-1.5 h-1.5 rounded-full bg-[#2EE59D] animate-pulse" />
