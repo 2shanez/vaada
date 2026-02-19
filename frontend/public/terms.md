@@ -1,11 +1,11 @@
 # Terms of Service
 
-**Vaada — Stake Your Word**
+**Vaada — Keep Your Promise**
 
 **Effective Date:** February 16, 2026
-**Last Updated:** February 16, 2026
+**Last Updated:** February 19, 2026
 
-Welcome to Vaada (https://vaada.io), operated by Vaada (" "we," "us," or "our"). By accessing or using our platform, you agree to these Terms of Service ("Terms"). If you do not agree, do not use Vaada.
+Welcome to Vaada (https://vaada.io), operated by Vaada ("we," "us," or "our"). By accessing or using our platform, you agree to these Terms of Service ("Terms"). If you do not agree, do not use Vaada.
 
 ---
 
@@ -40,14 +40,18 @@ You may not create multiple accounts, impersonate others, or use automated means
 
 ### 4.1 Commitment Contracts
 
-Users join challenges by staking **$5 USDC** on a fitness goal. Goals are verified through connected fitness devices and apps (Fitbit for steps, Strava for distance/miles).
+Users join promises by staking USDC on a fitness goal. Goals are verified through connected fitness devices and apps (Fitbit for steps, Strava for distance/miles).
 
 ### 4.2 Outcomes
 
-- **Winners** (users who meet their goal): Receive their original stake back, plus a proportional share of the pool of forfeited stakes from users who did not meet their goal.
-- **Losers** (users who do not meet their goal): Forfeit their staked USDC. Forfeited stakes are distributed to winners and/or the Vaada treasury.
+- **Winners** (users who keep their promise): Receive their original stake back, plus a proportional share of the pool of forfeited stakes from users who did not keep their promise.
+- **Losers** (users who break their promise): Forfeit their staked USDC. Forfeited stakes are distributed to winners and/or the Vaada treasury.
 
-### 4.3 Skill-Based Nature
+### 4.3 Claim Window
+
+After a promise is settled, winners have **30 calendar days** to claim their winnings. If winnings are not claimed within 30 days of settlement, **unclaimed funds are forfeited to the Vaada treasury**. Vaada is under no obligation to notify users of pending claims beyond in-app notifications. It is the user's sole responsibility to monitor their promises and claim winnings in a timely manner.
+
+### 4.4 Skill-Based Nature
 
 All outcomes on Vaada are determined by the user's own effort and physical activity. Unlike gambling, there is no element of chance — you control whether you achieve your goal. This is a commitment device designed to help you follow through on fitness intentions.
 
@@ -71,36 +75,47 @@ By using Vaada, you acknowledge and accept the following risks:
 
 Once funds are deposited into a Vaada smart contract, distribution is governed by the contract's code. Vaada cannot reverse, modify, or override smart contract execution except as explicitly coded into the contract's logic.
 
-## 6. Fitness Data and Verification
+## 6. Onchain Receipts
 
-### 6.1 Data Sources
+### 6.1 Soulbound Receipts
+
+Upon settlement of a promise, Vaada may mint a **non-transferable (soulbound) NFT receipt** to each participant's wallet address. These receipts serve as a permanent onchain record of your commitment — whether kept or broken.
+
+### 6.2 Permanent Record
+
+Receipts are recorded on the Base blockchain and **cannot be deleted, hidden, or transferred**. By participating in a Vaada promise, you consent to having your result (kept or broken) permanently recorded onchain.
+
+## 7. Fitness Data and Verification
+
+### 7.1 Data Sources
 
 Vaada verifies goal completion using data from third-party fitness platforms:
 
 - **Fitbit** — step count data
 - **Strava** — distance and activity data
 
-You must connect at least one supported fitness account to participate in challenges.
+You must connect at least one supported fitness account to participate in promises.
 
-### 6.2 Data Accuracy
+### 7.2 Data Accuracy
 
 You are responsible for ensuring your fitness data is accurate and reflects genuine physical activity. The following are prohibited:
 
 - Manipulating, spoofing, or fabricating fitness data
 - Using devices or software to artificially inflate metrics
 - Having another person wear your device or complete activities on your behalf
+- Manually entering activities (only device-recorded activities count)
 
 Vaada reserves the right to disqualify users and forfeit stakes if fraudulent activity is detected.
 
-### 6.3 Third-Party Services
+### 7.3 Third-Party Services
 
 Fitbit and Strava are independent third-party services. Vaada is not responsible for their availability, accuracy, data handling, or terms of service. Your use of these services is governed by their respective terms and privacy policies.
 
-## 7. Fees
+## 8. Fees
 
-Vaada may retain a percentage of forfeited stakes as a platform fee (treasury allocation). Current fee structures are displayed at the time of challenge creation. We reserve the right to modify fees with reasonable notice.
+Vaada may retain a percentage of forfeited stakes as a platform fee (treasury allocation). Current fee structures are displayed at the time of promise creation. We reserve the right to modify fees with reasonable notice.
 
-## 8. Prohibited Conduct
+## 9. Prohibited Conduct
 
 You agree not to:
 
@@ -111,25 +126,25 @@ You agree not to:
 - Circumvent any security measures or access controls
 - Use bots, scripts, or automated tools to interact with the platform (except through official APIs)
 
-## 9. Intellectual Property
+## 10. Intellectual Property
 
 All content, branding, code, and materials on Vaada (excluding user-generated content and open-source components) are owned by Vaada. You may not copy, modify, or distribute our materials without permission.
 
-## 10. Disclaimers
+## 11. Disclaimers
 
-### 10.1 "As Is" Basis
+### 11.1 "As Is" Basis
 
 VAADA IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
 
-### 10.2 No Financial Advice
+### 11.2 No Financial Advice
 
-Vaada does not provide financial, investment, tax, or legal advice. Participation in Vaada challenges involves risk of loss. You should consult appropriate professionals before using cryptocurrency or staking funds.
+Vaada does not provide financial, investment, tax, or legal advice. Participation in Vaada promises involves risk of loss. You should consult appropriate professionals before using cryptocurrency or staking funds.
 
-### 10.3 Regulatory Uncertainty
+### 11.3 Regulatory Uncertainty
 
 The regulatory landscape for cryptocurrency and blockchain-based platforms is evolving. Vaada makes no representations regarding the legality of its services in your jurisdiction. You are responsible for compliance with your local laws.
 
-## 11. Limitation of Liability
+## 12. Limitation of Liability
 
 TO THE MAXIMUM EXTENT PERMITTED BY LAW, VAADA, ITS OPERATOR, AND AFFILIATES SHALL NOT BE LIABLE FOR:
 
@@ -138,39 +153,40 @@ TO THE MAXIMUM EXTENT PERMITTED BY LAW, VAADA, ITS OPERATOR, AND AFFILIATES SHAL
 - LOSS OF FUNDS DUE TO WALLET COMPROMISE OR USER ERROR
 - INACCURATE FITNESS DATA FROM THIRD-PARTY PROVIDERS
 - SERVICE INTERRUPTIONS OR DOWNTIME
-- ANY DAMAGES EXCEEDING THE AMOUNT YOU STAKED IN THE RELEVANT CHALLENGE
+- UNCLAIMED WINNINGS FORFEITED AFTER THE 30-DAY CLAIM WINDOW
+- ANY DAMAGES EXCEEDING THE AMOUNT YOU STAKED IN THE RELEVANT PROMISE
 
-## 12. Indemnification
+## 13. Indemnification
 
 You agree to indemnify and hold harmless Vaada and its operator from any claims, damages, losses, or expenses (including legal fees) arising from your use of the platform, violation of these Terms, or infringement of any third party's rights.
 
-## 13. Dispute Resolution
+## 14. Dispute Resolution
 
-### 13.1 Informal Resolution
+### 14.1 Informal Resolution
 
 Before filing any formal claim, you agree to contact us at **hello@vaada.io** and attempt to resolve the dispute informally for at least 30 days.
 
-### 13.2 Binding Arbitration
+### 14.2 Binding Arbitration
 
 Any dispute not resolved informally shall be settled by binding arbitration administered under the rules of the American Arbitration Association (AAA). Arbitration will be conducted on an individual basis — **class actions and class arbitrations are not permitted**.
 
-### 13.3 Governing Law
+### 14.3 Governing Law
 
 These Terms are governed by the laws of the State of North Carolina, United States, without regard to conflict of law principles.
 
-## 14. Modifications
+## 15. Modifications
 
 We may update these Terms at any time. Material changes will be communicated via the platform or email. Continued use of Vaada after changes constitutes acceptance.
 
-## 15. Termination
+## 16. Termination
 
-We reserve the right to suspend or terminate your access to Vaada at any time, for any reason, with or without notice. Upon termination, any pending challenge stakes will be handled according to the applicable smart contract logic.
+We reserve the right to suspend or terminate your access to Vaada at any time, for any reason, with or without notice. Upon termination, any pending promise stakes will be handled according to the applicable smart contract logic. The 30-day claim window remains in effect for any settled promises at the time of termination.
 
-## 16. Severability
+## 17. Severability
 
 If any provision of these Terms is found unenforceable, the remaining provisions shall continue in full force and effect.
 
-## 17. Contact
+## 18. Contact
 
 For questions about these Terms, contact us at:
 

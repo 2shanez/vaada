@@ -1,11 +1,11 @@
 # Privacy Policy
 
-**Vaada — Stake Your Word**
+**Vaada — Keep Your Promise**
 
 **Effective Date:** February 16, 2026
-**Last Updated:** February 16, 2026
+**Last Updated:** February 19, 2026
 
-This Privacy Policy describes how Vaada (https://vaada.io), operated by Vaada (" "we," "us," or "our"), collects, uses, and shares your information when you use our platform.
+This Privacy Policy describes how Vaada (https://vaada.io), operated by Vaada ("we," "us," or "our"), collects, uses, and shares your information when you use our platform.
 
 ---
 
@@ -28,7 +28,7 @@ When you connect your fitness accounts, we collect:
 - **Fitbit data:** Daily step counts, activity timestamps
 - **Strava data:** Activity distance (miles/kilometers), activity type, timestamps
 
-This data is collected solely for the purpose of verifying challenge goal completion. We store fitness data in our database (hosted on **Supabase**) for the duration needed to verify and settle challenges.
+This data is collected solely for the purpose of verifying promise completion. We store fitness data in our database (hosted on **Supabase**) for the duration needed to verify and settle promises.
 
 ### 1.3 Blockchain Data
 
@@ -36,9 +36,10 @@ Your interactions with Vaada smart contracts generate publicly visible on-chain 
 
 - Wallet addresses
 - Transaction amounts and timestamps
-- Challenge participation and outcomes
+- Promise participation and outcomes
+- **Soulbound receipt NFTs** — permanent onchain records of each promise result (kept or broken), minted to your wallet address upon settlement
 
-**On-chain data is public and permanent.** We do not control blockchain data once a transaction is submitted.
+**On-chain data is public and permanent.** We do not control blockchain data once a transaction is submitted. Soulbound receipts are non-transferable and cannot be deleted.
 
 ### 1.4 Automatically Collected Data
 
@@ -54,9 +55,10 @@ When you use Vaada, we may automatically collect:
 
 We use your information to:
 
-- **Operate the platform:** Create accounts, process challenges, verify fitness goals
-- **Verify goal completion:** Compare your fitness data against challenge requirements
-- **Communicate with you:** Send challenge updates, notifications, and support responses
+- **Operate the platform:** Create accounts, process promises, verify fitness goals
+- **Verify goal completion:** Compare your fitness data against promise requirements
+- **Mint onchain receipts:** Record promise outcomes as soulbound NFTs on Base
+- **Communicate with you:** Send promise updates, claim window reminders, and support responses
 - **Prevent fraud:** Detect manipulated fitness data, duplicate accounts, or abuse
 - **Improve the platform:** Analyze usage patterns to enhance features and performance
 - **Comply with legal obligations:** Respond to lawful requests and enforce our Terms
@@ -70,12 +72,15 @@ We do **not** sell your personal information. We may share information with:
 - **Privy** — Authentication services
 - **Supabase** — Database hosting and storage
 - **Vercel** — Website hosting
+- **Alchemy** — Blockchain RPC infrastructure
 - **Base/Ethereum** — Blockchain transaction processing (public by nature)
 - **Fitbit/Strava** — Fitness data APIs (data flows from them to us)
+- **Chainlink** — Decentralized oracle services for goal verification
+- **Morpho** — DeFi yield protocol (treasury funds only)
 
 ### 3.2 Other Users
 
-Challenge participation is visible to other users in the same challenge. This may include your display name/wallet address and whether you met your goal.
+Promise participation is visible to other users. This may include your display name/wallet address, whether you kept your promise, and your onchain receipt. Settled promise results are displayed on the platform for up to **30 days** after settlement.
 
 ### 3.3 Legal Requirements
 
@@ -85,14 +90,16 @@ We may disclose information if required by law, legal process, or government req
 
 - Fitness data and account information are stored on **Supabase** (cloud-hosted PostgreSQL)
 - We use encryption in transit (TLS/HTTPS) and reasonable security measures
+- Row-level security (RLS) is enabled on all database tables containing sensitive data
 - **No system is 100% secure.** We cannot guarantee absolute security of your data
-- On-chain data is stored permanently on the Base/Ethereum blockchain and cannot be deleted
+- On-chain data (including soulbound receipts) is stored permanently on the Base/Ethereum blockchain and cannot be deleted
 
 ## 5. Data Retention
 
 - **Account data:** Retained while your account is active and for a reasonable period after deletion
-- **Fitness data:** Retained for the duration of the relevant challenge plus a reasonable verification period, then deleted or anonymized
-- **On-chain data:** Permanent and outside our control
+- **Fitness data:** Retained for the duration of the relevant promise plus the 30-day claim window, then deleted or anonymized
+- **Promise history:** Displayed on the platform for 30 days after settlement; onchain records are permanent
+- **On-chain data:** Permanent and outside our control (includes receipts, stakes, and outcomes)
 - **Usage logs:** Retained for up to 12 months
 
 ## 6. Your Rights and Choices
@@ -101,14 +108,14 @@ Depending on your jurisdiction, you may have the right to:
 
 - **Access** your personal data
 - **Correct** inaccurate data
-- **Delete** your account and associated data (excluding on-chain data)
+- **Delete** your account and associated data (excluding on-chain data and soulbound receipts)
 - **Export** your data in a portable format
 - **Opt out** of non-essential communications
 - **Disconnect** fitness accounts at any time
 
 To exercise these rights, contact us at **hello@vaada.io**.
 
-**Note:** Deleting your account does not affect data already recorded on the blockchain, as that data is publicly accessible and immutable.
+**Note:** Deleting your account does not affect data already recorded on the blockchain, including soulbound receipts. That data is publicly accessible and immutable by design.
 
 ## 7. Third-Party Services
 
