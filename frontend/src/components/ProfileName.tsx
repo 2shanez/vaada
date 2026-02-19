@@ -235,6 +235,13 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
     args: [address],
   })
 
+  const { data: tokenIds } = useReadContract({
+    address: contracts.vaadaReceipts,
+    abi: VAADA_RECEIPTS_ABI,
+    functionName: 'tokensOf',
+    args: [address],
+  })
+
   // NewUserChallenge data
   const { data: hasJoinedChallenge, isLoading: loadingChallenge } = useReadContract({
     address: contracts.newUserChallenge,
@@ -380,7 +387,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
           <p className="text-[10px] text-[var(--text-secondary)] uppercase tracking-wider mb-2">Promise History</p>
           <div className="space-y-1.5">
             {[...receiptList].reverse().map((r, i) => (
-              <div key={i} className={`flex items-center justify-between px-2.5 py-2 rounded-lg text-xs ${r.succeeded ? 'bg-[#2EE59D]/5' : 'bg-red-500/5'}`}>
+              <a key={i} href={`https://opensea.io/assets/base/${contracts.vaadaReceipts}/${tokenIds && (tokenIds as bigint[])[i] ? Number((tokenIds as bigint[])[i]) : ''}`} target="_blank" rel="noopener noreferrer" className={`flex items-center justify-between px-2.5 py-2 rounded-lg text-xs hover:opacity-80 transition-opacity ${r.succeeded ? 'bg-[#2EE59D]/5' : 'bg-red-500/5'}`}>
                 <div className="flex items-center gap-1.5">
                   <span>{r.succeeded ? '✅' : '❌'}</span>
                   <span className="font-medium truncate max-w-[120px]">{r.goalName || `Goal #${Number(r.goalId)}`}</span>
@@ -388,7 +395,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
                 <span className={`font-medium ${r.succeeded ? 'text-[#2EE59D]' : 'text-red-400'}`}>
                   {r.succeeded ? `+$${formatUnits(r.payout, 6)}` : `-$${formatUnits(r.stakeAmount, 6)}`}
                 </span>
-              </div>
+              </a>
             ))}
           </div>
         </div>
