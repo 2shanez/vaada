@@ -49,26 +49,24 @@ export function Leaderboard() {
           return
         }
 
-        // Get all Transfer events (mints) from receipts contract — from address(0) = mint
-        const logs = await client.getLogs({
-          address: contracts.vaadaReceipts,
-          event: {
-            type: 'event',
-            name: 'Transfer',
-            inputs: [
-              { type: 'address', name: 'from', indexed: true },
-              { type: 'address', name: 'to', indexed: true },
-              { type: 'uint256', name: 'tokenId', indexed: true },
-            ],
-          },
-          args: {
-            from: '0x0000000000000000000000000000000000000000',
-          },
-          fromBlock: 'earliest',
-        })
+        // Iterate through all minted tokens to find unique owners
+        const owners = await Promise.all(
+          Array.from({ length: Number(supply) }, (_, i) => i + 1).map(async (tokenId) => {
+            try {
+              return await client.readContract({
+                address: contracts.vaadaReceipts,
+                abi: [{ type: 'function', name: 'ownerOf', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ name: '', type: 'address' }], stateMutability: 'view' }],
+                functionName: 'ownerOf',
+                args: [BigInt(tokenId)],
+              }) as string
+            } catch {
+              return null
+            }
+          })
+        )
 
         // Unique addresses
-        const uniqueAddresses = [...new Set(logs.map(l => l.args.to as string))]
+        const uniqueAddresses = [...new Set(owners.filter(Boolean) as string[])]
 
         // Fetch reputation for each
         const reputations = await Promise.all(
