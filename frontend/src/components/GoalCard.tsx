@@ -536,8 +536,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   // Win moment celebration overlay
   if (showClaimCelebration) {
     const goalId = goal.onChainId || goal.id
-    const shareUrl = `https://vaada.io/goal/${goalId}`
-    const shareText = `I kept my promise and won $${userStake} USDC on Vaada ✅\n\n${goal.emoji} ${goal.title}\n\nStake your word →`
+    const shareUrl = `https://vaada.io`
+    const shareText = `I kept my promise — ${goal.emoji} ${goal.title} with $${userStake} on the line ✅\n\nThink you can keep yours? →`
     return (
       <div className="bg-[var(--surface)] border border-[#2EE59D] rounded-2xl relative overflow-hidden">
         {/* Close button */}
@@ -715,8 +715,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 onClick={(e) => {
                   e.stopPropagation()
                   const goalId = goal.onChainId || goal.id
-                  const shareUrl = `https://vaada.io/goal/${goalId}`
-                  const text = `${goal.emoji} ${goal.title} — keeping my promise on Vaada`
+                  const shareUrl = `https://vaada.io`
+                  const text = `${goal.emoji} ${goal.title} — keeping my promise on Vaada\n\nStake your word →`
                   window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`, '_blank')
                 }}
                 className="p-1.5 rounded-lg hover:bg-[var(--background)] active:scale-95 transition-all"
