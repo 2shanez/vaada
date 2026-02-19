@@ -83,7 +83,7 @@ export function BrowseGoals() {
           const participants = Number(goal.participantCount)
 
           // Skip dead/empty goals
-          if (participants === 0) continue
+          if (participants === 0 && goal.settled) continue
 
           loaded.push({
             id: `goal-${i}`,
