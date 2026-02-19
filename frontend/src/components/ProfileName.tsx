@@ -386,7 +386,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
                   <span className="font-medium truncate max-w-[120px]">{r.goalName || `Goal #${Number(r.goalId)}`}</span>
                 </div>
                 <span className={`font-medium ${r.succeeded ? 'text-[#2EE59D]' : 'text-red-400'}`}>
-                  ${formatUnits(r.payout, 6)}
+                  {r.succeeded ? `+$${formatUnits(r.payout, 6)}` : `-$${formatUnits(r.stakeAmount, 6)}`}
                 </span>
               </div>
             ))}
