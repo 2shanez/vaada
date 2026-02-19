@@ -83,7 +83,7 @@ export function Leaderboard() {
                 address: addr,
                 attempted: Number(rep[0]),
                 completed: Number(rep[1]),
-                winRate: Number(rep[2]),
+                winRate: Number(rep[2]) / 100,
                 streak: Number(rep[5]),
                 totalStaked: Number(formatUnits(rep[3], 6)),
               }
