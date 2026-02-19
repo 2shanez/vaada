@@ -45,7 +45,7 @@ function openGoogleCalendar(goal: Goal, deadline: number) {
   const fmt = (d: Date) => d.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z'
   const title = encodeURIComponent(goal.title || 'Vaada Promise')
   const goalId = goal.onChainId || goal.id
-  const details = encodeURIComponent('Your promise deadline is here. Check your progress at https://vaada.io/goal/' + goalId)
+  const details = encodeURIComponent('Your promise deadline is here. Check your progress at https://vaada.io/#promises)
   const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=⏰+Vaada:+${title}+deadline&dates=${fmt(startDate)}/${fmt(endDate)}&details=${details}`
   window.open(url, '_blank')
 }
