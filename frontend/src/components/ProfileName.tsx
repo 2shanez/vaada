@@ -362,11 +362,11 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className="text-sm font-semibold">${stakedNum > 0 ? formatUnits(totalStakedBig, 6) : '0'}</p>
-          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Staked</p>
+          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Total Staked</p>
         </div>
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className="text-sm font-semibold">${earnedNum > 0 ? formatUnits(totalEarnedBig, 6) : '0'}</p>
-          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Earned</p>
+          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Total Earned</p>
         </div>
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className={`text-sm font-semibold ${netPnl > 0 ? 'text-[#2EE59D]' : netPnl < 0 ? 'text-red-400' : ''}`}>{netFormatted}</p>
