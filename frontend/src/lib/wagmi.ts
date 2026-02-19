@@ -5,7 +5,7 @@ import { base } from 'wagmi/chains'
 export const privyConfig = createConfig({
   chains: [base],
   transports: {
-    [base.id]: http(),
+    [base.id]: http(process.env.NEXT_PUBLIC_BASE_RPC_URL),
   },
 })
 
