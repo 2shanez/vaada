@@ -81,8 +81,10 @@ export async function GET(
     const pct = Math.min(Math.round((actual / target) * 100), 100)
     const date = new Date(Number(r.endTime) * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     const shortAddr = `${r.participant.slice(0, 6)}...${r.participant.slice(-4)}`
-    const statusColor = kept ? '#2EE59D' : '#EF4444'
+    const statusColor = kept ? '#16A34A' : '#DC2626'
+    const statusBg = kept ? '#F0FDF4' : '#FEF2F2'
     const statusText = kept ? '\u2713 KEPT' : '\u2717 BROKEN'
+    const barBg = kept ? '#DCFCE7' : '#FEE2E2'
     const barPct = `${pct}%`
 
     return new ImageResponse(
@@ -93,13 +95,14 @@ export async function GET(
             flexDirection: 'column',
             width: '800px',
             height: '450px',
-            backgroundColor: '#0B0B14',
+            backgroundColor: '#FFFFFF',
             borderRadius: '16px',
             padding: '48px',
             fontFamily: 'Inter',
-            color: 'white',
+            color: '#111827',
           }}
         >
+          {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: 32, fontWeight: 700, color: '#2EE59D' }}>vaada</span>
             <div
@@ -108,7 +111,7 @@ export async function GET(
                 alignItems: 'center',
                 padding: '6px 20px',
                 borderRadius: 18,
-                backgroundColor: kept ? 'rgba(46,229,157,0.15)' : 'rgba(239,68,68,0.15)',
+                backgroundColor: statusBg,
                 color: statusColor,
                 fontSize: 16,
                 fontWeight: 600,
@@ -118,13 +121,15 @@ export async function GET(
             </div>
           </div>
 
+          {/* Goal name */}
           <div style={{ display: 'flex', flexDirection: 'column', marginTop: 60 }}>
-            <span style={{ fontSize: 48, fontWeight: 700 }}>{r.goalName}</span>
-            <span style={{ fontSize: 22, color: 'rgba(255,255,255,0.6)', marginTop: 8 }}>
-              {actual.toLocaleString()} / {target.toLocaleString()} {unit} — {pct}%
+            <span style={{ fontSize: 48, fontWeight: 700, color: '#111827' }}>{r.goalName}</span>
+            <span style={{ fontSize: 22, color: '#6B7280', marginTop: 8 }}>
+              {actual.toLocaleString()} / {target.toLocaleString()} {unit} \u2014 {pct}%
             </span>
           </div>
 
+          {/* Progress bar */}
           <div
             style={{
               display: 'flex',
@@ -132,7 +137,7 @@ export async function GET(
               width: '100%',
               height: 8,
               borderRadius: 4,
-              backgroundColor: 'rgba(255,255,255,0.1)',
+              backgroundColor: barBg,
             }}
           >
             <div
@@ -145,14 +150,15 @@ export async function GET(
             />
           </div>
 
+          {/* Footer */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)' }}>Staked</span>
-              <span style={{ fontSize: 28, fontWeight: 700, marginTop: 4 }}>${stakeUSD} USDC</span>
+              <span style={{ fontSize: 16, color: '#9CA3AF' }}>Staked</span>
+              <span style={{ fontSize: 28, fontWeight: 700, color: '#111827', marginTop: 4 }}>${stakeUSD} USDC</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>{shortAddr} — {date}</span>
-              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>Proof #{id} on Base</span>
+              <span style={{ fontSize: 14, color: '#9CA3AF' }}>{shortAddr} \u2014 {date}</span>
+              <span style={{ fontSize: 14, color: '#D1D5DB', marginTop: 4 }}>Proof #{id} on Base</span>
             </div>
           </div>
         </div>
