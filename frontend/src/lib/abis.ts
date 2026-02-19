@@ -168,6 +168,7 @@ export interface Goal {
   subdomain: string // 'Running' | 'Substack' | 'Duolingo'
   live?: boolean    // true = show in main list, false/undefined = Coming Soon
   settled?: boolean // true = goal has been settled
+  userResult?: 'kept' | 'broken' | 'none' // user's result for this goal
 }
 
 // Domain definitions for filtering

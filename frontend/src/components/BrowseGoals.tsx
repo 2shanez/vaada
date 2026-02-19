@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { usePublicClient } from 'wagmi'
+import { usePublicClient, useAccount } from 'wagmi'
 import { createPublicClient, http, formatUnits } from 'viem'
 import { base } from 'viem/chains'
 import { GoalCard, Goal } from './GoalCard'
@@ -19,6 +19,7 @@ export const FEATURED_GOALS: Goal[] = []
 
 export function BrowseGoals() {
   const publicClient = usePublicClient()
+  const { address } = useAccount()
   const contracts = useContracts()
   const [goals, setGoals] = useState<Goal[]>([])
   const [loading, setLoading] = useState(true)
@@ -108,13 +109,32 @@ export function BrowseGoals() {
         }
       }
 
+      // Fetch user results if connected
+      if (address && contracts.goalStake) {
+        for (const g of loaded) {
+          if (g.settled && g.onChainId !== undefined) {
+            try {
+              const p = await client.readContract({
+                address: contracts.goalStake,
+                abi: GOALSTAKE_ABI,
+                functionName: 'getParticipant',
+                args: [BigInt(g.onChainId), address],
+              }) as any
+              if (p && p.stake > BigInt(0)) {
+                g.userResult = p.succeeded ? 'kept' : 'broken'
+              }
+            } catch {}
+          }
+        }
+      }
+
       setGoals(loaded)
     } catch (err) {
       console.error('Failed to load goals:', err)
     } finally {
       setLoading(false)
     }
-  }, [publicClient, contracts.goalStake])
+  }, [publicClient, contracts.goalStake, address])
 
   useEffect(() => {
     setMounted(true)
@@ -128,8 +148,12 @@ export function BrowseGoals() {
     }
     return true
   }).sort((a, b) => {
-    // Unsettled first, then newest
+    // Unsettled first, then kept, then broken, then newest
     if (a.settled !== b.settled) return a.settled ? 1 : -1
+    const resultOrder = { kept: 0, broken: 1, none: 2, undefined: 2 }
+    const aOrder = resultOrder[a.userResult || 'undefined']
+    const bOrder = resultOrder[b.userResult || 'undefined']
+    if (aOrder !== bOrder) return aOrder - bOrder
     return (b.onChainId || 0) - (a.onChainId || 0)
   })
 
