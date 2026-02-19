@@ -200,11 +200,7 @@ export function BrowseGoals() {
               </div>
               <h3 className="text-lg font-semibold mb-2">{activeFilter === 'Live' ? 'No live promises right now' : 'No promises in the last 30 days'}</h3>
               <p className="text-sm text-[var(--text-secondary)] max-w-sm mx-auto">
-                Be the first to stake your word.
               </p>
-              <a href="/dashboard" className="inline-block mt-4 px-6 py-2 rounded-full bg-[#2EE59D] text-black text-sm font-semibold hover:bg-[#26cc8a] transition-colors">
-                Get Started
-              </a>
             </div>
           ) : (
             <>
