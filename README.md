@@ -5,7 +5,7 @@
 The promise market. Stake money on your goals, keep your promise → keep your stake + earn from those who don't.
 
 🔗 **Live:** [vaada.io](https://vaada.io) (Base Mainnet)  
-📄 **Whitepaper:** [docs/WHITEPAPER.md](docs/WHITEPAPER.md)
+📄 **Whitepaper:** [Whitepaper](docs/WHITEPAPER.md)
 
 ---
 
@@ -71,10 +71,7 @@ vaada/
 
 ---
 
-## Contracts (Base Mainnet)
-
-| Contract | Address |
-|----------|---------|
+----------|---------|
 | VaadaV3 | `0xAc67E863221B703CEE9B440a7beFe71EA8725434` |
 | AutomationV3 | `0xA6BcEcA41fCF743324a864F47dd03F0D3806341D` |
 | NewUserChallenge V4 | `0xB77e1FFa0be50E0B867c8f9CcdDBd1a88D354824` |
@@ -146,7 +143,6 @@ forge test
 ## Links
 
 - **Website:** https://vaada.io
-- **BaseScan:** [View contracts](https://basescan.org/address/0xAc67E863221B703CEE9B440a7beFe71EA8725434)
 
 ---
 
