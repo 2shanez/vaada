@@ -155,6 +155,8 @@ User Stakes USDC
    verifyParticipant(goalId, participant, actualValue)
        ↓
    Morpho withdrawal + Settlement (winners paid, losers slashed)
+       ↓
+   VaadaReceipts.sol (soulbound proof minted — kept or broken)
 ```
 
 ### Goal Types
@@ -328,8 +330,9 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 - Core contracts deployed (Base mainnet)
 - Fitbit (steps) + Strava (miles) integration
 - Privy wallet integration (email/Google login, embedded wallets)
-- NewUserChallenge onboarding contract
+- NewUserChallenge onboarding contract (V4 — no Chainlink, onchain self-settlement)
 - Morpho vault yield integration (~4.9% APY)
+- Onchain goal receipts (VaadaReceipts — soulbound, non-transferable proof of commitment)
 - Gas sponsorship (gasless for embedded wallets)
 - Coinbase Onramp (Apple Pay, debit card)
 - Profile names & leaderboards
@@ -353,7 +356,6 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 
 | Feature | Description | Impact |
 |---------|-------------|--------|
-| **Onchain goal receipts** | Non-transferable proof of completion. "Shane ran 20 miles, Feb 2026. Verified." | Retention — your fitness diploma, building onchain reputation |
 | **Social feed** | See friends' active goals, completions, and streaks. | Retention + growth — FOMO + accountability |
 | **Suggested stake amount** | "Based on your history, we recommend $75." ML-optimized for completion. | Retention — higher stakes = higher engagement |
 | **More Fitbit goal types** | Active minutes, distance, calories. | Growth — broader appeal, same integration |
@@ -496,7 +498,7 @@ The headcount stays lean because each level, the protocol does more and humans d
 |----------|---------|
 | VaadaV3 | `0xAc67E863221B703CEE9B440a7beFe71EA8725434` |
 | GoalStakeAutomationV3 | `0xA6BcEcA41fCF743324a864F47dd03F0D3806341D` |
-| NewUserChallenge V3 | `0xdC9ee5e9E99e3568D2B5eA9409222fbFeCB56373` |
+| NewUserChallenge V4 | `0xB77e1FFa0be50E0B867c8f9CcdDBd1a88D354824` |
 | VaadaReceipts | `0x2743327fa1EeDF92793608d659b7eEC428252dA2` |
 | Morpho Vault | `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` |
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
@@ -510,7 +512,7 @@ The headcount stays lean because each level, the protocol does more and humans d
 - **Auth**: Privy (email/Google login, embedded wallets, gas sponsorship)
 - **Onramp**: Coinbase (Apple Pay, Google Pay, debit card)
 - **Token Storage**: Supabase (encrypted refresh tokens)
-- **Oracles**: Chainlink Functions (Subscription ID 132)
+- **Settlement**: Backend verifier (Fitbit/Strava APIs) + onchain self-settlement (NUC V4)
 
 ### Security
 
@@ -557,4 +559,4 @@ Polymarket let people bet on the world. Vaada lets people bet on themselves.
 
 ---
 
-*"Keep your promise. Keep your stake."*
+*"Keep Your Promise."*
