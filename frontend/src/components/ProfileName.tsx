@@ -370,7 +370,7 @@ function ProfileDropdownStats({ address }: { address: `0x${string}` }) {
         </div>
         <div className="text-center px-1 py-1.5 rounded-lg bg-[var(--background)]">
           <p className={`text-sm font-semibold ${netPnl > 0 ? 'text-[#2EE59D]' : netPnl < 0 ? 'text-red-400' : ''}`}>{netFormatted}</p>
-          <p className="text-[10px] text-[var(--text-secondary)] whitespace-nowrap">Profit / Loss</p>
+          <p className={`text-[10px] whitespace-nowrap ${netPnl > 0 ? 'text-[#2EE59D]' : netPnl < 0 ? 'text-red-400' : 'text-[var(--text-secondary)]'}`}>{netPnl > 0 ? 'Profit' : netPnl < 0 ? 'Loss' : 'Profit / Loss'}</p>
         </div>
       </div>
 
