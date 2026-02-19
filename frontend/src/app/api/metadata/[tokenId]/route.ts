@@ -59,7 +59,7 @@ export async function GET(
     const status = r.succeeded ? 'Kept' : 'Broken'
     const date = new Date(Number(r.endTime) * 1000).toISOString().split('T')[0]
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://vaada.io'
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.vaada.io'
 
     const metadata = {
       name: `Vaada Proof #${id} — ${r.goalName}`,
