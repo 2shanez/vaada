@@ -108,22 +108,16 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     document.addEventListener('mousedown', handleClickOutside)
     document.addEventListener('touchstart', handleClickOutside)
     
-    // Update position on scroll/resize
-    const updatePos = () => {
-      if (playersButtonRef.current) {
-        const rect = playersButtonRef.current.getBoundingClientRect()
-        setDropdownPos({ top: rect.bottom + 4, left: rect.right - 280, width: 280 })
-      }
-    }
-    updatePos()
-    window.addEventListener('scroll', updatePos, true)
-    window.addEventListener('resize', updatePos)
+    // Close on scroll, update on resize
+    const closeOnScroll = () => setShowPlayers(false)
+    window.addEventListener('scroll', closeOnScroll, true)
+    window.addEventListener('resize', closeOnScroll)
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('touchstart', handleClickOutside)
-      window.removeEventListener('scroll', updatePos, true)
-      window.removeEventListener('resize', updatePos)
+      window.removeEventListener('scroll', closeOnScroll, true)
+      window.removeEventListener('resize', closeOnScroll)
     }
   }, [showPlayers])
   
