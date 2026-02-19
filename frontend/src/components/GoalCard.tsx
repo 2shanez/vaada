@@ -733,7 +733,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 },
                 { 
                   label: 'Payout', 
-                  desc: 'Split the pool' 
+                  desc: 'Winners split' 
                 },
               ].map((step, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center min-w-0">
