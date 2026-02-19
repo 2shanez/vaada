@@ -2,10 +2,17 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { usePublicClient } from 'wagmi'
-import { formatUnits } from 'viem'
+import { createPublicClient, http, formatUnits } from 'viem'
+import { base } from 'viem/chains'
 import { GoalCard, Goal } from './GoalCard'
 import { GOALSTAKE_ABI } from '@/lib/abis'
 import { useContracts } from '@/lib/hooks'
+
+// Fallback client for when wagmi isn't connected yet
+const fallbackClient = createPublicClient({
+  chain: base,
+  transport: http(process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://base.publicnode.com'),
+})
 
 // Export for backward compat
 export const FEATURED_GOALS: Goal[] = []
@@ -22,11 +29,12 @@ export function BrowseGoals() {
   const [activeFilter, setActiveFilter] = useState<Filter>('Live')
 
   const fetchGoals = useCallback(async () => {
-    if (!publicClient || !contracts.goalStake) return
+    if (!contracts.goalStake) return
+    const client = publicClient || fallbackClient
     setLoading(true)
 
     try {
-      const goalCount = await publicClient.readContract({
+      const goalCount = await client.readContract({
         address: contracts.goalStake,
         abi: GOALSTAKE_ABI,
         functionName: 'goalCount',
@@ -36,14 +44,14 @@ export function BrowseGoals() {
 
       for (let i = 0; i < Number(goalCount); i++) {
         try {
-          const goal = await publicClient.readContract({
+          const goal = await client.readContract({
             address: contracts.goalStake,
             abi: GOALSTAKE_ABI,
             functionName: 'getGoal',
             args: [BigInt(i)],
           }) as any
 
-          const goalType = await publicClient.readContract({
+          const goalType = await client.readContract({
             address: contracts.goalStake,
             abi: GOALSTAKE_ABI,
             functionName: 'goalTypes',
