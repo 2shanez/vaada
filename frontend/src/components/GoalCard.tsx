@@ -505,6 +505,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     }
   }, [playerAddresses.join(',')])
 
+  // Auto-fetch leaderboard data for joined users (for progress bar)
+  useEffect(() => {
+    if (hasJoined && address && leaderboardData.length === 0) {
+      fetchLeaderboard()
+    }
+  }, [hasJoined, address])
+
   // Phase timeline - maps contract phase to timeline step (0=Entry, 1=Compete, 2=Verify, 3=Payout)
   const getPhaseStep = () => {
     if (isSettled) return 3
