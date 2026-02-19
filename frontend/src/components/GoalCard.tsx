@@ -38,6 +38,39 @@ function formatTimeLeft(timestamp: number): string {
   return `${Math.floor(diff / 86400)}d ${Math.floor((diff % 86400) / 3600)}h`
 }
 
+
+function downloadCalendarEvent(goal: Goal, deadline: number) {
+  const startDate = new Date(deadline * 1000)
+  const endDate = new Date((deadline + 3600) * 1000) // 1hr event
+  const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+  const title = goal.title || 'Vaada Promise'
+  const goalId = goal.onChainId || goal.id
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Vaada//Promise//EN',
+    'BEGIN:VEVENT',
+    `DTSTART:${fmt(startDate)}`,
+    `DTEND:${fmt(endDate)}`,
+    `SUMMARY:⏰ Vaada: ${title} deadline`,
+    `DESCRIPTION:Your promise deadline is here. Check your progress at https://vaada.io`,
+    `URL:https://vaada.io/goal/${goalId}`,
+    'BEGIN:VALARM',
+    'TRIGGER:-PT2H',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Your Vaada promise deadline is in 2 hours!',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n')
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `vaada-${goalId}.ics`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const { address, isConnected } = useAccount()
   const { login, authenticated } = usePrivy()
@@ -673,6 +706,21 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   </svg>
                 )}
               </button>
+              {/* Calendar button */}
+              {goalDetails?.deadline && !goal.settled && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (goalDetails.deadline) downloadCalendarEvent(goal, goalDetails.deadline)
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-[var(--background)] active:scale-95 transition-all"
+                  title="Add to Calendar"
+                >
+                  <svg className="w-4 h-4 text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
         </div>
