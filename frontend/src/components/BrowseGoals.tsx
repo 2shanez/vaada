@@ -204,6 +204,7 @@ export function BrowseGoals() {
               </p>
             </div>
           ) : (
+            <>
             {activeFilter === 'All' && (
               <p className="text-center text-xs text-[var(--text-secondary)] mb-4">
                 Showing promises from the last 30 days
@@ -222,6 +223,7 @@ export function BrowseGoals() {
                 </div>
               ))}
             </div>
+            </>
           )}
         </div>
       )}
