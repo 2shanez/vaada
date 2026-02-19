@@ -600,7 +600,10 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
           </div>
 
           <p className="text-sm text-[var(--text-secondary)] mb-6 max-w-xs mx-auto">
-            You staked your word and kept it. The winnings are yours.
+            {goal.participants && goal.participants > 1 && userStake > 0 && goalDetails.totalStaked && goalDetails.totalStaked > userStake
+              ? 'Promise kept. You earned from the ones who didn't.'
+              : 'Everyone kept their promise. Your stake is back where it belongs.'
+            }
           </p>
 
           {/* Share buttons */}
