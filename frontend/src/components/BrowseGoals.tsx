@@ -81,8 +81,8 @@ export function BrowseGoals() {
           const deadlinePassed = now > Number(goal.deadline)
           const participants = Number(goal.participantCount)
 
-          // Skip dead goals: entry closed, 0 participants, not settled
-          if (entryPassed && participants === 0 && !goal.settled) continue
+          // Skip dead/empty goals
+          if (participants === 0) continue
 
           loaded.push({
             id: `goal-${i}`,
