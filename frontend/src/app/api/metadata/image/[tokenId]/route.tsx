@@ -125,7 +125,7 @@ export async function GET(
           <div style={{ display: 'flex', flexDirection: 'column', marginTop: 60 }}>
             <span style={{ fontSize: 48, fontWeight: 700, color: '#111827' }}>{r.goalName}</span>
             <span style={{ fontSize: 22, color: '#6B7280', marginTop: 8 }}>
-              {actual.toLocaleString()} / {target.toLocaleString()} {unit} \u2014 {pct}%
+              {actual.toLocaleString()} / {target.toLocaleString()} {unit} — {pct}%
             </span>
           </div>
 
@@ -157,7 +157,7 @@ export async function GET(
               <span style={{ fontSize: 28, fontWeight: 700, color: '#111827', marginTop: 4 }}>${stakeUSD} USDC</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <span style={{ fontSize: 14, color: '#9CA3AF' }}>{shortAddr} \u2014 {date}</span>
+              <span style={{ fontSize: 14, color: '#9CA3AF' }}>{shortAddr} — {date}</span>
               <span style={{ fontSize: 14, color: '#D1D5DB', marginTop: 4 }}>Proof #{id} on Base</span>
             </div>
           </div>
