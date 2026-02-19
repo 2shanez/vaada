@@ -85,6 +85,7 @@ export function BrowseGoals() {
             domain: 'Fitness',
             subdomain: isSteps ? 'Steps' : 'Running',
             live: true,
+            settled: goal.settled,
           })
         } catch {
           // Skip goals that error
@@ -104,15 +105,15 @@ export function BrowseGoals() {
     fetchGoals()
   }, [fetchGoals])
 
-  // Filter: Live = active & not settled, All = everything
+  // Filter: Live = unsettled only, All = everything
   const filteredGoals = goals.filter(g => {
     if (activeFilter === 'Live') {
-      // Show unsettled goals only
-      return true // GoalCard handles display; we filter out settled below
+      return !g.settled
     }
     return true
   }).sort((a, b) => {
-    // Newest goals first
+    // Unsettled first, then newest
+    if (a.settled !== b.settled) return a.settled ? 1 : -1
     return (b.onChainId || 0) - (a.onChainId || 0)
   })
 
