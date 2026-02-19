@@ -218,21 +218,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   useEffect(() => {
     if (isClaimSuccess) {
       setShowClaimCelebration(true)
-      // Refetch participant data and wait for it before hiding celebration
-      const hideAfterRefetch = async () => {
-        await refetchParticipant()
-        // Small extra delay to ensure UI state is updated
-        await new Promise(resolve => setTimeout(resolve, 500))
-        setShowClaimCelebration(false)
-      }
-      // Start hide timer but ensure minimum 8s celebration
-      const minDelay = setTimeout(() => {
-        hideAfterRefetch()
-      }, 8000)
-      return () => clearTimeout(minDelay)
+      refetchParticipant()
     }
   }, [isClaimSuccess, refetchParticipant])
-
   // Handle approval → join flow
   useEffect(() => {
     if (isApproveSuccess && step === 'approving' && goal.onChainId !== undefined) {
@@ -568,7 +556,15 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     const shareText = `I kept my promise and won $${userStake} USDC on Vaada ✅\n\n${goal.emoji} ${goal.title}\n\nStake your word →`
     return (
       <div className="bg-[var(--surface)] border border-[#2EE59D] rounded-2xl relative overflow-hidden">
-        {/* Falling confetti */}
+        {/* Close button */}
+        <button
+          onClick={() => setShowClaimCelebration(false)}
+          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground)] transition-all"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>        {/* Falling confetti */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {[...Array(40)].map((_, i) => (
             <div
