@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { useAccount, useWaitForTransactionReceipt, useSwitchChain, useReadContracts, useReadContract } from 'wagmi'
 import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { usePrivy } from '@privy-io/react-auth'
@@ -87,13 +88,18 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
   
   // Ref for click-outside handling on player dropdown
   const playersDropdownRef = useRef<HTMLDivElement>(null)
+  const playersButtonRef = useRef<HTMLButtonElement>(null)
+  const [dropdownPos, setDropdownPos] = useState<{top: number, left: number, width: number}>({top: 0, left: 0, width: 0})
   
   // Close dropdown when clicking outside
   useEffect(() => {
     if (!showPlayers) return
     
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (playersDropdownRef.current && !playersDropdownRef.current.contains(event.target as Node)) {
+      if (
+        playersDropdownRef.current && !playersDropdownRef.current.contains(event.target as Node) &&
+        playersButtonRef.current && !playersButtonRef.current.contains(event.target as Node)
+      ) {
         setShowPlayers(false)
       }
     }
@@ -776,13 +782,18 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
           </div>
-          <div className="relative flex items-center gap-2" ref={playersDropdownRef}>
+          <div className="relative flex items-center gap-2">
             <button 
+              ref={playersButtonRef}
               type="button"
               onClick={(e) => { 
                 e.preventDefault()
                 e.stopPropagation()
                 const shouldShow = !showPlayers
+                if (shouldShow && playersButtonRef.current) {
+                  const rect = playersButtonRef.current.getBoundingClientRect()
+                  setDropdownPos({ top: rect.bottom + 4 + window.scrollY, left: rect.right - 280, width: 280 })
+                }
                 setShowPlayers(shouldShow)
                 // Auto-fetch leaderboard for steps goals when opening
                 if (shouldShow && isStepsGoal && leaderboardData.length === 0 && (participants > 0 || hasJoined)) {
@@ -800,9 +811,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               <span className={`text-[var(--text-secondary)] text-xs transition-transform duration-150 ${showPlayers ? 'rotate-90' : ''}`}>›</span>
             </button>
           
-          {/* Players dropdown - always shows leaderboard style for steps goals */}
-          {showPlayers && (participants > 0 || hasJoined) && (
-            <div className="absolute right-0 top-full mt-1 z-50 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 min-w-[260px] shadow-xl">
+          {/* Players dropdown - rendered via portal to escape grid stacking */}
+          {showPlayers && (participants > 0 || hasJoined) && typeof document !== 'undefined' && createPortal(
+            <div 
+              ref={playersDropdownRef}
+              className="fixed bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 shadow-xl"
+              style={{ top: dropdownPos.top - window.scrollY, left: Math.max(16, dropdownPos.left), width: dropdownPos.width, zIndex: 9999 }}
+            >
               {/* Header with refresh for steps goals */}
               {isStepsGoal && (
                 <div className="flex items-center justify-between mb-2">
@@ -872,7 +887,8 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   </p>
                 </div>
               )}
-            </div>
+            </div>,
+            document.body
           )}
           </div>
         </div>
