@@ -157,6 +157,8 @@ User Stakes USDC
    Morpho withdrawal + Settlement (winners paid, losers slashed)
        ↓
    VaadaReceipts.sol (soulbound proof minted — kept or broken)
+       ↓
+   Dynamic NFT metadata + proof card image (via /api/metadata/)
 ```
 
 ### Goal Types
@@ -333,7 +335,9 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 - NewUserChallenge onboarding contract (V4 — no Chainlink, onchain self-settlement)
 - Morpho vault yield integration (~4.9% APY)
 - Onchain goal receipts (VaadaReceipts — soulbound, non-transferable proof of commitment)
-- Gas sponsorship (gasless for embedded wallets)
+- Dynamic NFT proof cards (ERC-721 metadata + generated images via next/og)
+- "View Proof" links to OpenSea from receipt history
+- Profile dropdown viewport fix for mobile- Gas sponsorship (gasless for embedded wallets)
 - Coinbase Onramp (Apple Pay, debit card)
 - Profile names & leaderboards
 - Automated cron verification + settlement
@@ -514,6 +518,14 @@ The headcount stays lean because each level, the protocol does more and humans d
 - **Token Storage**: Supabase (encrypted refresh tokens)
 - **Settlement**: Backend verifier (Fitbit/Strava APIs) + onchain self-settlement (NUC V4)
 
+### NFT Proof System
+
+- **VaadaReceipts** mints a soulbound (non-transferable) ERC-721 token on every settlement
+- **Dynamic metadata** served via `/api/metadata/[tokenId]` — ERC-721 compliant JSON with name, description, attributes (status, promise, goal type, target, actual, stake, payout, date)
+- **Proof card image** generated via `/api/metadata/image/[tokenId]` using `next/og` (Satori) with Inter font — shows promise name, progress bar, stake amount, wallet, and kept/broken status
+- **OpenSea compatible** — `tokenURI` points to metadata API via `setBaseURI`
+- Each receipt stores onchain: goalId, participant, goalType, target, actual, stakeAmount, payout, succeeded, startTime, endTime, mintedAt, goalName
+- Viewable from profile dropdown via "View Proof" links to OpenSea
 ### Security
 
 - Stakes held in audited ERC20 (USDC)
