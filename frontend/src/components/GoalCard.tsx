@@ -39,37 +39,15 @@ function formatTimeLeft(timestamp: number): string {
 }
 
 
-function downloadCalendarEvent(goal: Goal, deadline: number) {
+function openGoogleCalendar(goal: Goal, deadline: number) {
   const startDate = new Date(deadline * 1000)
-  const endDate = new Date((deadline + 3600) * 1000) // 1hr event
-  const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
-  const title = goal.title || 'Vaada Promise'
+  const endDate = new Date((deadline + 3600) * 1000)
+  const fmt = (d: Date) => d.toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z'
+  const title = encodeURIComponent(goal.title || 'Vaada Promise')
   const goalId = goal.onChainId || goal.id
-  const ics = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//Vaada//Promise//EN',
-    'BEGIN:VEVENT',
-    `DTSTART:${fmt(startDate)}`,
-    `DTEND:${fmt(endDate)}`,
-    `SUMMARY:⏰ Vaada: ${title} deadline`,
-    `DESCRIPTION:Your promise deadline is here. Check your progress at https://vaada.io`,
-    `URL:https://vaada.io/goal/${goalId}`,
-    'BEGIN:VALARM',
-    'TRIGGER:-PT2H',
-    'ACTION:DISPLAY',
-    'DESCRIPTION:Your Vaada promise deadline is in 2 hours!',
-    'END:VALARM',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].join('\r\n')
-  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `vaada-${goalId}.ics`
-  a.click()
-  URL.revokeObjectURL(url)
+  const details = encodeURIComponent('Your promise deadline is here. Check your progress at https://vaada.io/goal/' + goalId)
+  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=⏰+Vaada:+${title}+deadline&dates=${fmt(startDate)}/${fmt(endDate)}&details=${details}`
+  window.open(url, '_blank')
 }
 export function GoalCard({ goal, onJoined }: GoalCardProps) {
   const { address, isConnected } = useAccount()
@@ -772,7 +750,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    if (goalDetails.deadline) downloadCalendarEvent(goal, goalDetails.deadline)
+                    if (goalDetails.deadline) openGoogleCalendar(goal, goalDetails.deadline)
                   }}
                   className="p-1.5 rounded-lg hover:bg-[var(--background)] active:scale-95 transition-all"
                   title="Add to Calendar"
