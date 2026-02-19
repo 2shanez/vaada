@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
+import { ImageResponse } from 'next/og'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
-import sharp from 'sharp'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -34,23 +34,14 @@ const RECEIPTS_ABI = [
   },
 ] as const
 
-function escapeXml(s: string) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-}
-
-// Load font once at module level
-let fontBase64: string | null = null
-function getFont(): string {
-  if (!fontBase64) {
-    try {
-      const fontPath = join(process.cwd(), 'public', 'fonts', 'Inter.ttf')
-      const fontBuffer = readFileSync(fontPath)
-      fontBase64 = fontBuffer.toString('base64')
-    } catch {
-      fontBase64 = ''
-    }
+let fontData: ArrayBuffer | null = null
+function getFont(): ArrayBuffer {
+  if (!fontData) {
+    const fontPath = join(process.cwd(), 'public', 'fonts', 'Inter.ttf')
+    const buf = readFileSync(fontPath)
+    fontData = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)
   }
-  return fontBase64
+  return fontData
 }
 
 export async function GET(
@@ -60,7 +51,7 @@ export async function GET(
   const { tokenId } = await params
   const id = parseInt(tokenId)
   if (isNaN(id) || id < 1) {
-    return new NextResponse('Invalid token ID', { status: 400 })
+    return new Response('Invalid token ID', { status: 400 })
   }
 
   try {
@@ -82,54 +73,108 @@ export async function GET(
     const date = new Date(Number(r.endTime) * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     const shortAddr = `${r.participant.slice(0, 6)}...${r.participant.slice(-4)}`
     const statusColor = kept ? '#2EE59D' : '#EF4444'
-    const statusBgR = kept ? '46' : '239'
-    const statusBgG = kept ? '229' : '68'
-    const statusBgB = kept ? '157' : '68'
-    const statusText = kept ? 'KEPT' : 'BROKEN'
-    const statusIcon = kept ? '\u2713' : '\u2717'
-    const barWidth = Math.max(4, (pct / 100) * 704)
-    const goalName = escapeXml(r.goalName)
-    const font = getFont()
+    const statusText = kept ? '✓ KEPT' : '✗ BROKEN'
+    const barPct = `${pct}%`
 
-    const svg = `<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <style>
-      @font-face {
-        font-family: 'Inter';
-        src: url('data:font/ttf;base64,${font}') format('truetype');
-        font-weight: 100 900;
-        font-style: normal;
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '800px',
+            height: '450px',
+            backgroundColor: '#0B0B14',
+            borderRadius: '16px',
+            padding: '48px',
+            fontFamily: 'Inter',
+            color: 'white',
+          }}
+        >
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 32, fontWeight: 700, color: '#2EE59D' }}>vaada</span>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '6px 20px',
+                borderRadius: 18,
+                backgroundColor: kept ? 'rgba(46,229,157,0.15)' : 'rgba(239,68,68,0.15)',
+                color: statusColor,
+                fontSize: 16,
+                fontWeight: 600,
+              }}
+            >
+              {statusText}
+            </div>
+          </div>
+
+          {/* Goal name */}
+          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 60 }}>
+            <span style={{ fontSize: 48, fontWeight: 700 }}>{r.goalName}</span>
+            <span style={{ fontSize: 22, color: 'rgba(255,255,255,0.6)', marginTop: 8 }}>
+              {actual.toLocaleString()} / {target.toLocaleString()} {unit} — {pct}%
+            </span>
+          </div>
+
+          {/* Progress bar */}
+          <div
+            style={{
+              display: 'flex',
+              marginTop: 20,
+              width: '100%',
+              height: 8,
+              borderRadius: 4,
+              backgroundColor: 'rgba(255,255,255,0.1)',
+            }}
+          >
+            <div
+              style={{
+                width: barPct,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: statusColor,
+              }}
+            />
+          </div>
+
+          {/* Footer */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)' }}>Staked</span>
+              <span style={{ fontSize: 28, fontWeight: 700, marginTop: 4 }}>${stakeUSD} USDC</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>{shortAddr} — {date}</span>
+              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)', marginTop: 4 }}>Proof #{id} on Base</span>
+            </div>
+          </div>
+        </div>
+      ),
+      {
+        width: 800,
+        height: 450,
+        fonts: [
+          {
+            name: 'Inter',
+            data: getFont(),
+            style: 'normal',
+            weight: 400,
+          },
+          {
+            name: 'Inter',
+            data: getFont(),
+            style: 'normal',
+            weight: 700,
+          },
+        ],
+        headers: {
+          'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+        },
       }
-    </style>
-  </defs>
-  <rect width="800" height="450" fill="#0B0B14" rx="16"/>
-  
-  <text x="48" y="72" font-family="Inter" font-size="32" font-weight="700" fill="#2EE59D">vaada</text>
-  <rect x="580" y="42" width="172" height="36" rx="18" fill="rgb(${statusBgR},${statusBgG},${statusBgB})" fill-opacity="0.15"/>
-  <text x="666" y="66" font-family="Inter" font-size="16" font-weight="600" fill="${statusColor}" text-anchor="middle">${statusIcon} ${statusText}</text>
-  
-  <text x="48" y="190" font-family="Inter" font-size="48" font-weight="700" fill="white">${goalName}</text>
-  <text x="48" y="230" font-family="Inter" font-size="22" fill="white" fill-opacity="0.6">${actual.toLocaleString()} / ${target.toLocaleString()} ${unit} - ${pct}%</text>
-  
-  <rect x="48" y="250" width="704" height="8" rx="4" fill="white" fill-opacity="0.1"/>
-  <rect x="48" y="250" width="${barWidth}" height="8" rx="4" fill="${statusColor}"/>
-  
-  <text x="48" y="370" font-family="Inter" font-size="16" fill="white" fill-opacity="0.4">Staked</text>
-  <text x="48" y="402" font-family="Inter" font-size="28" font-weight="700" fill="white">$${stakeUSD} USDC</text>
-  
-  <text x="752" y="380" font-family="Inter" font-size="14" fill="white" fill-opacity="0.4" text-anchor="end">${shortAddr} - ${date}</text>
-  <text x="752" y="402" font-family="Inter" font-size="14" fill="white" fill-opacity="0.3" text-anchor="end">Proof #${id} on Base</text>
-</svg>`
-
-    const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer()
-
-    return new NextResponse(pngBuffer, {
-      headers: {
-        'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=86400, s-maxage=86400',
-      },
-    })
+    )
   } catch (error: any) {
-    return new NextResponse(`Error: ${error.message}`, { status: 500 })
+    return new Response(`Error: ${error.message}`, { status: 500 })
   }
 }
