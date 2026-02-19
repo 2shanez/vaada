@@ -558,7 +558,7 @@ export function LiveChallengeCard() {
           </div>
           <h3 className="font-bold text-base mb-1">Promise Kept!</h3>
           <p className="text-sm text-[var(--text-secondary)]">
-            You joined a goal in time. Your $5 will be returned!
+            You joined in time! Your $5 is being returned to your wallet.
           </p>
         </div>
       </div>
@@ -614,7 +614,7 @@ export function LiveChallengeCard() {
         </div>
         <div className="w-full flex items-center justify-center gap-2 py-2 bg-[#2EE59D]/15 rounded-xl text-[#2EE59D] font-bold text-sm border border-[#2EE59D]/30">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-          <span>You're in — now join a promise to win!</span>
+          <span>You're in! Your $5 returns after 24h.</span>
         </div>
       </div>
     </div>
