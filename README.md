@@ -1,6 +1,6 @@
 # Vaada
 
-**Stake Your Promise.**
+**Keep Your Promise.**
 
 The promise market. Stake money on your goals, keep your promise → keep your stake + earn from those who don't.
 
@@ -37,7 +37,7 @@ Vaada (Hindi for "promise") is a protocol where users stake USDC on personal com
 |-------|------------|
 | **Chain** | Base (Coinbase L2) — Mainnet |
 | **Contracts** | Solidity + Foundry |
-| **Verification** | Backend verifier + Alchemy RPC |
+| **Verification** | Backend verifier + Alchemy RPC + onchain self-settlement |
 | **Yield** | Morpho Vault (~4.9% APY on locked stakes) |
 | **Frontend** | Next.js 16, React, Tailwind |
 | **Auth** | Privy (email/Google/wallet) |
@@ -54,7 +54,7 @@ vaada/
 │   ├── src/
 │   │   ├── VaadaV3.sol               # Core protocol
 │   │   ├── GoalStakeAutomationV3.sol # Verification bridge
-│   │   ├── NewUserChallenge.sol      # Onboarding contract
+│   │   ├── NewUserChallengeV4.sol     # Onboarding contract (no Chainlink)
 │   │   └── VaadaReceipts.sol         # Soulbound proof of commitment
 │   └── script/       # Deploy scripts
 │
@@ -77,7 +77,7 @@ vaada/
 |----------|---------|
 | VaadaV3 | `0xAc67E863221B703CEE9B440a7beFe71EA8725434` |
 | AutomationV3 | `0xA6BcEcA41fCF743324a864F47dd03F0D3806341D` |
-| NewUserChallenge V3 | `0xdC9ee5e9E99e3568D2B5eA9409222fbFeCB56373` |
+| NewUserChallenge V4 | `0xB77e1FFa0be50E0B867c8f9CcdDBd1a88D354824` |
 | VaadaReceipts | `0x2743327fa1EeDF92793608d659b7eEC428252dA2` |
 | Morpho Vault | `0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61` |
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
@@ -146,7 +146,6 @@ forge test
 ## Links
 
 - **Website:** https://vaada.io
-- **Admin:** https://vaada.io/admin
 - **BaseScan:** [View contracts](https://basescan.org/address/0xAc67E863221B703CEE9B440a7beFe71EA8725434)
 
 ---
