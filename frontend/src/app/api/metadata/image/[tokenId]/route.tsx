@@ -1,9 +1,6 @@
-import { NextRequest } from 'next/server'
-import { ImageResponse } from 'next/og'
+import { NextRequest, NextResponse } from 'next/server'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
-
-export const runtime = 'edge'
 
 const RECEIPTS_ADDRESS = '0x2743327fa1EeDF92793608d659b7eEC428252dA2'
 const RPC_URL = process.env.BASE_RPC_URL || 'https://mainnet.base.org'
@@ -41,7 +38,7 @@ export async function GET(
   const { tokenId } = await params
   const id = parseInt(tokenId)
   if (isNaN(id) || id < 1) {
-    return new Response('Invalid token ID', { status: 400 })
+    return new NextResponse('Invalid token ID', { status: 400 })
   }
 
   try {
@@ -62,78 +59,46 @@ export async function GET(
     const pct = Math.min(Math.round((actual / target) * 100), 100)
     const date = new Date(Number(r.endTime) * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     const shortAddr = `${r.participant.slice(0, 6)}...${r.participant.slice(-4)}`
+    const statusColor = kept ? '#2EE59D' : '#EF4444'
+    const statusBg = kept ? 'rgba(46,229,157,0.15)' : 'rgba(239,68,68,0.15)'
+    const statusText = kept ? '✅ KEPT' : '❌ BROKEN'
+    const barWidth = (pct / 100) * 704
 
-    return new ImageResponse(
-      (
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            padding: '48px',
-            background: '#0B0B14',
-            color: 'white',
-            fontFamily: 'system-ui, sans-serif',
-          }}
-        >
-          {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div style={{ fontSize: '32px', fontWeight: 700, color: '#2EE59D' }}>vaada</div>
-            </div>
-            <div style={{
-              display: 'flex',
-              padding: '6px 16px',
-              borderRadius: '999px',
-              fontSize: '16px',
-              fontWeight: 600,
-              background: kept ? 'rgba(46,229,157,0.15)' : 'rgba(239,68,68,0.15)',
-              color: kept ? '#2EE59D' : '#EF4444',
-            }}>
-              {kept ? '\u2705 KEPT' : '\u274c BROKEN'}
-            </div>
-          </div>
+    const svg = `<svg width="800" height="450" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="450" fill="#0B0B14" rx="16"/>
+  
+  <!-- Header -->
+  <text x="48" y="72" font-family="system-ui, sans-serif" font-size="32" font-weight="700" fill="#2EE59D">vaada</text>
+  <rect x="580" y="42" width="172" height="36" rx="18" fill="${statusBg}"/>
+  <text x="666" y="66" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="${statusColor}" text-anchor="middle">${statusText}</text>
+  
+  <!-- Goal Name -->
+  <text x="48" y="190" font-family="system-ui, sans-serif" font-size="48" font-weight="700" fill="white">${r.goalName}</text>
+  
+  <!-- Progress text -->
+  <text x="48" y="230" font-family="system-ui, sans-serif" font-size="22" fill="rgba(255,255,255,0.6)">${actual.toLocaleString()} / ${target.toLocaleString()} ${unit} • ${pct}%</text>
+  
+  <!-- Progress bar bg -->
+  <rect x="48" y="250" width="704" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
+  <!-- Progress bar fill -->
+  <rect x="48" y="250" width="${barWidth}" height="8" rx="4" fill="${statusColor}"/>
+  
+  <!-- Footer left -->
+  <text x="48" y="370" font-family="system-ui, sans-serif" font-size="16" fill="rgba(255,255,255,0.4)">Staked</text>
+  <text x="48" y="402" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="white">$${stakeUSD} USDC</text>
+  
+  <!-- Footer right -->
+  <text x="752" y="380" font-family="system-ui, sans-serif" font-size="14" fill="rgba(255,255,255,0.4)" text-anchor="end">${shortAddr} • ${date}</text>
+  <text x="752" y="402" font-family="system-ui, sans-serif" font-size="14" fill="rgba(255,255,255,0.3)" text-anchor="end">Proof #${id} • Base</text>
+</svg>`
 
-          {/* Main Content */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ fontSize: '48px', fontWeight: 700, lineHeight: 1.1 }}>
-              {r.goalName}
-            </div>
-            <div style={{ fontSize: '22px', color: 'rgba(255,255,255,0.6)' }}>
-              {actual.toLocaleString()} / {target.toLocaleString()} {unit} \u2022 {pct}%
-            </div>
-            {/* Progress bar */}
-            <div style={{ display: 'flex', width: '100%', height: '8px', borderRadius: '4px', background: 'rgba(255,255,255,0.1)' }}>
-              <div style={{
-                width: `${pct}%`,
-                height: '100%',
-                borderRadius: '4px',
-                background: kept ? '#2EE59D' : '#EF4444',
-              }} />
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <div style={{ fontSize: '16px', color: 'rgba(255,255,255,0.4)' }}>Staked</div>
-              <div style={{ fontSize: '28px', fontWeight: 700 }}>${stakeUSD} USDC</div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-              <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)' }}>{shortAddr} \u2022 {date}</div>
-              <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.3)' }}>Proof #{id} \u2022 Base</div>
-            </div>
-          </div>
-        </div>
-      ),
-      {
-        width: 800,
-        height: 450,
+    return new NextResponse(svg, {
+      headers: {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'public, max-age=86400, s-maxage=86400',
       },
-    )
+    })
   } catch (error: any) {
-    return new Response(`Error: ${error.message}`, { status: 500 })
+    return new NextResponse(`Error: ${error.message}`, { status: 500 })
   }
 }
