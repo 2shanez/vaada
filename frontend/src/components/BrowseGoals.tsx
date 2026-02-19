@@ -209,11 +209,11 @@ export function BrowseGoals() {
                 Showing promises from the last 30 days
               </p>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto" style={{ overflow: 'visible' }}>
+            <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto" style={{ overflow: 'visible' }}>
               {filteredGoals.map((goal, index) => (
                 <div
                   key={goal.id}
-                  className={`${
+                  className={`w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] ${
                     mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
                   style={{ transitionDelay: `${index * 50}ms`, transition: 'opacity 500ms, transform 500ms', overflow: 'visible' }}
