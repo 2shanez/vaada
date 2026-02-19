@@ -204,6 +204,11 @@ export function BrowseGoals() {
               </p>
             </div>
           ) : (
+            {activeFilter === 'All' && (
+              <p className="text-center text-xs text-[var(--text-secondary)] mb-4">
+                Showing promises from the last 30 days
+              </p>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
               {filteredGoals.map((goal, index) => (
                 <div
@@ -217,11 +222,6 @@ export function BrowseGoals() {
                 </div>
               ))}
             </div>
-          )}
-          {activeFilter === 'All' && filteredGoals.length > 0 && (
-            <p className="text-center text-xs text-[var(--text-secondary)] mt-6">
-              Showing promises from the last 30 days
-            </p>
           )}
         </div>
       )}
