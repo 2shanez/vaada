@@ -164,9 +164,9 @@ export function BrowseGoals() {
           <p className="text-sm text-[var(--text-secondary)]">Loading promises...</p>
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center gap-4">
+        <div>
           {filteredGoals.length === 0 ? (
-            <div className="w-full text-center py-16">
+            <div className="text-center py-16">
               <div className="w-14 h-14 rounded-full bg-[#2EE59D]/10 flex items-center justify-center mx-auto mb-4">
                 <svg className="w-7 h-7 text-[#2EE59D]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
@@ -176,19 +176,19 @@ export function BrowseGoals() {
               </p>
             </div>
           ) : (
-            filteredGoals.map((goal, index) => (
-              <div
-                key={goal.id}
-                className={`w-full max-w-md transition-all duration-500 ${
-                  filteredGoals.length > 1 ? 'sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.67rem)]' : ''
-                } ${
-                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                }`}
-                style={{ transitionDelay: `${index * 50}ms` }}
-              >
-                <GoalCard goal={goal} />
-              </div>
-            ))
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+              {filteredGoals.map((goal, index) => (
+                <div
+                  key={goal.id}
+                  className={`transition-all duration-500 ${
+                    mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                  }`}
+                  style={{ transitionDelay: `${index * 50}ms` }}
+                >
+                  <GoalCard goal={goal} />
+                </div>
+              ))}
+            </div>
           )}
         </div>
       )}
