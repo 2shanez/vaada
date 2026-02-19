@@ -2,6 +2,12 @@
 
 **Version 3.0 — February 2026**
 
+<p align="center">
+  <img src="images/vaada-icon.png" alt="Vaada Logo" width="180" />
+</p>
+
+*The commitment market where you bet on yourself.*
+
 ---
 
 ## Abstract
@@ -46,6 +52,9 @@ Behavioral economics shows loss aversion is 2x stronger than gain motivation. Pe
 4. **Settle** — Hit your goal = stake returned + bonus from losers. Miss = stake goes to winners.
 
 No middleman. No refunds. No excuses.
+
+![Vaada Homepage — Stake, Compete, Settle](images/homepage-full.png)
+*The Vaada homepage: browse active promises, stake USDC, and track your commitments — all from a single interface.*
 
 **Why it works:**
 - Real money at risk (not points or badges)
@@ -138,6 +147,14 @@ Vaada is the first product built on this primitive. It won't be the last.
 ---
 
 ## How It Works
+
+### The User Experience
+
+![Goal Card — Mobile View](images/goal-card-mobile.png)
+*A live goal card on mobile: see the promise, the stake, the deadline, and your progress at a glance.*
+
+![Goal Card — Detail View](images/goal-card-detail.png)
+*Detailed goal view: real-time progress tracking, participant list, countdown timer, and settlement status.*
 
 ### Smart Contract Architecture
 
@@ -293,6 +310,9 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 - Composable — other apps can integrate Vaada as accountability infrastructure
 - Expandable — works for any verifiable commitment, not just fitness
 
+![Leaderboard — Social Competition](images/leaderboard.png)
+*The leaderboard: see who's winning, who's falling behind, and where you stack up against the competition.*
+
 ---
 
 ## Go-to-Market
@@ -343,11 +363,18 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 - Prominent countdown timer on active goal cards
 - Progress bar with real-time tracking for joined participants
 - Add-to-Calendar (.ics download with 2hr reminder)
-- Context-aware empty states in Browse Promises- Gas sponsorship (gasless for embedded wallets)
+- Context-aware empty states in Browse Promises
+- Gas sponsorship (gasless for embedded wallets)
 - Coinbase Onramp (Apple Pay, debit card)
 - Profile names & leaderboards
 - Automated cron verification + settlement
 - Anti-cheat (manual activity filter)
+
+![Win Celebration — Promise Kept](images/win-celebration.png)
+*The win moment: confetti, earnings summary, and one-tap sharing — the reward loop that drives virality.*
+
+![Dynamic NFT Proof Card](images/nft-proof-card.png)
+*Onchain proof of commitment: a soulbound NFT receipt showing your promise, your progress, and your result — permanently on Base.*
 
 ---
 
@@ -393,6 +420,15 @@ No YC-backed startup (across 5,000+ companies) builds what Vaada builds. Zero on
 | **Self-lock vaults** | "Lock my $500 until I run 50 miles." Savings + fitness. | Retention — new use case, same contracts |
 | **Employer integrations** | Companies fund employee goal pools. B2B revenue. | Revenue — enterprise product line |
 | **Mobile app (iOS)** | Native push notifications, AI coach, daily engagement. | Retention + growth — real mobile experience |
+
+![Browse Promises — Discover Active Goals](images/browse-promises-1.png)
+*Browse Promises: discover active goals across fitness categories, see stakes and deadlines, and join with one tap.*
+
+![Browse Promises — Filtering & Categories](images/browse-promises-2.png)
+*Filter by goal type, stake range, and timeline to find the perfect challenge.*
+
+![Browse Promises — Community Activity](images/browse-promises-3.png)
+*See community activity: who's joining, who's winning, and which promises are trending.*
 
 ---
 
@@ -531,6 +567,7 @@ The headcount stays lean because each level, the protocol does more and humans d
 - **OpenSea compatible** — `tokenURI` points to metadata API via `setBaseURI`
 - Each receipt stores onchain: goalId, participant, goalType, target, actual, stakeAmount, payout, succeeded, startTime, endTime, mintedAt, goalName
 - Viewable from profile dropdown via "View Proof" links to OpenSea
+
 ### Security
 
 - Stakes held in audited ERC20 (USDC)
