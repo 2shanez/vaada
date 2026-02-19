@@ -478,12 +478,13 @@ export function LiveChallengeCard() {
 
   const challengeData = challenge as [bigint, bigint, boolean, boolean, boolean] | undefined
   const deadline = challengeData ? Number(challengeData[1]) * 1000 : 0
-  const hasJoinedVaada = challengeData ? challengeData[2] : false
-  const claimed = challengeData ? challengeData[3] : false
-  const forfeited = challengeData ? challengeData[4] : false
+  const settled = challengeData ? challengeData[2] : false
+  const won = challengeData ? challengeData[3] : false
+  const canSettle = challengeData ? challengeData[4] : false
   const isExpired = deadline > 0 && Date.now() > deadline
-  const isCompleted = hasJoinedVaada || claimed
-  const isFailed = isExpired && !isCompleted && !forfeited
+  const isCompleted = settled && won          // settled + won = kept their promise
+  const isFailed = settled && !won            // settled + lost = broke their promise
+  const isPending = !settled && isExpired     // deadline passed, not yet settled
 
   useEffect(() => {
     if (typeof window !== 'undefined' && address) {
@@ -565,8 +566,8 @@ export function LiveChallengeCard() {
     )
   }
 
-  // Show fail result (expired without joining a goal)
-  if (isExpired) {
+  // Show fail result (settled and lost, or expired and pending settlement)
+  if (isFailed || isPending) {
     return (
       <div className="rounded-xl p-4 relative overflow-hidden max-w-sm mx-auto border bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent border-red-500/30">
         <button
