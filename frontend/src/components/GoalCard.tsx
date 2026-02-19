@@ -721,6 +721,30 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
                   </svg>
                 </button>
               )}
+              {/* Invite friend button */}
+              {!goal.settled && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    const goalId = goal.onChainId || goal.id
+                    const shareUrl = `https://vaada.io/goal/${goalId}`
+                    const text = `I just staked on ${goal.title}. Join me:`
+                    if (navigator.share) {
+                      navigator.share({ title: `Join my Vaada promise`, text, url: shareUrl }).catch(() => {})
+                    } else {
+                      navigator.clipboard.writeText(`${text} ${shareUrl}`)
+                      setLinkCopied(true)
+                      setTimeout(() => setLinkCopied(false), 2000)
+                    }
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-[var(--background)] active:scale-95 transition-all"
+                  title="Invite a friend"
+                >
+                  <svg className="w-4 h-4 text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -767,6 +791,45 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
       </div>
 
       <div className="px-4 pb-4">
+        {/* Countdown timer */}
+        {!isSettled && goalDetails?.deadline && formatTimeLeft(goalDetails.deadline) !== 'Passed' && (
+          <div className="flex items-center justify-center gap-2 py-3 mb-1 border-t border-[var(--border)]/50">
+            <svg className="w-4 h-4 text-[#2EE59D] animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-sm font-bold text-[var(--foreground)]">
+              {formatTimeLeft(goalDetails.deadline)} left
+            </span>
+          </div>
+        )}
+
+        {/* Progress bar for joined users */}
+        {!isSettled && hasJoined && leaderboardData.length > 0 && address && (() => {
+          const userData = leaderboardData.find(d => d.address.toLowerCase() === address.toLowerCase())
+          if (!userData) return null
+          const pct = Math.min(100, Math.round((userData.steps / goal.targetMiles) * 100))
+          const isComplete = userData.steps >= goal.targetMiles
+          return (
+            <div className="px-0 pb-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs text-[var(--text-secondary)]">Your progress</span>
+                <span className={`text-xs font-bold ${isComplete ? 'text-[#2EE59D]' : 'text-[var(--foreground)]'}`}>
+                  {userData.steps.toLocaleString()} / {goal.targetMiles.toLocaleString()} {goal.targetUnit || 'steps'}
+                </span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-[var(--border)]/50">
+                <div 
+                  className={`h-2 rounded-full transition-all duration-500 ${isComplete ? 'bg-[#2EE59D]' : 'bg-[#2EE59D]/70'}`}
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+              {isComplete && (
+                <p className="text-[10px] text-[#2EE59D] font-medium mt-1 text-center">✓ Target reached!</p>
+              )}
+            </div>
+          )
+        })()}
+
         {/* Timeline */}
         {!isSettled && (
           <div className="py-5 border-t border-[var(--border)]/50">
