@@ -76,6 +76,14 @@ export function BrowseGoals() {
           const stakeText = minStake === maxStake ? `$${minStake}` : `$${minStake}-$${maxStake}`
           const targetText = target.toLocaleString() + (isSteps ? ' steps' : target === 1 ? ' mile' : ' miles')
 
+          const now = Math.floor(Date.now() / 1000)
+          const entryPassed = now > Number(goal.entryDeadline)
+          const deadlinePassed = now > Number(goal.deadline)
+          const participants = Number(goal.participantCount)
+
+          // Skip dead goals: entry closed, 0 participants, not settled
+          if (entryPassed && participants === 0 && !goal.settled) continue
+
           loaded.push({
             id: `goal-${i}`,
             onChainId: i,
@@ -87,7 +95,7 @@ export function BrowseGoals() {
             durationDays: Math.ceil(duration / 86400),
             minStake,
             maxStake,
-            participants: Number(goal.participantCount),
+            participants,
             totalStaked: Number(formatUnits(goal.totalStaked, 6)),
             category,
             domain: 'Fitness',
