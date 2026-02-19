@@ -81,9 +81,13 @@ export function ProfileNameButton() {
   useEffect(() => {
     if (showDropdown && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
+      const dropdownWidth = Math.min(320, window.innerWidth - 32)
+      const rightEdge = window.innerWidth - rect.right
+      // Ensure dropdown doesn't overflow left side of viewport
+      const maxRight = window.innerWidth - dropdownWidth - 16
       setDropdownPos({
         top: rect.bottom + 8,
-        right: Math.max(16, window.innerWidth - rect.right),
+        right: Math.min(Math.max(16, rightEdge), maxRight),
       })
     }
   }, [showDropdown])
