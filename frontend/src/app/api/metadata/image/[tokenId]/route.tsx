@@ -2,8 +2,6 @@ import { NextRequest } from 'next/server'
 import { ImageResponse } from 'next/og'
 import { createPublicClient, http } from 'viem'
 import { base } from 'viem/chains'
-import { readFileSync } from 'fs'
-import { join } from 'path'
 
 const RECEIPTS_ADDRESS = '0x2743327fa1EeDF92793608d659b7eEC428252dA2'
 const RPC_URL = process.env.BASE_RPC_URL || 'https://mainnet.base.org'
@@ -34,14 +32,22 @@ const RECEIPTS_ABI = [
   },
 ] as const
 
-let fontData: ArrayBuffer | null = null
-function getFont(): ArrayBuffer {
-  if (!fontData) {
-    const fontPath = join(process.cwd(), 'public', 'fonts', 'Inter.ttf')
-    const buf = readFileSync(fontPath)
-    fontData = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)
+let fontCache: ArrayBuffer | null = null
+async function getFont(): Promise<ArrayBuffer> {
+  if (!fontCache) {
+    const res = await fetch('https://fonts.cdnfonts.com/s/19795/Inter-Regular.woff')
+    fontCache = await res.arrayBuffer()
   }
-  return fontData
+  return fontCache
+}
+
+let fontBoldCache: ArrayBuffer | null = null
+async function getFontBold(): Promise<ArrayBuffer> {
+  if (!fontBoldCache) {
+    const res = await fetch('https://fonts.cdnfonts.com/s/19795/Inter-Bold.woff')
+    fontBoldCache = await res.arrayBuffer()
+  }
+  return fontBoldCache
 }
 
 export async function GET(
@@ -55,13 +61,16 @@ export async function GET(
   }
 
   try {
-    const client = createPublicClient({ chain: base, transport: http(RPC_URL) })
-    const receipt = await client.readContract({
-      address: RECEIPTS_ADDRESS,
-      abi: RECEIPTS_ABI,
-      functionName: 'getReceipt',
-      args: [BigInt(id)],
-    })
+    const [fontData, fontBoldData, receipt] = await Promise.all([
+      getFont(),
+      getFontBold(),
+      createPublicClient({ chain: base, transport: http(RPC_URL) }).readContract({
+        address: RECEIPTS_ADDRESS,
+        abi: RECEIPTS_ABI,
+        functionName: 'getReceipt',
+        args: [BigInt(id)],
+      }),
+    ])
 
     const r = receipt as any
     const kept = r.succeeded
@@ -73,7 +82,7 @@ export async function GET(
     const date = new Date(Number(r.endTime) * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     const shortAddr = `${r.participant.slice(0, 6)}...${r.participant.slice(-4)}`
     const statusColor = kept ? '#2EE59D' : '#EF4444'
-    const statusText = kept ? '✓ KEPT' : '✗ BROKEN'
+    const statusText = kept ? '\u2713 KEPT' : '\u2717 BROKEN'
     const barPct = `${pct}%`
 
     return new ImageResponse(
@@ -91,7 +100,6 @@ export async function GET(
             color: 'white',
           }}
         >
-          {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ fontSize: 32, fontWeight: 700, color: '#2EE59D' }}>vaada</span>
             <div
@@ -110,7 +118,6 @@ export async function GET(
             </div>
           </div>
 
-          {/* Goal name */}
           <div style={{ display: 'flex', flexDirection: 'column', marginTop: 60 }}>
             <span style={{ fontSize: 48, fontWeight: 700 }}>{r.goalName}</span>
             <span style={{ fontSize: 22, color: 'rgba(255,255,255,0.6)', marginTop: 8 }}>
@@ -118,7 +125,6 @@ export async function GET(
             </span>
           </div>
 
-          {/* Progress bar */}
           <div
             style={{
               display: 'flex',
@@ -139,7 +145,6 @@ export async function GET(
             />
           </div>
 
-          {/* Footer */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)' }}>Staked</span>
@@ -158,15 +163,15 @@ export async function GET(
         fonts: [
           {
             name: 'Inter',
-            data: getFont(),
-            style: 'normal',
-            weight: 400,
+            data: fontData,
+            style: 'normal' as const,
+            weight: 400 as const,
           },
           {
             name: 'Inter',
-            data: getFont(),
-            style: 'normal',
-            weight: 700,
+            data: fontBoldData,
+            style: 'normal' as const,
+            weight: 700 as const,
           },
         ],
         headers: {
