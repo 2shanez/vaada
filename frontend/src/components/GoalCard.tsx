@@ -912,7 +912,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         )}
 
         {/* Pool + Players */}
-        <div className="flex items-center justify-between py-3 border-t border-[var(--border)]/50 mb-3">
+        <div className="flex items-center justify-between py-3 border-t border-[var(--border)]/50">
           <div className="flex items-center gap-2">
             <span className="text-xs text-[var(--text-secondary)]">Pool</span>
             <span className="text-sm font-bold text-[#2EE59D]">${pooled}</span>
