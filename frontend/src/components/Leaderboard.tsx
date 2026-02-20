@@ -135,12 +135,12 @@ export function Leaderboard() {
         ) : (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-[28px_1fr_50px_50px_60px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-3 sm:px-4 py-3 border-b border-[var(--border)] text-[10px] sm:text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
+            <div className="grid grid-cols-[28px_1fr_44px_44px_44px_52px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-3 sm:px-4 py-3 border-b border-[var(--border)] text-[10px] sm:text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
               <span></span>
               <span>User</span>
               <span className="text-center">Kept</span>
               <span className="text-center">Rate</span>
-              <span className="text-center hidden sm:block">Streak</span>
+              <span className="text-center">Streak</span>
               <span className="text-right">Staked</span>
             </div>
 
@@ -148,7 +148,7 @@ export function Leaderboard() {
             {entries.map((entry, i) => (
               <div
                 key={entry.address}
-                className={`grid grid-cols-[28px_1fr_50px_50px_60px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-3 sm:px-4 py-3 items-center ${
+                className={`grid grid-cols-[28px_1fr_44px_44px_44px_52px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-3 sm:px-4 py-3 items-center ${
                   i === 0 ? 'bg-[#2EE59D]/5' : ''
                 } ${i < entries.length - 1 ? 'border-b border-[var(--border)]/50' : ''}`}
               >
@@ -167,7 +167,7 @@ export function Leaderboard() {
                 <span className="text-sm font-semibold text-center">
                   {entry.attempted > 0 ? `${entry.winRate}%` : '—'}
                 </span>
-                <span className="text-sm font-semibold text-center hidden sm:block">
+                <span className="text-sm font-semibold text-center">
                   {entry.streak > 0 ? `${entry.streak} 🔥` : '0'}
                 </span>
                 <span className="text-sm font-semibold text-right">
