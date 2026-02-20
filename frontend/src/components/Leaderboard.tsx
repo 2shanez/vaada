@@ -49,51 +49,45 @@ export function Leaderboard() {
           return
         }
 
-        // Get all Transfer events (mints) from receipts contract — from address(0) = mint
-        const logs = await client.getLogs({
-          address: contracts.vaadaReceipts,
-          event: {
-            type: 'event',
-            name: 'Transfer',
-            inputs: [
-              { type: 'address', name: 'from', indexed: true },
-              { type: 'address', name: 'to', indexed: true },
-              { type: 'uint256', name: 'tokenId', indexed: true },
-            ],
-          },
-          args: {
-            from: '0x0000000000000000000000000000000000000000',
-          },
-          fromBlock: 'earliest',
+        // Iterate ownerOf for each token (avoids getLogs range limits on Alchemy free tier)
+        const totalSupply = Number(supply)
+        const ownerCalls = Array.from({ length: Math.min(totalSupply, 100) }, (_, i) => ({
+          address: contracts.vaadaReceipts as `0x${string}`,
+          abi: VAADA_RECEIPTS_ABI,
+          functionName: 'ownerOf' as const,
+          args: [BigInt(i)],
+        }))
+
+        const ownerResults = await client.multicall({ contracts: ownerCalls })
+        const uniqueAddresses = [...new Set(
+          ownerResults
+            .filter(r => r.status === 'success')
+            .map(r => r.result as string)
+        )]
+
+        // Fetch reputation for each via multicall
+        const repCalls = uniqueAddresses.map(addr => ({
+          address: contracts.vaadaReceipts as `0x${string}`,
+          abi: VAADA_RECEIPTS_ABI,
+          functionName: 'getReputation' as const,
+          args: [addr as `0x${string}`],
+        }))
+
+        const repResults = await client.multicall({ contracts: repCalls })
+
+        const reputations = uniqueAddresses.map((addr, i) => {
+          const result = repResults[i]
+          if (result.status !== 'success') return null
+          const rep = result.result as [bigint, bigint, bigint, bigint, bigint, bigint, bigint]
+          return {
+            address: addr,
+            attempted: Number(rep[0]),
+            completed: Number(rep[1]),
+            winRate: Number(rep[2]) / 100,
+            streak: Number(rep[5]),
+            totalStaked: Number(formatUnits(rep[3], 6)),
+          }
         })
-
-        // Unique addresses
-        const uniqueAddresses = [...new Set(logs.map(l => l.args.to as string))]
-
-        // Fetch reputation for each
-        const reputations = await Promise.all(
-          uniqueAddresses.map(async (addr) => {
-            try {
-              const rep = await client.readContract({
-                address: contracts.vaadaReceipts,
-                abi: VAADA_RECEIPTS_ABI,
-                functionName: 'getReputation',
-                args: [addr as `0x${string}`],
-              }) as [bigint, bigint, bigint, bigint, bigint, bigint, bigint]
-
-              return {
-                address: addr,
-                attempted: Number(rep[0]),
-                completed: Number(rep[1]),
-                winRate: Number(rep[2]),
-                streak: Number(rep[5]),
-                totalStaked: Number(formatUnits(rep[3], 6)),
-              }
-            } catch {
-              return null
-            }
-          })
-        )
 
         const valid = reputations.filter(Boolean) as LeaderboardEntry[]
 
