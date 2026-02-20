@@ -224,7 +224,7 @@ export function Leaderboard() {
                 <span className="text-sm font-semibold text-center">
                   {entry.streak > 0 ? `${entry.streak} 🔥` : "0"}
                 </span>
-                <span className="text-sm font-semibold text-right text-[var(--text-secondary)]">
+                <span className="text-sm font-semibold text-right">
                   ${entry.totalStaked.toFixed(0)}
                 </span>
               </div>
