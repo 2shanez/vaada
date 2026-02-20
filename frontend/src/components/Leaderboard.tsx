@@ -135,7 +135,7 @@ export function Leaderboard() {
         ) : (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-[24px_minmax(0,1fr)_40px_40px_40px_44px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 border-b border-[var(--border)] text-[9px] sm:text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
+            <div className="grid grid-cols-[24px_minmax(0,1fr)_repeat(4,minmax(0,1fr))] sm:grid-cols-[40px_1fr_80px_80px_80px_90px] gap-0 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 border-b border-[var(--border)] text-[9px] sm:text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
               <span></span>
               <span>User</span>
               <span className="text-center">Kept</span>
@@ -148,7 +148,7 @@ export function Leaderboard() {
             {entries.map((entry, i) => (
               <div
                 key={entry.address}
-                className={`grid grid-cols-[24px_minmax(0,1fr)_40px_40px_40px_44px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 items-center ${
+                className={`grid grid-cols-[24px_minmax(0,1fr)_repeat(4,minmax(0,1fr))] sm:grid-cols-[40px_1fr_80px_80px_80px_90px] gap-0 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 items-center ${
                   i === 0 ? 'bg-[#2EE59D]/5' : ''
                 } ${i < entries.length - 1 ? 'border-b border-[var(--border)]/50' : ''}`}
               >
