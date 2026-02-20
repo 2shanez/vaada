@@ -81,11 +81,10 @@ export async function GET(
     const pct = Math.min(Math.round((actual / target) * 100), 100)
     const date = new Date(Number(r.endTime) * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     const shortAddr = `${r.participant.slice(0, 6)}...${r.participant.slice(-4)}`
-    const statusColor = kept ? '#16A34A' : '#DC2626'
-    const statusBg = kept ? '#F0FDF4' : '#FEF2F2'
-    const statusText = kept ? '\u2713 KEPT' : '\u2717 BROKEN'
-    const barBg = kept ? '#DCFCE7' : '#FEE2E2'
+    const statusColor = kept ? '#2EE59D' : '#EF4444'
+    const statusText = kept ? '✓ PROMISE KEPT' : '✗ BROKEN'
     const barPct = `${pct}%`
+    const emoji = r.goalType === 0 ? '🏃' : '👟'
 
     return new ImageResponse(
       (
@@ -96,72 +95,99 @@ export async function GET(
             width: '600px',
             height: '600px',
             backgroundColor: '#0B0B14',
-            padding: '48px',
             fontFamily: 'Inter',
             color: '#F9FAFB',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 28, fontWeight: 700, color: '#2EE59D' }}>vaada</span>
-            <div
-              style={{
+          {/* Subtle gradient glow top-right */}
+          <div style={{
+            display: 'flex',
+            position: 'absolute',
+            top: '-100px',
+            right: '-100px',
+            width: '300px',
+            height: '300px',
+            borderRadius: '50%',
+            background: kept ? 'radial-gradient(circle, rgba(46,229,157,0.08) 0%, transparent 70%)' : 'radial-gradient(circle, rgba(239,68,68,0.06) 0%, transparent 70%)',
+          }} />
+
+          {/* Inner card */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            margin: '24px',
+            padding: '40px',
+            borderRadius: '20px',
+            border: '1px solid rgba(255,255,255,0.06)',
+            backgroundColor: '#13131D',
+            flex: 1,
+          }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: 24, fontWeight: 700, color: '#2EE59D', letterSpacing: '-0.02em' }}>vaada</span>
+              <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                padding: '6px 20px',
-                borderRadius: 18,
-                backgroundColor: kept ? 'rgba(46,229,157,0.15)' : 'rgba(220,38,38,0.15)',
+                padding: '6px 16px',
+                borderRadius: 20,
+                border: `1px solid ${kept ? 'rgba(46,229,157,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                backgroundColor: kept ? 'rgba(46,229,157,0.1)' : 'rgba(239,68,68,0.1)',
                 color: statusColor,
-                fontSize: 15,
+                fontSize: 13,
                 fontWeight: 600,
-              }}
-            >
-              {statusText}
+                letterSpacing: '0.05em',
+              }}>
+                {statusText}
+              </div>
             </div>
-          </div>
 
-          {/* Goal name */}
-          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 48 }}>
-            <span style={{ fontSize: 40, fontWeight: 700, color: '#F9FAFB' }}>{r.goalName}</span>
-            <span style={{ fontSize: 20, color: '#9CA3AF', marginTop: 8 }}>
-              {actual.toLocaleString()} / {target.toLocaleString()} {unit} — {pct}%
-            </span>
-          </div>
+            {/* Goal name + emoji */}
+            <div style={{ display: 'flex', flexDirection: 'column', marginTop: 36 }}>
+              <span style={{ fontSize: 18, color: '#6B7280' }}>{emoji} PROMISE</span>
+              <span style={{ fontSize: 32, fontWeight: 700, color: '#F9FAFB', marginTop: 6, lineHeight: 1.2 }}>{r.goalName}</span>
+            </div>
 
-          {/* Progress bar */}
-          <div
-            style={{
-              display: 'flex',
-              marginTop: 24,
-              width: '100%',
-              height: 8,
-              borderRadius: 4,
-              backgroundColor: '#1F2937',
-            }}
-          >
-            <div
-              style={{
-                width: barPct,
-                height: 8,
-                borderRadius: 4,
-                backgroundColor: statusColor,
-              }}
-            />
-          </div>
+            {/* Progress section */}
+            <div style={{ display: 'flex', flexDirection: 'column', marginTop: 28 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span style={{ fontSize: 14, color: '#9CA3AF' }}>{actual.toLocaleString()} / {target.toLocaleString()} {unit}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: statusColor }}>{pct}%</span>
+              </div>
+              <div style={{
+                display: 'flex',
+                width: '100%',
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: '#1F2937',
+              }}>
+                <div style={{
+                  width: barPct,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: statusColor,
+                }} />
+              </div>
+            </div>
 
-          {/* Stake amount */}
-          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 40 }}>
-            <span style={{ fontSize: 14, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Staked</span>
-            <span style={{ fontSize: 36, fontWeight: 700, color: '#F9FAFB', marginTop: 4 }}>${stakeUSD}</span>
-          </div>
+            {/* Stats row */}
+            <div style={{ display: 'flex', gap: 40, marginTop: 32 }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Staked</span>
+                <span style={{ fontSize: 28, fontWeight: 700, color: '#F9FAFB', marginTop: 2 }}>${stakeUSD}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Date</span>
+                <span style={{ fontSize: 28, fontWeight: 700, color: '#F9FAFB', marginTop: 2 }}>{date}</span>
+              </div>
+            </div>
 
-          {/* Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
-            <span style={{ fontSize: 14, color: '#6B7280' }}>{shortAddr}</span>
-            <span style={{ fontSize: 14, color: '#6B7280' }}>{date}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
-            <span style={{ fontSize: 12, color: '#4B5563' }}>Proof #{id} · Base · vaada.io</span>
+            {/* Footer */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <span style={{ fontSize: 13, color: '#4B5563' }}>{shortAddr}</span>
+              <span style={{ fontSize: 13, color: '#4B5563' }}>Proof #{id} · Base</span>
+            </div>
           </div>
         </div>
       ),
