@@ -621,17 +621,6 @@ export default function Home() {
                 {/* <li><a href="/whitepaper.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Whitepaper</a></li> */}
               </ul>
             </div>
-            {/* Built With */}
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Built With</h4>
-              <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm text-[var(--text-secondary)]">
-                <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Base</a>
-                <a href="https://morpho.org" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Morpho</a>
-                <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Privy</a>
-                <a href="https://www.alchemy.com" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">Alchemy</a>
-                <a href="https://www.circle.com/usdc" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--foreground)] transition-colors">USDC</a>
-              </div>
-            </div>
             {/* Community */}
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Community</h4>
