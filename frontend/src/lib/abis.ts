@@ -278,6 +278,13 @@ export const NEW_USER_CHALLENGE_ABI = [
 
 export const VAADA_RECEIPTS_ABI = [
   {
+    name: 'ownerOf',
+    type: 'function',
+    inputs: [{ name: 'tokenId', type: 'uint256' }],
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
     name: 'getReputation',
     type: 'function',
     inputs: [{ name: 'account', type: 'address' }],
