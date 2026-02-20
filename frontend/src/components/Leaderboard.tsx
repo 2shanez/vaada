@@ -24,12 +24,16 @@ interface LeaderboardEntry {
   totalStaked: number
 }
 
+type TabType = 'all' | 'strava' | 'fitbit'
+
 export function Leaderboard() {
   const contracts = useContracts()
   const publicClient = usePublicClient()
   const leaderboardView = useInView(0.2)
   const [entries, setEntries] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<TabType>('all')
+  const [receiptsByAddr, setReceiptsByAddr] = useState<Record<string, any[]>>({})
 
   useEffect(() => {
     if (!contracts.vaadaReceipts) return
@@ -98,6 +102,23 @@ export function Leaderboard() {
           e.name = profiles[e.address.toLowerCase()]
         })
 
+        // Fetch wallet receipts for per-type filtering
+        const receiptCalls = uniqueAddresses.map(addr => ({
+          address: contracts.vaadaReceipts as `0x${string}`,
+          abi: VAADA_RECEIPTS_ABI,
+          functionName: 'getWalletReceipts' as const,
+          args: [addr as `0x${string}`],
+        }))
+        const receiptResults = await client.multicall({ contracts: receiptCalls })
+        const receiptsMap: Record<string, any[]> = {}
+        uniqueAddresses.forEach((addr, i) => {
+          const result = receiptResults[i]
+          if (result.status === 'success') {
+            receiptsMap[addr.toLowerCase()] = result.result as any[]
+          }
+        })
+        setReceiptsByAddr(receiptsMap)
+
         // Sort by completed desc, then win rate, then streak
         valid.sort((a, b) => b.completed - a.completed || b.winRate - a.winRate || b.streak - a.streak)
 
@@ -112,9 +133,31 @@ export function Leaderboard() {
     fetchLeaderboard()
   }, [publicClient, contracts.vaadaReceipts])
 
-  // Show section even when empty
+  // Compute filtered entries based on active tab
+  const filteredEntries = activeTab === 'all' ? entries : entries.map(entry => {
+    const receipts = receiptsByAddr[entry.address.toLowerCase()] || []
+    const goalTypeFilter = activeTab === 'strava' ? 0 : 1
+    const filtered = receipts.filter((r: any) => Number(r.goalType) === goalTypeFilter)
+    if (filtered.length === 0) return null
+    const completed = filtered.filter((r: any) => r.succeeded).length
+    const attempted = filtered.length
+    const totalStaked = filtered.reduce((sum: number, r: any) => sum + Number(r.stakeAmount) / 1e6, 0)
+    return {
+      ...entry,
+      attempted,
+      completed,
+      winRate: attempted > 0 ? Math.round((completed / attempted) * 100) : 0,
+      totalStaked,
+    }
+  }).filter(Boolean) as LeaderboardEntry[]
 
   const rankEmoji = (i: number) => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`
+
+  const tabs: { key: TabType; label: string; emoji: string }[] = [
+    { key: 'all', label: 'All', emoji: '🏆' },
+    { key: 'strava', label: 'Strava', emoji: '🏃' },
+    { key: 'fitbit', label: 'Fitbit', emoji: '👟' },
+  ]
 
   return (
     <section ref={leaderboardView.ref} className={`border-t border-[var(--border)] py-8 sm:py-12 px-4 sm:px-6 transition-all duration-700 ${leaderboardView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
@@ -124,11 +167,28 @@ export function Leaderboard() {
           <h2 className="text-xl sm:text-2xl font-bold mt-1">Top Promisers</h2>
         </div>
 
+        {/* Tabs */}
+        <div className="flex justify-center gap-2 mb-4">
+          {tabs.map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all ${
+                activeTab === tab.key
+                  ? 'bg-[#2EE59D]/15 text-[#2EE59D] border border-[#2EE59D]/30'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-transparent'
+              }`}
+            >
+              {tab.emoji} {tab.label}
+            </button>
+          ))}
+        </div>
+
         {loading ? (
           <div className="flex justify-center py-8">
             <div className="w-6 h-6 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : entries.length === 0 ? (
+        ) : filteredEntries.length === 0 ? (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
             <p className="text-sm text-[var(--text-secondary)]">No promises settled yet. Be the first!</p>
           </div>
@@ -145,7 +205,7 @@ export function Leaderboard() {
             </div>
 
             {/* Rows */}
-            {entries.map((entry, i) => (
+            {filteredEntries.map((entry, i) => (
               <div
                 key={entry.address}
                 className={`grid grid-cols-[24px_minmax(0,1fr)_repeat(4,minmax(0,1fr))] sm:grid-cols-[40px_1fr_80px_80px_80px_90px] gap-0 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 items-center ${
