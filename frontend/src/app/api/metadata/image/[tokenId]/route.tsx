@@ -93,27 +93,26 @@ export async function GET(
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '800px',
-            height: '450px',
-            backgroundColor: '#FFFFFF',
-            borderRadius: '16px',
+            width: '600px',
+            height: '600px',
+            backgroundColor: '#0B0B14',
             padding: '48px',
             fontFamily: 'Inter',
-            color: '#111827',
+            color: '#F9FAFB',
           }}
         >
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: 32, fontWeight: 700, color: '#2EE59D' }}>vaada</span>
+            <span style={{ fontSize: 28, fontWeight: 700, color: '#2EE59D' }}>vaada</span>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 padding: '6px 20px',
                 borderRadius: 18,
-                backgroundColor: statusBg,
+                backgroundColor: kept ? 'rgba(46,229,157,0.15)' : 'rgba(220,38,38,0.15)',
                 color: statusColor,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 600,
               }}
             >
@@ -122,9 +121,9 @@ export async function GET(
           </div>
 
           {/* Goal name */}
-          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 60 }}>
-            <span style={{ fontSize: 48, fontWeight: 700, color: '#111827' }}>{r.goalName}</span>
-            <span style={{ fontSize: 22, color: '#6B7280', marginTop: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 48 }}>
+            <span style={{ fontSize: 40, fontWeight: 700, color: '#F9FAFB' }}>{r.goalName}</span>
+            <span style={{ fontSize: 20, color: '#9CA3AF', marginTop: 8 }}>
               {actual.toLocaleString()} / {target.toLocaleString()} {unit} — {pct}%
             </span>
           </div>
@@ -133,11 +132,11 @@ export async function GET(
           <div
             style={{
               display: 'flex',
-              marginTop: 20,
+              marginTop: 24,
               width: '100%',
               height: 8,
               borderRadius: 4,
-              backgroundColor: barBg,
+              backgroundColor: '#1F2937',
             }}
           >
             <div
@@ -150,22 +149,25 @@ export async function GET(
             />
           </div>
 
+          {/* Stake amount */}
+          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 40 }}>
+            <span style={{ fontSize: 14, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Staked</span>
+            <span style={{ fontSize: 36, fontWeight: 700, color: '#F9FAFB', marginTop: 4 }}>${stakeUSD}</span>
+          </div>
+
           {/* Footer */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 'auto' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: 16, color: '#9CA3AF' }}>Staked</span>
-              <span style={{ fontSize: 28, fontWeight: 700, color: '#111827', marginTop: 4 }}>${stakeUSD} USDC</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <span style={{ fontSize: 14, color: '#9CA3AF' }}>{shortAddr} — {date}</span>
-              <span style={{ fontSize: 14, color: '#D1D5DB', marginTop: 4 }}>Proof #{id} on Base</span>
-            </div>
+            <span style={{ fontSize: 14, color: '#6B7280' }}>{shortAddr}</span>
+            <span style={{ fontSize: 14, color: '#6B7280' }}>{date}</span>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+            <span style={{ fontSize: 12, color: '#4B5563' }}>Proof #{id} · Base · vaada.io</span>
           </div>
         </div>
       ),
       {
-        width: 800,
-        height: 450,
+        width: 600,
+        height: 600,
         fonts: [
           {
             name: 'Inter',
