@@ -219,7 +219,7 @@ export function AdminGoals() {
                 const { label, color } = getPhaseLabel(goal)
                 const isActive = goal.active && !goal.settled
                 return (
-                  <tr key={goal.id} className={`border-b border-[var(--border)]/50 ${!isActive ? 'opacity-50' : ''} ${hiddenIds.includes(goal.id) ? 'opacity-40 line-through' : ''}`}>
+                  <tr key={goal.id} className={`border-b border-[var(--border)]/50 ${!isActive ? 'opacity-50' : ''} ${hiddenIds.includes(goal.id) ? 'opacity-30 bg-red-50' : ''}`}>
                     <td className="py-3 pr-3 font-mono text-[var(--text-secondary)]">{goal.id}</td>
                     <td className="py-3 pr-3 font-medium">{goal.name}</td>
                     <td className="py-3 pr-3">
@@ -243,24 +243,24 @@ export function AdminGoals() {
                     </td>
                     <td className="py-3">
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => handleToggleHide(goal.id)}
-                          disabled={hidingId === goal.id}
-                          className={`text-xs px-2 py-1 rounded-lg border transition-colors disabled:opacity-50 ${
-                            hiddenIds.includes(goal.id)
-                              ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20 hover:bg-yellow-500/20'
-                              : 'bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200'
-                          }`}
-                        >
-                          {hidingId === goal.id ? '...' : hiddenIds.includes(goal.id) ? 'Show' : 'Hide'}
-                        </button>
-                        {isActive && (
+                        {hiddenIds.includes(goal.id) ? (
                           <button
-                            onClick={() => handleCancel(goal.id)}
-                            disabled={cancellingId === goal.id}
-                            className="text-xs px-2 py-1 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                            onClick={() => handleToggleHide(goal.id)}
+                            disabled={hidingId === goal.id}
+                            className="text-xs px-2 py-1 rounded-lg bg-green-500/10 text-green-600 border border-green-500/20 hover:bg-green-500/20 transition-colors disabled:opacity-50"
                           >
-                            {cancellingId === goal.id ? '...' : 'Cancel'}
+                            {hidingId === goal.id ? '...' : 'Restore'}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              if (confirm(`Delete "${goal.name}" from the site? (Can be restored later)`))
+                                handleToggleHide(goal.id)
+                            }}
+                            disabled={hidingId === goal.id}
+                            className="text-xs px-2 py-1 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                          >
+                            {hidingId === goal.id ? '...' : 'Delete'}
                           </button>
                         )}
                         <a
