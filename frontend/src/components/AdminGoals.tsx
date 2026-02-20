@@ -183,101 +183,130 @@ export function AdminGoals() {
     )
   }
 
+  const [showArchived, setShowArchived] = useState(false)
+  const activeGoals = goals.filter(g => !hiddenIds.includes(g.id))
+  const archivedGoals = goals.filter(g => hiddenIds.includes(g.id))
+
+  const renderTable = (goalList: typeof goals, isArchive: boolean) => (
+    <div className="overflow-x-auto -mx-6 px-6">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-[var(--text-secondary)] text-xs uppercase tracking-wider border-b border-[var(--border)]">
+            <th className="pb-3 pr-3">#</th>
+            <th className="pb-3 pr-3">Name</th>
+            <th className="pb-3 pr-3">Type</th>
+            <th className="pb-3 pr-3">Target</th>
+            <th className="pb-3 pr-3">Stake</th>
+            <th className="pb-3 pr-3">Status</th>
+            <th className="pb-3 pr-3">Users</th>
+            <th className="pb-3 pr-3">TVL</th>
+            <th className="pb-3 pr-3">Deadline</th>
+            <th className="pb-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {goalList.map((goal) => {
+            const { label, color } = getPhaseLabel(goal)
+            const isActive = goal.active && !goal.settled
+            return (
+              <tr key={goal.id} className={`border-b border-[var(--border)]/50 ${!isActive && !isArchive ? 'opacity-50' : ''}`}>
+                <td className="py-3 pr-3 font-mono text-[var(--text-secondary)]">{goal.id}</td>
+                <td className="py-3 pr-3 font-medium">{goal.name}</td>
+                <td className="py-3 pr-3">
+                  <span className="text-xs">{goal.goalType === 1 ? '👟 Steps' : '🏃 Miles'}</span>
+                </td>
+                <td className="py-3 pr-3 font-mono">
+                  {goal.target.toLocaleString()}
+                </td>
+                <td className="py-3 pr-3 font-mono">
+                  ${goal.minStake}{goal.maxStake !== goal.minStake ? `-$${goal.maxStake}` : ''}
+                </td>
+                <td className={`py-3 pr-3 font-medium ${color}`}>
+                  {label}
+                </td>
+                <td className="py-3 pr-3 font-mono">{goal.participantCount}</td>
+                <td className="py-3 pr-3 font-mono">${goal.totalStaked.toFixed(2)}</td>
+                <td className="py-3 pr-3 text-xs text-[var(--text-secondary)]">
+                  {formatTime(goal.deadline)}
+                  <br />
+                  <span className="text-[10px]">{formatDuration(goal.deadline - goal.startTime)} duration</span>
+                </td>
+                <td className="py-3">
+                  <div className="flex gap-2">
+                    {isArchive ? (
+                      <button
+                        onClick={() => handleToggleHide(goal.id)}
+                        disabled={hidingId === goal.id}
+                        className="text-xs px-2 py-1 rounded-lg bg-green-500/10 text-green-600 border border-green-500/20 hover:bg-green-500/20 transition-colors disabled:opacity-50"
+                      >
+                        {hidingId === goal.id ? '...' : 'Restore'}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          if (confirm(`Archive "${goal.name}"? It will be hidden from the public site.`))
+                            handleToggleHide(goal.id)
+                        }}
+                        disabled={hidingId === goal.id}
+                        className="text-xs px-2 py-1 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                      >
+                        {hidingId === goal.id ? '...' : 'Archive'}
+                      </button>
+                    )}
+                    <a
+                      href={`https://basescan.org/address/${contracts.goalStake}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs px-2 py-1 rounded-lg bg-[var(--background)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[#2EE59D] transition-colors"
+                    >
+                      View
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+
   return (
-    <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">📋 Created Promises ({goals.length})</h2>
-        <button
-          onClick={fetchGoals}
-          className="text-xs text-[var(--text-secondary)] hover:text-[#2EE59D] transition-colors"
-        >
-          ↻ Refresh
-        </button>
+    <div className="space-y-4">
+      {/* Active Promises */}
+      <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">📋 Active Promises ({activeGoals.length})</h2>
+          <button
+            onClick={fetchGoals}
+            className="text-xs text-[var(--text-secondary)] hover:text-[#2EE59D] transition-colors"
+          >
+            ↻ Refresh
+          </button>
+        </div>
+
+        {activeGoals.length === 0 ? (
+          <p className="text-[var(--text-secondary)] text-sm">No active promises.</p>
+        ) : (
+          renderTable(activeGoals, false)
+        )}
       </div>
 
-      {goals.length === 0 ? (
-        <p className="text-[var(--text-secondary)] text-sm">No promises created yet.</p>
-      ) : (
-        <div className="overflow-x-auto -mx-6 px-6">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-[var(--text-secondary)] text-xs uppercase tracking-wider border-b border-[var(--border)]">
-                <th className="pb-3 pr-3">#</th>
-                <th className="pb-3 pr-3">Name</th>
-                <th className="pb-3 pr-3">Type</th>
-                <th className="pb-3 pr-3">Target</th>
-                <th className="pb-3 pr-3">Stake</th>
-                <th className="pb-3 pr-3">Status</th>
-                <th className="pb-3 pr-3">Users</th>
-                <th className="pb-3 pr-3">TVL</th>
-                <th className="pb-3 pr-3">Deadline</th>
-                <th className="pb-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {goals.map((goal) => {
-                const { label, color } = getPhaseLabel(goal)
-                const isActive = goal.active && !goal.settled
-                return (
-                  <tr key={goal.id} className={`border-b border-[var(--border)]/50 ${!isActive ? 'opacity-50' : ''} ${hiddenIds.includes(goal.id) ? 'opacity-30 bg-red-50' : ''}`}>
-                    <td className="py-3 pr-3 font-mono text-[var(--text-secondary)]">{goal.id}</td>
-                    <td className="py-3 pr-3 font-medium">{goal.name}</td>
-                    <td className="py-3 pr-3">
-                      <span className="text-xs">{goal.goalType === 1 ? '👟 Steps' : '🏃 Miles'}</span>
-                    </td>
-                    <td className="py-3 pr-3 font-mono">
-                      {goal.target.toLocaleString()}
-                    </td>
-                    <td className="py-3 pr-3 font-mono">
-                      ${goal.minStake}{goal.maxStake !== goal.minStake ? `-$${goal.maxStake}` : ''}
-                    </td>
-                    <td className={`py-3 pr-3 font-medium ${color}`}>
-                      {label}
-                    </td>
-                    <td className="py-3 pr-3 font-mono">{goal.participantCount}</td>
-                    <td className="py-3 pr-3 font-mono">${goal.totalStaked.toFixed(2)}</td>
-                    <td className="py-3 pr-3 text-xs text-[var(--text-secondary)]">
-                      {formatTime(goal.deadline)}
-                      <br />
-                      <span className="text-[10px]">{formatDuration(goal.deadline - goal.startTime)} duration</span>
-                    </td>
-                    <td className="py-3">
-                      <div className="flex gap-2">
-                        {hiddenIds.includes(goal.id) ? (
-                          <button
-                            onClick={() => handleToggleHide(goal.id)}
-                            disabled={hidingId === goal.id}
-                            className="text-xs px-2 py-1 rounded-lg bg-green-500/10 text-green-600 border border-green-500/20 hover:bg-green-500/20 transition-colors disabled:opacity-50"
-                          >
-                            {hidingId === goal.id ? '...' : 'Restore'}
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              if (confirm(`Delete "${goal.name}" from the site? (Can be restored later)`))
-                                handleToggleHide(goal.id)
-                            }}
-                            disabled={hidingId === goal.id}
-                            className="text-xs px-2 py-1 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-50"
-                          >
-                            {hidingId === goal.id ? '...' : 'Delete'}
-                          </button>
-                        )}
-                        <a
-                          href={`https://basescan.org/address/${contracts.goalStake}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs px-2 py-1 rounded-lg bg-[var(--background)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[#2EE59D] transition-colors"
-                        >
-                          View
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+      {/* Archived Promises */}
+      {archivedGoals.length > 0 && (
+        <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
+          <button
+            onClick={() => setShowArchived(!showArchived)}
+            className="flex items-center justify-between w-full text-left"
+          >
+            <h2 className="text-lg font-semibold text-[var(--text-secondary)]">🗃️ Archived ({archivedGoals.length})</h2>
+            <span className="text-[var(--text-secondary)] text-sm">{showArchived ? '▲ Hide' : '▼ Show'}</span>
+          </button>
+          {showArchived && (
+            <div className="mt-4">
+              {renderTable(archivedGoals, true)}
+            </div>
+          )}
         </div>
       )}
     </div>
