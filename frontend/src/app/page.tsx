@@ -688,7 +688,7 @@ export default function Home() {
             <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
             <div className="flex items-center gap-2 mt-3">
               <span className="text-xs text-[var(--text-secondary)]">Built by:</span>
-              <img src="/founder.jpg" alt="Founder" className="w-8 h-8 rounded-md" />
+              <img src="/founder.jpg" alt="Founder" className="w-8 h-8" />
             </div>
         </div>
       </footer>
