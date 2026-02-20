@@ -637,7 +637,7 @@ export default function AdminPage() {
                     value={goalName}
                     onChange={(e) => setGoalName(e.target.value)}
                     placeholder="e.g. 10K Steps Daily"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                   />
                 </div>
 
@@ -678,7 +678,7 @@ export default function AdminPage() {
                     value={goalTarget}
                     onChange={(e) => setGoalTarget(e.target.value)}
                     placeholder={goalType === 1 ? 'e.g. 10000' : 'e.g. 3'}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                   />
                 </div>
 
@@ -691,7 +691,7 @@ export default function AdminPage() {
                       value={goalStake}
                       onChange={(e) => setGoalStake(e.target.value)}
                       placeholder="5"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                   <div className="flex-1">
@@ -701,7 +701,7 @@ export default function AdminPage() {
                       value={goalMaxStake}
                       onChange={(e) => setGoalMaxStake(e.target.value)}
                       placeholder="Same as min"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                 </div>
@@ -715,7 +715,7 @@ export default function AdminPage() {
                       value={goalEntryMin}
                       onChange={(e) => setGoalEntryMin(e.target.value)}
                       placeholder="60"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                   <div className="flex-1">
@@ -725,7 +725,7 @@ export default function AdminPage() {
                       value={goalDeadlineMin}
                       onChange={(e) => setGoalDeadlineMin(e.target.value)}
                       placeholder="120"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                 </div>
