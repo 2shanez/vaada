@@ -24,6 +24,15 @@ export function BrowseGoals() {
   const [goals, setGoals] = useState<Goal[]>([])
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
+  const [hiddenIds, setHiddenIds] = useState<number[]>([])
+
+  // Fetch hidden goal IDs
+  useEffect(() => {
+    fetch('/api/admin/hidden-goals')
+      .then(r => r.json())
+      .then(d => setHiddenIds(d.hiddenIds || []))
+      .catch(() => {})
+  }, [])
 
   const FILTERS = ['Live', 'All'] as const
   type Filter = typeof FILTERS[number]
@@ -145,6 +154,8 @@ export function BrowseGoals() {
   // Filter: Live = unsettled only, All = last 30 days
   const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400
   const filteredGoals = goals.filter(g => {
+    // Hide admin-hidden goals
+    if (g.onChainId !== undefined && hiddenIds.includes(g.onChainId)) return false
     if (activeFilter === 'Live') {
       return !g.settled
     }

@@ -55,6 +55,34 @@ export function AdminGoals() {
   const [goals, setGoals] = useState<AdminGoal[]>([])
   const [loading, setLoading] = useState(true)
   const [cancellingId, setCancellingId] = useState<number | null>(null)
+  const [hiddenIds, setHiddenIds] = useState<number[]>([])
+  const [hidingId, setHidingId] = useState<number | null>(null)
+
+  // Fetch hidden goals
+  useEffect(() => {
+    fetch('/api/admin/hidden-goals')
+      .then(r => r.json())
+      .then(d => setHiddenIds(d.hiddenIds || []))
+      .catch(() => {})
+  }, [])
+
+  const handleToggleHide = async (goalId: number) => {
+    const isHidden = hiddenIds.includes(goalId)
+    setHidingId(goalId)
+    try {
+      const res = await fetch('/api/admin/hidden-goals', {
+        method: isHidden ? 'DELETE' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ goalId }),
+      })
+      if (!res.ok) throw new Error('Failed')
+      setHiddenIds(prev => isHidden ? prev.filter(id => id !== goalId) : [...prev, goalId])
+    } catch (err) {
+      alert('Failed to update visibility')
+    } finally {
+      setHidingId(null)
+    }
+  }
 
   const fetchGoals = useCallback(async () => {
     if (!contracts.goalStake) return
@@ -191,7 +219,7 @@ export function AdminGoals() {
                 const { label, color } = getPhaseLabel(goal)
                 const isActive = goal.active && !goal.settled
                 return (
-                  <tr key={goal.id} className={`border-b border-[var(--border)]/50 ${!isActive ? 'opacity-50' : ''}`}>
+                  <tr key={goal.id} className={`border-b border-[var(--border)]/50 ${!isActive ? 'opacity-50' : ''} ${hiddenIds.includes(goal.id) ? 'opacity-40 line-through' : ''}`}>
                     <td className="py-3 pr-3 font-mono text-[var(--text-secondary)]">{goal.id}</td>
                     <td className="py-3 pr-3 font-medium">{goal.name}</td>
                     <td className="py-3 pr-3">
@@ -215,6 +243,17 @@ export function AdminGoals() {
                     </td>
                     <td className="py-3">
                       <div className="flex gap-2">
+                        <button
+                          onClick={() => handleToggleHide(goal.id)}
+                          disabled={hidingId === goal.id}
+                          className={`text-xs px-2 py-1 rounded-lg border transition-colors disabled:opacity-50 ${
+                            hiddenIds.includes(goal.id)
+                              ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20 hover:bg-yellow-500/20'
+                              : 'bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200'
+                          }`}
+                        >
+                          {hidingId === goal.id ? '...' : hiddenIds.includes(goal.id) ? 'Show' : 'Hide'}
+                        </button>
                         {isActive && (
                           <button
                             onClick={() => handleCancel(goal.id)}
