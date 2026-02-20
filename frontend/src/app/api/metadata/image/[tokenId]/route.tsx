@@ -82,11 +82,19 @@ export async function GET(
     const pct = Math.min(Math.round((actual / target) * 100), 100)
     const date = new Date(Number(r.endTime) * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     const shortAddr = `${r.participant.slice(0, 6)}...${r.participant.slice(-4)}`
-    const statusColor = kept ? '#2EE59D' : '#EF4444'
+    const accentColor = kept ? '#2EE59D' : '#EF4444'
     const statusText = kept ? 'KEPT' : 'BROKEN'
     const barPct = `${pct}%`
     const emoji = r.goalType === 0 ? '🏃' : '👟'
     const goalType = r.goalType === 0 ? 'Running' : 'Fitbit (Steps)'
+
+    // White theme colors
+    const bg = '#FFFFFF'
+    const cardBg = '#F9FAFB'
+    const textPrimary = '#111827'
+    const textSecondary = '#6B7280'
+    const borderColor = '#E5E7EB'
+    const pillBg = '#F3F4F6'
 
     return new ImageResponse(
       (
@@ -94,48 +102,46 @@ export async function GET(
           style={{
             display: 'flex',
             flexDirection: 'column',
-            width: '600px',
-            height: '600px',
-            backgroundColor: '#0A0A12',
+            width: '800px',
+            height: '420px',
+            backgroundColor: bg,
             fontFamily: 'Inter',
-            color: '#F9FAFB',
-            padding: '20px',
+            color: textPrimary,
+            padding: '24px',
           }}
         >
-          {/* Card container */}
+          {/* Card */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
             borderRadius: '20px',
-            border: `1px solid ${kept ? 'rgba(46,229,157,0.25)' : 'rgba(239,68,68,0.25)'}`,
+            border: `1px solid ${borderColor}`,
             overflow: 'hidden',
-            backgroundColor: '#12121C',
+            backgroundColor: bg,
           }}>
-            {/* Header section — gradient like GoalCard */}
+            {/* Header */}
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              padding: '28px 32px 24px',
-              background: 'linear-gradient(135deg, #0A0A12, #12121C)',
-              borderBottom: '1px solid rgba(255,255,255,0.06)',
-              position: 'relative',
+              padding: '24px 28px 20px',
+              borderBottom: `1px solid ${borderColor}`,
             }}>
-              {/* Top row: logo + status badge */}
+              {/* Top row */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: 22, fontWeight: 700, color: '#2EE59D', letterSpacing: '-0.02em' }}>vaada</span>
-                  <span style={{ fontSize: 12, color: '#6B7280' }}>Proof #{id}</span>
+                  <span style={{ fontSize: 20, fontWeight: 700, color: '#2EE59D' }}>vaada</span>
+                  <span style={{ fontSize: 12, color: textSecondary }}>Proof #{id}</span>
                 </div>
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '5px 14px',
+                  gap: '5px',
+                  padding: '4px 14px',
                   borderRadius: 20,
-                  border: `1px solid ${kept ? 'rgba(46,229,157,0.3)' : 'rgba(239,68,68,0.3)'}`,
-                  backgroundColor: kept ? 'rgba(46,229,157,0.1)' : 'rgba(239,68,68,0.1)',
-                  color: statusColor,
+                  border: `1px solid ${kept ? 'rgba(46,229,157,0.4)' : 'rgba(239,68,68,0.4)'}`,
+                  backgroundColor: kept ? 'rgba(46,229,157,0.08)' : 'rgba(239,68,68,0.08)',
+                  color: accentColor,
                   fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: '0.06em',
@@ -144,24 +150,24 @@ export async function GET(
                 </div>
               </div>
 
-              {/* Goal icon + name */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: 24 }}>
+              {/* Goal name row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: 16 }}>
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: 56,
-                  height: 56,
-                  borderRadius: 16,
-                  background: 'linear-gradient(135deg, rgba(46,229,157,0.2), rgba(46,229,157,0.05))',
-                  border: '1px solid rgba(46,229,157,0.15)',
-                  fontSize: 26,
+                  width: 48,
+                  height: 48,
+                  borderRadius: 14,
+                  backgroundColor: kept ? 'rgba(46,229,157,0.1)' : 'rgba(239,68,68,0.1)',
+                  border: `1px solid ${kept ? 'rgba(46,229,157,0.2)' : 'rgba(239,68,68,0.2)'}`,
+                  fontSize: 22,
                 }}>
                   {emoji}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: 24, fontWeight: 700, color: '#F9FAFB', lineHeight: 1.2 }}>{r.goalName}</span>
-                  <span style={{ fontSize: 13, color: '#6B7280', marginTop: 2 }}>{goalType} · {date}</span>
+                  <span style={{ fontSize: 22, fontWeight: 700, color: textPrimary, lineHeight: 1.2 }}>{r.goalName}</span>
+                  <span style={{ fontSize: 12, color: textSecondary, marginTop: 2 }}>{goalType} · {date}</span>
                 </div>
               </div>
             </div>
@@ -170,87 +176,53 @@ export async function GET(
             <div style={{
               display: 'flex',
               flexDirection: 'column',
-              padding: '24px 32px',
+              padding: '20px 28px',
               flex: 1,
+              justifyContent: 'space-between',
             }}>
-              {/* Stat pills row — matching GoalCard stat boxes */}
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  backgroundColor: '#0A0A12',
-                  borderRadius: 12,
-                  padding: '12px 14px',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  alignItems: 'center',
-                }}>
-                  <span style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Target</span>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: '#F9FAFB', marginTop: 2 }}>{target.toLocaleString()}</span>
-                  <span style={{ fontSize: 11, color: '#6B7280' }}>{unit}</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  backgroundColor: '#0A0A12',
-                  borderRadius: 12,
-                  padding: '12px 14px',
-                  border: `1px solid ${kept ? 'rgba(46,229,157,0.3)' : 'rgba(255,255,255,0.06)'}`,
-                  alignItems: 'center',
-                }}>
-                  <span style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Actual</span>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: kept ? '#2EE59D' : '#F9FAFB', marginTop: 2 }}>{actual.toLocaleString()}</span>
-                  <span style={{ fontSize: 11, color: '#6B7280' }}>{unit}</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  backgroundColor: '#0A0A12',
-                  borderRadius: 12,
-                  padding: '12px 14px',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  alignItems: 'center',
-                }}>
-                  <span style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Staked</span>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: '#F9FAFB', marginTop: 2 }}>${stakeUSD}</span>
-                  <span style={{ fontSize: 11, color: '#6B7280' }}>USDC</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  backgroundColor: '#0A0A12',
-                  borderRadius: 12,
-                  padding: '12px 14px',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  alignItems: 'center',
-                }}>
-                  <span style={{ fontSize: 11, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Payout</span>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: kept ? '#2EE59D' : '#EF4444', marginTop: 2 }}>${payoutUSD}</span>
-                  <span style={{ fontSize: 11, color: '#6B7280' }}>USDC</span>
-                </div>
+              {/* Stat pills */}
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {[
+                  { label: 'Target', value: target.toLocaleString(), sub: unit },
+                  { label: 'Actual', value: actual.toLocaleString(), sub: unit, highlight: kept },
+                  { label: 'Staked', value: `$${stakeUSD}`, sub: 'USDC' },
+                  { label: 'Payout', value: `$${payoutUSD}`, sub: 'USDC', highlight: true },
+                ].map((s, i) => (
+                  <div key={i} style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                    backgroundColor: pillBg,
+                    borderRadius: 12,
+                    padding: '10px 12px',
+                    border: `1px solid ${s.highlight ? (kept ? 'rgba(46,229,157,0.3)' : 'rgba(239,68,68,0.3)') : borderColor}`,
+                    alignItems: 'center',
+                  }}>
+                    <span style={{ fontSize: 10, color: textSecondary, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</span>
+                    <span style={{ fontSize: 17, fontWeight: 700, color: s.highlight ? accentColor : textPrimary, marginTop: 2 }}>{s.value}</span>
+                    <span style={{ fontSize: 10, color: textSecondary }}>{s.sub}</span>
+                  </div>
+                ))}
               </div>
 
-              {/* Progress bar */}
-              <div style={{ display: 'flex', flexDirection: 'column', marginTop: 24 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 13, color: '#9CA3AF' }}>Progress</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: statusColor }}>{pct}%</span>
+              {/* Progress */}
+              <div style={{ display: 'flex', flexDirection: 'column', marginTop: 16 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: textSecondary }}>Progress</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: accentColor }}>{pct}%</span>
                 </div>
                 <div style={{
                   display: 'flex',
                   width: '100%',
-                  height: 8,
-                  borderRadius: 4,
-                  backgroundColor: 'rgba(255,255,255,0.06)',
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: '#E5E7EB',
                 }}>
                   <div style={{
                     width: barPct,
-                    height: 8,
-                    borderRadius: 4,
-                    backgroundColor: statusColor,
+                    height: 6,
+                    borderRadius: 3,
+                    backgroundColor: accentColor,
                   }} />
                 </div>
               </div>
@@ -260,14 +232,14 @@ export async function GET(
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginTop: 'auto',
-                paddingTop: 20,
-                borderTop: '1px solid rgba(255,255,255,0.06)',
+                paddingTop: 12,
+                borderTop: `1px solid ${borderColor}`,
+                marginTop: 12,
               }}>
-                <span style={{ fontSize: 12, color: '#4B5563' }}>{shortAddr}</span>
+                <span style={{ fontSize: 11, color: textSecondary }}>{shortAddr}</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, color: '#4B5563' }}>Goal #{Number(r.goalId)}</span>
-                  <span style={{ fontSize: 12, color: '#2EE59D' }}>⬡ Base</span>
+                  <span style={{ fontSize: 11, color: textSecondary }}>Goal #{Number(r.goalId)}</span>
+                  <span style={{ fontSize: 11, color: '#2EE59D', fontWeight: 600 }}>⬡ Base</span>
                 </div>
               </div>
             </div>
@@ -275,8 +247,8 @@ export async function GET(
         </div>
       ),
       {
-        width: 600,
-        height: 600,
+        width: 800,
+        height: 420,
         fonts: [
           {
             name: 'Inter',
