@@ -57,6 +57,7 @@ export function AdminGoals() {
   const [cancellingId, setCancellingId] = useState<number | null>(null)
   const [hiddenIds, setHiddenIds] = useState<number[]>([])
   const [hidingId, setHidingId] = useState<number | null>(null)
+  const [showArchived, setShowArchived] = useState(false)
 
   // Fetch hidden goals
   useEffect(() => {
@@ -183,7 +184,6 @@ export function AdminGoals() {
     )
   }
 
-  const [showArchived, setShowArchived] = useState(false)
   const activeGoals = goals.filter(g => !hiddenIds.includes(g.id))
   const archivedGoals = goals.filter(g => hiddenIds.includes(g.id))
 
