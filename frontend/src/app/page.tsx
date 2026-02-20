@@ -611,7 +611,7 @@ export default function Home() {
       <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--surface)]">
         <div className="max-w-6xl mx-auto">
           {/* Footer columns */}
-          <div className="flex flex-wrap justify-center gap-16 mb-6 text-center sm:text-left">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12 mb-6">
             {/* Built With */}
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-4">Built With</h4>
