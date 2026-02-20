@@ -200,7 +200,7 @@ export function usePlatformStats() {
     }
 
     setStats({
-      totalStaked: Number(formatUnits(totalStaked, 6)),
+      totalStaked: Math.floor(Number(formatUnits(totalStaked, 6))),
       totalParticipants,
       activeGoals,
       totalGoals: validGoals,
