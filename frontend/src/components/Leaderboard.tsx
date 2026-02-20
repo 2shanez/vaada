@@ -1,18 +1,33 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
-import { usePublicClient, useReadContract } from 'wagmi'
-import { createPublicClient, http, formatUnits } from 'viem'
-import { base } from 'viem/chains'
-import { useContracts } from '@/lib/hooks'
-import { VAADA_RECEIPTS_ABI } from '@/lib/abis'
-import { fetchProfiles } from './ProfileName'
-import { useInView } from '@/lib/useInView'
+import { useState, useEffect } from "react"
+import { usePublicClient } from "wagmi"
+import { createPublicClient, http, formatUnits } from "viem"
+import { base } from "viem/chains"
+import { useContracts } from "@/lib/hooks"
+import { VAADA_RECEIPTS_ABI } from "@/lib/abis"
+import { fetchProfiles } from "./ProfileName"
+import { useInView } from "@/lib/useInView"
 
 const fallbackClient = createPublicClient({
   chain: base,
-  transport: http(process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://base-mainnet.g.alchemy.com/v2/V2EEs8WP3hd6yldPEx92v'),
+  transport: http(process.env.NEXT_PUBLIC_BASE_RPC_URL || "https://base-mainnet.g.alchemy.com/v2/V2EEs8WP3hd6yldPEx92v"),
 })
+
+// GoalType enum matches contract: 0 = STRAVA_MILES, 1 = FITBIT_STEPS
+const GOAL_TYPE_LABELS: Record<string, { label: string; emoji: string }> = {
+  all: { label: "All", emoji: "🏆" },
+  strava: { label: "Strava", emoji: "🏃" },
+  fitbit: { label: "Fitbit", emoji: "👟" },
+}
+
+interface Receipt {
+  goalId: bigint
+  goalType: number
+  succeeded: boolean
+  stakeAmount: bigint
+  payout: bigint
+}
 
 interface LeaderboardEntry {
   address: string
@@ -24,12 +39,31 @@ interface LeaderboardEntry {
   totalStaked: number
 }
 
+function computeStats(receipts: Receipt[]): Omit<LeaderboardEntry, "address" | "name"> {
+  const attempted = receipts.length
+  const completed = receipts.filter((r) => r.succeeded).length
+  const winRate = attempted > 0 ? Math.round((completed / attempted) * 100) : 0
+  const totalStaked = receipts.reduce((sum, r) => sum + Number(formatUnits(r.stakeAmount, 6)), 0)
+
+  // Calculate current streak (most recent consecutive wins)
+  let streak = 0
+  // Receipts are in mint order, walk backwards
+  for (let i = receipts.length - 1; i >= 0; i--) {
+    if (receipts[i].succeeded) streak++
+    else break
+  }
+
+  return { attempted, completed, winRate, streak, totalStaked }
+}
+
 export function Leaderboard() {
   const contracts = useContracts()
   const publicClient = usePublicClient()
   const leaderboardView = useInView(0.2)
-  const [entries, setEntries] = useState<LeaderboardEntry[]>([])
+  const [allData, setAllData] = useState<Map<string, Receipt[]>>(new Map())
+  const [profiles, setProfiles] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("all")
 
   useEffect(() => {
     if (!contracts.vaadaReceipts) return
@@ -37,11 +71,10 @@ export function Leaderboard() {
 
     const fetchLeaderboard = async () => {
       try {
-        // Check total supply first
         const supply = await client.readContract({
           address: contracts.vaadaReceipts,
           abi: VAADA_RECEIPTS_ABI,
-          functionName: 'totalSupply',
+          functionName: "totalSupply",
         }) as bigint
 
         if (Number(supply) === 0) {
@@ -49,14 +82,14 @@ export function Leaderboard() {
           return
         }
 
-        // Iterate through all minted tokens to find unique owners
+        // Get unique owners via ownerOf
         const owners = await Promise.all(
           Array.from({ length: Number(supply) }, (_, i) => i + 1).map(async (tokenId) => {
             try {
               return await client.readContract({
                 address: contracts.vaadaReceipts,
-                abi: [{ type: 'function', name: 'ownerOf', inputs: [{ name: 'tokenId', type: 'uint256' }], outputs: [{ name: '', type: 'address' }], stateMutability: 'view' }],
-                functionName: 'ownerOf',
+                abi: [{ type: "function", name: "ownerOf", inputs: [{ name: "tokenId", type: "uint256" }], outputs: [{ name: "", type: "address" }], stateMutability: "view" }],
+                functionName: "ownerOf",
                 args: [BigInt(tokenId)],
               }) as string
             } catch {
@@ -65,48 +98,33 @@ export function Leaderboard() {
           })
         )
 
-        // Unique addresses
         const uniqueAddresses = [...new Set(owners.filter(Boolean) as string[])]
 
-        // Fetch reputation for each
-        const reputations = await Promise.all(
+        // Fetch receipts for each user
+        const receiptMap = new Map<string, Receipt[]>()
+        await Promise.all(
           uniqueAddresses.map(async (addr) => {
             try {
-              const rep = await client.readContract({
+              const receipts = await client.readContract({
                 address: contracts.vaadaReceipts,
                 abi: VAADA_RECEIPTS_ABI,
-                functionName: 'getReputation',
+                functionName: "getWalletReceipts",
                 args: [addr as `0x${string}`],
-              }) as [bigint, bigint, bigint, bigint, bigint, bigint, bigint]
-
-              return {
-                address: addr,
-                attempted: Number(rep[0]),
-                completed: Number(rep[1]),
-                winRate: Number(rep[2]) / 100,
-                streak: Number(rep[5]),
-                totalStaked: Number(formatUnits(rep[3], 6)),
-              }
+              }) as unknown as Receipt[]
+              receiptMap.set(addr, receipts)
             } catch {
-              return null
+              // skip
             }
           })
         )
 
-        const valid = reputations.filter(Boolean) as LeaderboardEntry[]
+        setAllData(receiptMap)
 
         // Fetch display names
-        const profiles = await fetchProfiles(valid.map(e => e.address))
-        valid.forEach(e => {
-          e.name = profiles[e.address.toLowerCase()]
-        })
-
-        // Sort by completed desc, then win rate, then streak
-        valid.sort((a, b) => b.winRate - a.winRate || b.completed - a.completed || b.streak - a.streak)
-
-        setEntries(valid)
+        const profs = await fetchProfiles(uniqueAddresses)
+        setProfiles(profs)
       } catch (err) {
-        console.error('Leaderboard fetch error:', err)
+        console.error("Leaderboard fetch error:", err)
       } finally {
         setLoading(false)
       }
@@ -115,16 +133,54 @@ export function Leaderboard() {
     fetchLeaderboard()
   }, [publicClient, contracts.vaadaReceipts])
 
-  // Show section even when empty
+  // Compute entries based on active tab
+  const entries: LeaderboardEntry[] = []
+  allData.forEach((receipts, address) => {
+    const filtered = activeTab === "all"
+      ? receipts
+      : activeTab === "strava"
+        ? receipts.filter((r) => r.goalType === 0)
+        : receipts.filter((r) => r.goalType === 1)
 
-  const rankEmoji = (i: number) => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`
+    if (filtered.length === 0) return
+
+    const stats = computeStats(filtered)
+    entries.push({ address, name: profiles[address.toLowerCase()], ...stats })
+  })
+
+  // Sort: win rate > completed > streak
+  entries.sort((a, b) => b.winRate - a.winRate || b.completed - a.completed || b.streak - a.streak)
+
+  const rankEmoji = (i: number) => (i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`)
+
+  const tabs = Object.entries(GOAL_TYPE_LABELS)
 
   return (
-    <section ref={leaderboardView.ref} className={`border-t border-[var(--border)] py-8 sm:py-12 px-4 sm:px-6 transition-all duration-700 ${leaderboardView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+    <section
+      ref={leaderboardView.ref}
+      className={`border-t border-[var(--border)] py-8 sm:py-12 px-4 sm:px-6 transition-all duration-700 ${leaderboardView.isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+    >
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-6">
           <span className="text-xs font-semibold text-[#2EE59D] uppercase tracking-wider">Leaderboard</span>
           <h2 className="text-2xl font-bold mt-2">Top Promisers</h2>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex items-center justify-center gap-2 mb-4">
+          {tabs.map(([key, { label, emoji }]) => (
+            <button
+              key={key}
+              onClick={() => setActiveTab(key)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                activeTab === key
+                  ? "bg-[#2EE59D]/15 text-[#2EE59D] border border-[#2EE59D]/30"
+                  : "text-[var(--text-secondary)] hover:text-[var(--foreground)] border border-transparent"
+              }`}
+            >
+              {emoji} {label}
+            </button>
+          ))}
         </div>
 
         {loading ? (
@@ -133,7 +189,9 @@ export function Leaderboard() {
           </div>
         ) : entries.length === 0 ? (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
-            <p className="text-sm text-[var(--text-secondary)]">No promises settled yet. Be the first!</p>
+            <p className="text-sm text-[var(--text-secondary)]">
+              {activeTab === "all" ? "No promises settled yet. Be the first!" : `No ${GOAL_TYPE_LABELS[activeTab]?.label} promises settled yet.`}
+            </p>
           </div>
         ) : (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
@@ -152,10 +210,10 @@ export function Leaderboard() {
               <div
                 key={entry.address}
                 className={`grid grid-cols-[40px_1fr_60px_60px_60px_80px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-2 px-4 py-3 items-center ${
-                  i === 0 ? 'bg-[#2EE59D]/5' : ''
-                } ${i < entries.length - 1 ? 'border-b border-[var(--border)]/50' : ''}`}
+                  i === 0 ? "bg-[#2EE59D]/5" : ""
+                } ${i < entries.length - 1 ? "border-b border-[var(--border)]/50" : ""}`}
               >
-                <span className={`text-sm font-bold ${i < 3 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
+                <span className={`text-sm font-bold ${i < 3 ? "text-[#2EE59D]" : "text-[var(--text-secondary)]"}`}>
                   {rankEmoji(i)}
                 </span>
                 <a
@@ -168,10 +226,10 @@ export function Leaderboard() {
                   {entry.completed}/{entry.attempted}
                 </span>
                 <span className="text-sm font-semibold text-center">
-                  {entry.attempted > 0 ? `${entry.winRate}%` : '—'}
+                  {entry.attempted > 0 ? `${entry.winRate}%` : "—"}
                 </span>
                 <span className="text-sm font-semibold text-center">
-                  {entry.streak > 0 ? `${entry.streak} 🔥` : '0'}
+                  {entry.streak > 0 ? `${entry.streak} 🔥` : "0"}
                 </span>
                 <span className="text-sm font-semibold text-right text-[var(--text-secondary)]">
                   ${entry.totalStaked.toFixed(0)}
