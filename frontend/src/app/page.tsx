@@ -448,7 +448,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8">
-            Make a Promise. Keep Your Promise. Earn From Your Promise. Own Your Promise.
+            Keep Your Promise
           </p>
           
           <button 
