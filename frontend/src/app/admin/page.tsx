@@ -119,10 +119,10 @@ type Tab = 'dashboard' | 'create'
 
 function StatCard({ label, value, sub, accent }: { label: string; value: string; sub?: string; accent?: boolean }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1a1a2e] to-[#16162a] border border-white/[0.06] p-5">
-      <div className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2">{label}</div>
-      <div className={`text-2xl font-bold ${accent ? 'text-[#2EE59D]' : 'text-white'}`}>{value}</div>
-      {sub && <div className="text-xs text-white/30 mt-1">{sub}</div>}
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-200 p-5">
+      <div className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">{label}</div>
+      <div className={`text-2xl font-bold ${accent ? 'text-[#2EE59D]' : 'text-gray-900'}`}>{value}</div>
+      {sub && <div className="text-xs text-gray-400 mt-1">{sub}</div>}
     </div>
   )
 }
@@ -130,7 +130,7 @@ function StatCard({ label, value, sub, accent }: { label: string; value: string;
 function SectionHeader({ icon, title, action }: { icon: string; title: string; action?: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between mb-4">
-      <h2 className="flex items-center gap-2 text-base font-semibold text-white/90">
+      <h2 className="flex items-center gap-2 text-base font-semibold text-gray-900">
         <span>{icon}</span>
         {title}
       </h2>
@@ -141,8 +141,8 @@ function SectionHeader({ icon, title, action }: { icon: string; title: string; a
 
 function ContractRow({ label, address }: { label: string; address: string }) {
   return (
-    <div className="flex items-center justify-between py-2.5 border-b border-white/[0.04] last:border-0">
-      <span className="text-sm text-white/50">{label}</span>
+    <div className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
+      <span className="text-sm text-gray-500">{label}</span>
       <a
         href={`https://basescan.org/address/${address}`}
         target="_blank"
@@ -332,12 +332,12 @@ export default function AdminPage() {
   // Password gate
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-[#0B0B14] flex items-center justify-center p-4">
-        <div className="bg-[#13131D] rounded-2xl p-8 border border-white/[0.06] max-w-sm w-full shadow-2xl">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200 max-w-sm w-full shadow-2xl">
           <div className="text-center mb-6">
             <div className="text-4xl mb-3">🔐</div>
-            <h1 className="text-xl font-bold text-white">Admin Access</h1>
-            <p className="text-white/40 text-sm mt-1">Enter password to continue</p>
+            <h1 className="text-xl font-bold text-gray-900">Admin Access</h1>
+            <p className="text-gray-400 text-sm mt-1">Enter password to continue</p>
           </div>
           <form onSubmit={handleLogin}>
             <input
@@ -345,10 +345,10 @@ export default function AdminPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full px-4 py-3 rounded-xl bg-[#0B0B14] border border-white/[0.08] text-white mb-4 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-gray-900 mb-4 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
               autoFocus
             />
-            {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <button
               type="submit"
               className="w-full py-3 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#2EE59D]/90 transition"
@@ -379,18 +379,18 @@ export default function AdminPage() {
   const totalYield = yieldEarned + nucYield
 
   return (
-    <div className="min-h-screen bg-[#0B0B14]">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-white/[0.06] bg-[#0B0B14]/80 backdrop-blur-xl sticky top-0 z-50">
+      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-lg font-bold text-white flex items-center gap-2">
+              <h1 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <span className="text-xl">⚡</span> Vaada Admin
               </h1>
             </div>
             {/* Tab Navigation */}
-            <div className="flex gap-1 ml-6 bg-white/[0.04] rounded-xl p-1">
+            <div className="flex gap-1 ml-6 bg-gray-100 rounded-xl p-1">
               {(['dashboard', 'create'] as Tab[]).map((tab) => (
                 <button
                   key={tab}
@@ -398,7 +398,7 @@ export default function AdminPage() {
                   className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
                     activeTab === tab
                       ? 'bg-[#2EE59D]/10 text-[#2EE59D]'
-                      : 'text-white/40 hover:text-white/70'
+                      : 'text-gray-400 hover:text-gray-700'
                   }`}
                 >
                   {tab === 'dashboard' ? 'Dashboard' : 'Create'}
@@ -407,7 +407,7 @@ export default function AdminPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <a href="/" className="text-sm text-white/40 hover:text-white/70 transition-colors">
+            <a href="/" className="text-sm text-gray-400 hover:text-gray-700 transition-colors">
               ← Site
             </a>
             <button 
@@ -415,7 +415,7 @@ export default function AdminPage() {
                 sessionStorage.removeItem('vaada_admin_auth')
                 setAuthenticated(false)
               }}
-              className="text-sm text-white/40 hover:text-red-400 transition-colors"
+              className="text-sm text-gray-400 hover:text-red-500 transition-colors"
             >
               Logout
             </button>
@@ -438,62 +438,62 @@ export default function AdminPage() {
             {/* VaadaV3 + NewUserChallenge side by side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* VaadaV3 */}
-              <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+              <div className="rounded-2xl bg-gray-50 border border-gray-200 p-6">
                 <SectionHeader icon="💰" title="VaadaV3" />
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Active Stakes</div>
+                    <div className="text-xs text-gray-400 mb-1">Active Stakes</div>
                     <div className="text-xl font-bold">${totalStakedUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Vault Value</div>
+                    <div className="text-xs text-gray-400 mb-1">Vault Value</div>
                     <div className="text-xl font-bold">${vaultValueUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Yield Earned</div>
+                    <div className="text-xs text-gray-400 mb-1">Yield Earned</div>
                     <div className="text-xl font-bold text-[#2EE59D]">${yieldEarned.toFixed(6)}</div>
-                    <div className="text-[10px] text-white/20">{yieldPercent}%</div>
+                    <div className="text-[10px] text-gray-300">{yieldPercent}%</div>
                   </div>
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Total Goals</div>
+                    <div className="text-xs text-gray-400 mb-1">Total Goals</div>
                     <div className="text-xl font-bold">{goalCount?.toString() || '0'}</div>
                   </div>
                 </div>
               </div>
 
               {/* NewUserChallenge */}
-              <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+              <div className="rounded-2xl bg-gray-50 border border-gray-200 p-6">
                 <SectionHeader icon="🚀" title="NewUserChallenge" />
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Active Stakes</div>
+                    <div className="text-xs text-gray-400 mb-1">Active Stakes</div>
                     <div className="text-xl font-bold">${nucStakedUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Vault Value</div>
+                    <div className="text-xs text-gray-400 mb-1">Vault Value</div>
                     <div className="text-xl font-bold">${nucVaultUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Yield Earned</div>
+                    <div className="text-xs text-gray-400 mb-1">Yield Earned</div>
                     <div className="text-xl font-bold text-[#2EE59D]">${nucYield.toFixed(6)}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-white/30 mb-1">Pending</div>
-                    <div className="text-xl font-bold text-yellow-400">{nucPending}</div>
+                    <div className="text-xs text-gray-400 mb-1">Pending</div>
+                    <div className="text-xl font-bold text-yellow-600">{nucPending}</div>
                   </div>
                 </div>
-                <div className="flex gap-4 mt-4 pt-4 border-t border-white/[0.04]">
+                <div className="flex gap-4 mt-4 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-white/20" />
-                    <span className="text-xs text-white/40">Total {nucTotalChallenges?.toString() || '0'}</span>
+                    <span className="text-xs text-gray-400">Total {nucTotalChallenges?.toString() || '0'}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-[#2EE59D]" />
-                    <span className="text-xs text-white/40">Won {nucTotalWon?.toString() || '0'}</span>
+                    <span className="text-xs text-gray-400">Won {nucTotalWon?.toString() || '0'}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-red-400" />
-                    <span className="text-xs text-white/40">Forfeited {nucTotalForfeited?.toString() || '0'}</span>
+                    <span className="text-xs text-gray-400">Forfeited {nucTotalForfeited?.toString() || '0'}</span>
                   </div>
                 </div>
               </div>
@@ -503,24 +503,24 @@ export default function AdminPage() {
             <AdminGoals />
 
             {/* Gas Sponsorship */}
-            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+            <div className="rounded-2xl bg-gray-50 border border-gray-200 p-6">
               <SectionHeader icon="⛽" title="Gas Sponsorship" />
               <div className="flex flex-wrap gap-6">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-[#2EE59D]" />
-                  <span className="text-sm text-white/60">Enabled</span>
+                  <span className="text-sm text-gray-600">Enabled</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-white/40">Network:</span>
-                  <span className="text-sm font-medium text-white/80">Base</span>
+                  <span className="text-sm text-gray-400">Network:</span>
+                  <span className="text-sm font-medium text-gray-800">Base</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-[#2EE59D]" />
-                  <span className="text-sm text-white/60">Client Txns Allowed</span>
+                  <span className="text-sm text-gray-600">Client Txns Allowed</span>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-white/[0.04] flex items-center justify-between">
-                <p className="text-xs text-white/30">
+              <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                <p className="text-xs text-gray-400">
                   ~$0.001/tx on Base · $20 covers ~6,000+ transactions
                 </p>
                 <a
@@ -535,15 +535,15 @@ export default function AdminPage() {
             </div>
 
             {/* Collapsible: Contract Addresses */}
-            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06]">
+            <div className="rounded-2xl bg-gray-50 border border-gray-200">
               <button
                 onClick={() => toggleSection('contracts')}
                 className="w-full flex items-center justify-between p-6 text-left"
               >
-                <h2 className="flex items-center gap-2 text-base font-semibold text-white/90">
+                <h2 className="flex items-center gap-2 text-base font-semibold text-gray-900">
                   <span>📍</span> Contract Addresses
                 </h2>
-                <span className={`text-white/30 transition-transform ${expandedSections.contracts ? 'rotate-180' : ''}`}>
+                <span className={`text-gray-400 transition-transform ${expandedSections.contracts ? 'rotate-180' : ''}`}>
                   ▾
                 </span>
               </button>
@@ -560,15 +560,15 @@ export default function AdminPage() {
             </div>
 
             {/* Collapsible: Roles */}
-            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06]">
+            <div className="rounded-2xl bg-gray-50 border border-gray-200">
               <button
                 onClick={() => toggleSection('roles')}
                 className="w-full flex items-center justify-between p-6 text-left"
               >
-                <h2 className="flex items-center gap-2 text-base font-semibold text-white/90">
+                <h2 className="flex items-center gap-2 text-base font-semibold text-gray-900">
                   <span>👤</span> Roles
                 </h2>
-                <span className={`text-white/30 transition-transform ${expandedSections.roles ? 'rotate-180' : ''}`}>
+                <span className={`text-gray-400 transition-transform ${expandedSections.roles ? 'rotate-180' : ''}`}>
                   ▾
                 </span>
               </button>
@@ -582,7 +582,7 @@ export default function AdminPage() {
             </div>
 
             {/* Dev Tools */}
-            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+            <div className="rounded-2xl bg-gray-50 border border-gray-200 p-6">
               <SectionHeader icon="🛠️" title="Dev Tools" />
               <div className="flex flex-wrap gap-3">
                 <button
@@ -597,12 +597,12 @@ export default function AdminPage() {
                     sessionStorage.clear()
                     alert('All local data cleared! Refresh to see changes.')
                   }}
-                  className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl text-sm font-medium hover:bg-red-500/20 transition-colors"
+                  className="px-4 py-2 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl text-sm font-medium hover:bg-red-500/20 transition-colors"
                 >
                   🗑️ Clear All Data
                 </button>
               </div>
-              <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/[0.04]">
+              <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-gray-100">
                 {[
                   { label: 'Chainlink Functions', url: 'https://functions.chain.link/base/132' },
                   { label: 'Morpho Vault', url: 'https://app.morpho.org/vault?vault=0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61&network=base' },
@@ -613,7 +613,7 @@ export default function AdminPage() {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-white/30 hover:text-[#2EE59D] transition-colors"
+                    className="text-xs text-gray-400 hover:text-[#2EE59D] transition-colors"
                   >
                     {label} →
                   </a>
@@ -626,31 +626,31 @@ export default function AdminPage() {
         {/* ==================== CREATE PROMISE TAB ==================== */}
         {activeTab === 'create' && (
           <div className="max-w-lg mx-auto">
-            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-8">
+            <div className="rounded-2xl bg-gray-50 border border-gray-200 p-8">
               <SectionHeader icon="➕" title="Create Promise" />
               
               <div className="space-y-5 mt-6">
                 {/* Name */}
                 <div>
-                  <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Name</label>
+                  <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Name</label>
                   <input
                     value={goalName}
                     onChange={(e) => setGoalName(e.target.value)}
                     placeholder="e.g. 10K Steps Daily"
-                    className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                   />
                 </div>
 
                 {/* Goal Type */}
                 <div>
-                  <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Type</label>
+                  <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Type</label>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setGoalType(1)}
                       className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${
                         goalType === 1
                           ? 'border-[#2EE59D]/40 bg-[#2EE59D]/10 text-[#2EE59D]'
-                          : 'border-white/[0.08] text-white/40 hover:text-white/60'
+                          : 'border-gray-200 text-gray-400 hover:text-gray-600'
                       }`}
                     >
                       👟 Fitbit Steps
@@ -660,7 +660,7 @@ export default function AdminPage() {
                       className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${
                         goalType === 0
                           ? 'border-[#2EE59D]/40 bg-[#2EE59D]/10 text-[#2EE59D]'
-                          : 'border-white/[0.08] text-white/40 hover:text-white/60'
+                          : 'border-gray-200 text-gray-400 hover:text-gray-600'
                       }`}
                     >
                       🏃 Strava Miles
@@ -670,7 +670,7 @@ export default function AdminPage() {
 
                 {/* Target */}
                 <div>
-                  <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">
                     Target ({goalType === 1 ? 'steps' : 'miles'})
                   </label>
                   <input
@@ -678,30 +678,30 @@ export default function AdminPage() {
                     value={goalTarget}
                     onChange={(e) => setGoalTarget(e.target.value)}
                     placeholder={goalType === 1 ? 'e.g. 10000' : 'e.g. 3'}
-                    className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                   />
                 </div>
 
                 {/* Stake */}
                 <div className="flex gap-3">
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Min Stake ($)</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Min Stake ($)</label>
                     <input
                       type="number"
                       value={goalStake}
                       onChange={(e) => setGoalStake(e.target.value)}
                       placeholder="5"
-                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Max Stake ($)</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Max Stake ($)</label>
                     <input
                       type="number"
                       value={goalMaxStake}
                       onChange={(e) => setGoalMaxStake(e.target.value)}
                       placeholder="Same as min"
-                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                 </div>
@@ -709,34 +709,34 @@ export default function AdminPage() {
                 {/* Timing */}
                 <div className="flex gap-3">
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Entry window (min)</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Entry window (min)</label>
                     <input
                       type="number"
                       value={goalEntryMin}
                       onChange={(e) => setGoalEntryMin(e.target.value)}
                       placeholder="60"
-                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Duration (min)</label>
+                    <label className="block text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Duration (min)</label>
                     <input
                       type="number"
                       value={goalDeadlineMin}
                       onChange={(e) => setGoalDeadlineMin(e.target.value)}
                       placeholder="120"
-                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
                     />
                   </div>
                 </div>
 
                 {/* Preview */}
-                <div className="p-4 rounded-xl bg-[#0B0B14] border border-white/[0.04] text-sm space-y-1">
-                  <p className="text-xs font-medium text-white/30 uppercase tracking-wider">Preview</p>
-                  <p className="text-white/70 mt-2">
+                <div className="p-4 rounded-xl bg-white border border-gray-100 text-sm space-y-1">
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Preview</p>
+                  <p className="text-gray-700 mt-2">
                     {goalName || '(unnamed)'} · {goalTarget || '?'} {goalType === 1 ? 'steps' : 'miles'} · ${goalStake || '?'}{goalMaxStake && goalMaxStake !== goalStake ? `-$${goalMaxStake}` : ''}
                   </p>
-                  <p className="text-white/40 text-xs">
+                  <p className="text-gray-400 text-xs">
                     Entry: {goalEntryMin}min · Duration: {goalDeadlineMin}min
                   </p>
                 </div>
@@ -754,13 +754,13 @@ export default function AdminPage() {
                 {createResult && (
                   <div className="p-4 rounded-xl bg-[#2EE59D]/10 border border-[#2EE59D]/20 text-sm">
                     <p className="font-semibold text-[#2EE59D] mb-1">✅ Created!</p>
-                    <p className="text-white/40 break-all font-mono text-xs">TX: {createResult.txHash}</p>
-                    <p className="text-white/40 text-xs">Block: {createResult.blockNumber}</p>
+                    <p className="text-gray-400 break-all font-mono text-xs">TX: {createResult.txHash}</p>
+                    <p className="text-gray-400 text-xs">Block: {createResult.blockNumber}</p>
                   </div>
                 )}
 
                 {createError && (
-                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-400">
+                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-500">
                     {createError}
                   </div>
                 )}
