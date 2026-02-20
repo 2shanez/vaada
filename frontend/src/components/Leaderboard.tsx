@@ -82,41 +82,33 @@ export function Leaderboard() {
           return
         }
 
-        // Get unique owners via ownerOf
-        const owners = await Promise.all(
-          Array.from({ length: Number(supply) }, (_, i) => i + 1).map(async (tokenId) => {
-            try {
-              return await client.readContract({
-                address: contracts.vaadaReceipts,
-                abi: [{ type: "function", name: "ownerOf", inputs: [{ name: "tokenId", type: "uint256" }], outputs: [{ name: "", type: "address" }], stateMutability: "view" }],
-                functionName: "ownerOf",
-                args: [BigInt(tokenId)],
-              }) as string
-            } catch {
-              return null
-            }
-          })
-        )
+        // Batch ownerOf calls via multicall
+        const ownerOfCalls = Array.from({ length: Number(supply) }, (_, i) => ({
+          address: contracts.vaadaReceipts as `0x${string}`,
+          abi: [{ type: "function" as const, name: "ownerOf" as const, inputs: [{ name: "tokenId", type: "uint256" }], outputs: [{ name: "", type: "address" }], stateMutability: "view" as const }],
+          functionName: "ownerOf" as const,
+          args: [BigInt(i + 1)],
+        }))
 
+        const ownerResults = await client.multicall({ contracts: ownerOfCalls })
+        const owners = ownerResults.map(r => r.status === 'success' ? r.result as unknown as string : null)
         const uniqueAddresses = [...new Set(owners.filter(Boolean) as string[])]
 
-        // Fetch receipts for each user
+        // Batch getWalletReceipts calls via multicall
+        const receiptCalls = uniqueAddresses.map(addr => ({
+          address: contracts.vaadaReceipts as `0x${string}`,
+          abi: VAADA_RECEIPTS_ABI,
+          functionName: "getWalletReceipts" as const,
+          args: [addr as `0x${string}`],
+        }))
+
+        const receiptResults = await client.multicall({ contracts: receiptCalls })
         const receiptMap = new Map<string, Receipt[]>()
-        await Promise.all(
-          uniqueAddresses.map(async (addr) => {
-            try {
-              const receipts = await client.readContract({
-                address: contracts.vaadaReceipts,
-                abi: VAADA_RECEIPTS_ABI,
-                functionName: "getWalletReceipts",
-                args: [addr as `0x${string}`],
-              }) as unknown as Receipt[]
-              receiptMap.set(addr, receipts)
-            } catch {
-              // skip
-            }
-          })
-        )
+        uniqueAddresses.forEach((addr, i) => {
+          if (receiptResults[i].status === 'success') {
+            receiptMap.set(addr, receiptResults[i].result as unknown as Receipt[])
+          }
+        })
 
         setAllData(receiptMap)
 

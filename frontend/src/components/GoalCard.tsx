@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { createPortal } from 'react-dom'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+
 import { useAccount, useWaitForTransactionReceipt, useSwitchChain, useReadContracts, useReadContract } from 'wagmi'
 import { useSponsoredWrite } from '@/lib/useSponsoredWrite'
 import { usePrivy } from '@privy-io/react-auth'
@@ -18,6 +18,9 @@ import { RescueTimeConnect, useRescueTimeConnection } from './RescueTimeConnect'
 import { FitbitConnect, useFitbitConnection } from './FitbitConnect'
 import { OnboardingCommitment } from './OnboardingCommitment'
 import { fetchProfiles } from './ProfileName'
+import { WinCelebration } from './WinCelebration'
+import { GoalTimeline } from './GoalTimeline'
+import { GoalLeaderboard } from './GoalLeaderboard'
 // Re-export Goal type for other components
 export type { Goal }
 
@@ -495,6 +498,9 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
     }
   })
 
+  // Memoize player address key for stable dependency
+  const playerAddressKey = useMemo(() => playerAddresses.join(','), [playerAddresses])
+
   // Fetch player profiles when addresses change
   useEffect(() => {
     if (playerAddresses.length > 0) {
@@ -502,7 +508,7 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
         setPlayerProfiles(profiles)
       })
     }
-  }, [playerAddresses.join(',')])
+  }, [playerAddressKey])
 
   // Auto-fetch leaderboard data for joined users (for progress bar)
   useEffect(() => {
@@ -535,111 +541,13 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
   // Win moment celebration overlay
   if (showClaimCelebration) {
-    const goalId = goal.onChainId || goal.id
-    const shareUrl = `https://vaada.io`
-    const shareText = `I kept my promise — ${goal.emoji} ${goal.title} with $${userStake} on the line ✅\n\nThink you can keep yours? →`
     return (
-      <div className="bg-[var(--surface)] border border-[#2EE59D] rounded-2xl relative overflow-hidden">
-        {/* Close button */}
-        <button
-          onClick={() => setShowClaimCelebration(false)}
-          className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground)] transition-all"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>        {/* Falling confetti */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(40)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `-${5 + Math.random() * 10}%`,
-                width: `${4 + Math.random() * 6}px`,
-                height: `${4 + Math.random() * 6}px`,
-                backgroundColor: ["#2EE59D", "#FFD700", "#FF6B6B", "#4ECDC4", "#A78BFA", "#F59E0B"][i % 6],
-                animation: `confettiFall ${2 + Math.random() * 3}s ease-in ${Math.random() * 2}s infinite`,
-                opacity: 0.9,
-              }}
-            />
-          ))}
-        </div>
-        <style>{`
-          @keyframes confettiFall {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(500px) rotate(720deg); opacity: 0; }
-          }
-          @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(46,229,157,0.2); }
-            50% { box-shadow: 0 0 40px rgba(46,229,157,0.4); }
-          }
-          @keyframes scaleIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-          }
-        `}</style>
-
-        <div className="relative px-6 py-10 text-center" style={{ animation: "scaleIn 0.4s ease-out" }}>
-          {/* Promise emoji */}
-          <div className="text-6xl mb-3">{goal.emoji}</div>
-
-          {/* Status badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2EE59D]/15 mb-4">
-            <span className="text-xs font-bold text-[#2EE59D] uppercase tracking-wider">✓ Promise Kept</span>
-          </div>
-
-          {/* Promise name */}
-          <h3 className="text-xl font-bold text-[var(--foreground)] mb-2">{goal.title}</h3>
-
-          {/* Amount won */}
-          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#2EE59D]/10 border border-[#2EE59D]/20 mb-6" style={{ animation: "pulseGlow 2s ease-in-out infinite" }}>
-            <span className="text-3xl font-bold text-[#2EE59D]">+${userStake}</span>
-            <span className="text-sm font-medium text-[#2EE59D]/70">USDC</span>
-          </div>
-
-          <p className="text-sm text-[var(--text-secondary)] mb-6 max-w-xs mx-auto">
-            {goal.participants && goal.participants > 1 && userStake > 0 && goalDetails.totalStaked && goalDetails.totalStaked > userStake
-              ? "Promise kept. You earned from the ones who didn't."
-              : 'Everyone kept their promise. Your stake is back where it belongs.'
-            }
-          </p>
-
-          {/* Share buttons */}
-          <div className="flex items-center justify-center gap-3">
-            <button
-              onClick={() => {
-                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`, "_blank")
-              }}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--foreground)] text-[var(--background)] text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-              Share Win
-            </button>
-            <button
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({ title: "I kept my promise on Vaada!", text: shareText, url: shareUrl }).catch(() => {})
-                } else {
-                  navigator.clipboard.writeText(`${shareText} ${shareUrl}`)
-                }
-              }}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--border)] text-[var(--foreground)] text-sm font-semibold hover:border-[var(--foreground)] active:scale-95 transition-all"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-              </svg>
-              Share
-            </button>
-          </div>
-
-          {/* Vaada branding */}
-          <p className="text-[10px] text-[var(--text-secondary)]/50 mt-6 uppercase tracking-widest">vaada.io</p>
-        </div>
-      </div>
+      <WinCelebration
+        goal={goal}
+        userStake={userStake}
+        goalDetails={goalDetails}
+        onClose={() => setShowClaimCelebration(false)}
+      />
     )
   }
 
@@ -852,66 +760,12 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
 
         {/* Timeline */}
         {!isSettled && (
-          <div className="py-5 border-t border-[var(--border)]/50">
-            <div className="flex items-start">
-              {[
-                { 
-                  label: 'Entry', 
-                  desc: goalDetails.entryDeadline 
-                    ? (formatTimeLeft(goalDetails.entryDeadline) === 'Passed' ? 'Closed' : `Closes in ${formatTimeLeft(goalDetails.entryDeadline)}`)
-                    : 'Join now'
-                },
-                { 
-                  label: 'Compete', 
-                  desc: (() => {
-                    if (!goalDetails.deadline) return `${durationText} window`;
-                    if (formatTimeLeft(goalDetails.deadline) === 'Passed') return 'Ended';
-                    // During entry phase, show the competition window duration (not countdown)
-                    if (currentPhaseStep === 0 && goalDetails.entryDeadline && goalDetails.deadline) {
-                      const competeDuration = goalDetails.deadline - goalDetails.entryDeadline;
-                      if (competeDuration < 3600) return `${Math.floor(competeDuration / 60)}m window`;
-                      if (competeDuration < 86400) return `${Math.floor(competeDuration / 3600)}h ${Math.floor((competeDuration % 3600) / 60)}m window`;
-                      return `${Math.floor(competeDuration / 86400)}d ${Math.floor((competeDuration % 86400) / 3600)}h window`;
-                    }
-                    // After entry closes, show countdown to deadline
-                    return `${formatTimeLeft(goalDetails.deadline)} left`;
-                  })()
-                },
-                { 
-                  label: 'Verify', 
-                  desc: currentPhaseStep === 2 
-                    ? 'Verifying...' 
-                    : goal.targetUnit === 'steps'
-                      ? 'Via Fitbit'
-                      : goal.subdomain === 'Running' 
-                        ? 'Via Strava' 
-                        : 'Coming soon'
-                },
-                { 
-                  label: 'Payout', 
-                  desc: 'Winners split' 
-                },
-              ].map((step, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center min-w-0">
-                  <div className="flex items-center w-full mb-2">
-                    {i > 0 && (
-                      <div className={`flex-1 h-0.5 ${i <= currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'}`} />
-                    )}
-                    <div className={`w-3 h-3 rounded-full flex-shrink-0 ${
-                      i <= currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'
-                    }`} />
-                    {i < 3 && (
-                      <div className={`flex-1 h-0.5 ${i < currentPhaseStep ? 'bg-[#2EE59D]' : 'bg-[var(--border)]'}`} />
-                    )}
-                  </div>
-                  <p className={`text-[10px] font-semibold text-center leading-tight ${i <= currentPhaseStep ? 'text-[var(--foreground)]' : 'text-[var(--text-secondary)]'}`}>
-                    {step.label}
-                  </p>
-                  <p className="text-[8px] text-[var(--text-secondary)] text-center leading-tight px-0.5">{step.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <GoalTimeline
+            currentPhaseStep={currentPhaseStep}
+            goalDetails={goalDetails}
+            durationText={durationText}
+            goal={goal}
+          />
         )}
 
         {/* Pool + Players */}
@@ -949,84 +803,20 @@ export function GoalCard({ goal, onJoined }: GoalCardProps) {
               <span className={`text-[var(--text-secondary)] text-xs transition-transform duration-150 ${showPlayers ? 'rotate-90' : ''}`}>›</span>
             </button>
           
-          {/* Players dropdown - rendered via portal to escape grid stacking */}
-          {showPlayers && (participants > 0 || hasJoined) && typeof document !== 'undefined' && createPortal(
-            <div 
-              ref={playersDropdownRef}
-              className="fixed bg-[var(--surface)] border border-[var(--border)] rounded-xl p-3 shadow-xl"
-              style={{ top: dropdownPos.top, left: Math.max(16, dropdownPos.left), width: dropdownPos.width, zIndex: 9999 }}
-            >
-              {/* Header with refresh for steps goals */}
-              {isStepsGoal && (
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[var(--foreground)]">Leaderboard</span>
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); fetchLeaderboard() }}
-                    disabled={leaderboardLoading}
-                    className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-[#2EE59D] bg-[#2EE59D]/10 rounded-full hover:bg-[#2EE59D]/20 transition-all disabled:opacity-50"
-                  >
-                    <svg className={`w-3 h-3 ${leaderboardLoading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    {leaderboardLoading ? '' : 'Refresh'}
-                  </button>
-                </div>
-              )}
-              
-              {leaderboardError && (
-                <p className="text-[10px] text-red-500 mb-2">{leaderboardError}</p>
-              )}
-              
-              {/* Loading state for steps goals */}
-              {isStepsGoal && leaderboardLoading && leaderboardData.length === 0 ? (
-                <div className="py-4 text-center">
-                  <div className="w-5 h-5 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin mx-auto" />
-                  <p className="text-[10px] text-[var(--text-secondary)] mt-2">Fetching steps...</p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {/* Sort by steps if we have leaderboard data, otherwise show player list */}
-                  {(isStepsGoal && leaderboardData.length > 0
-                    ? leaderboardData
-                    : playerList.map(p => ({ address: p.address, stake: p.stake, steps: 0, name: playerProfiles[p.address.toLowerCase()] }))
-                  ).map((p, i) => (
-                    <div key={i} className={`flex items-center justify-between py-1.5 px-2 rounded-lg ${
-                      i === 0 && isStepsGoal && leaderboardData.length > 0 ? 'bg-[#2EE59D]/10' : 'hover:bg-[var(--background)]'
-                    }`}>
-                      <div className="flex items-center gap-2 min-w-0">
-                        {isStepsGoal && leaderboardData.length > 0 && (
-                          <span className={`text-xs font-bold flex-shrink-0 ${i === 0 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
-                            {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
-                          </span>
-                        )}
-                        <span className="text-[11px] text-[var(--text-secondary)] truncate">
-                          {p.name || playerProfiles[p.address.toLowerCase()] || `${p.address.slice(0, 6)}...${p.address.slice(-4)}`}
-                        </span>
-                        <UserRepBadge address={p.address as `0x${string}`} />
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        {isStepsGoal && leaderboardData.length > 0 && (
-                          <span className={`text-[11px] font-bold ${p.steps >= goal.targetMiles ? 'text-[#2EE59D]' : 'text-[var(--foreground)]'}`}>
-                            {p.steps.toLocaleString()}
-                          </span>
-                        )}
-                        <span className="text-[11px] font-medium text-[#2EE59D]">${p.stake}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              
-              {/* Target footer for steps goals - always show */}
-              {isStepsGoal && (
-                <div className="mt-2 pt-2 border-t border-[var(--border)]">
-                  <p className="text-[9px] text-[var(--text-secondary)] text-center">
-                    Target: {goal.targetMiles.toLocaleString()} steps
-                  </p>
-                </div>
-              )}
-            </div>,
-            document.body
+          {/* Players dropdown */}
+          {showPlayers && (participants > 0 || hasJoined) && (
+            <GoalLeaderboard
+              goal={goal}
+              isStepsGoal={isStepsGoal}
+              leaderboardData={leaderboardData}
+              leaderboardLoading={leaderboardLoading}
+              leaderboardError={leaderboardError}
+              playerList={playerList}
+              playerProfiles={playerProfiles}
+              fetchLeaderboard={fetchLeaderboard}
+              dropdownPos={dropdownPos}
+              playersDropdownRef={playersDropdownRef}
+            />
           )}
           </div>
         </div>
