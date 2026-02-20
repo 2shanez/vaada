@@ -11,7 +11,7 @@ import { useContracts } from '@/lib/hooks'
 // Fallback client for when wagmi isn't connected yet
 const fallbackClient = createPublicClient({
   chain: base,
-  transport: http(process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://base-mainnet.g.alchemy.com/v2/V2EEs8WP3hd6yldPEx92v'),
+  transport: http(process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://mainnet.base.org'),
 })
 
 // Export for backward compat

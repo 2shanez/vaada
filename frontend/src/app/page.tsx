@@ -16,6 +16,7 @@ import { LiveChallengeCard, OnboardingCommitment } from '@/components/Onboarding
 import { NEW_USER_CHALLENGE_ABI } from '@/lib/abis'
 import { analytics, identifyUser } from '@/lib/analytics'
 import { VaadaLogo } from '@/components/VaadaLogo'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 // Dynamic imports for heavy components - don't block first paint
 const BrowseGoals = dynamic(() => import('@/components/BrowseGoals').then(m => ({ default: m.BrowseGoals })), {
@@ -76,7 +77,7 @@ function IntegrationsDropdown() {
     ? `https://www.vaada.io/api/fitbit/auth?wallet=${address}`
     : 'https://www.vaada.io/api/fitbit/auth'
 
-  const stravaClientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID || '199295'
+  const stravaClientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID
   const stravaRedirectUri = 'https://www.vaada.io/api/strava/callback'
   const stravaState = address ? encodeURIComponent(JSON.stringify({ wallet: address })) : ''
   const stravaUrl = `https://www.strava.com/oauth/authorize?client_id=${stravaClientId}&redirect_uri=${stravaRedirectUri}&response_type=code&scope=activity:read_all&state=${stravaState}`
@@ -487,7 +488,7 @@ export default function Home() {
       {/* Promises Grid */}
       <section className="pb-6 sm:pb-8 px-4 sm:px-6 relative">
         <div className="max-w-6xl mx-auto">
-          <BrowseGoals />
+          <ErrorBoundary><BrowseGoals /></ErrorBoundary>
         </div>
       </section>
 
@@ -557,7 +558,7 @@ export default function Home() {
       </section>
 
       {/* Leaderboard - auto-hides when empty */}
-      <Leaderboard />
+      <ErrorBoundary><Leaderboard /></ErrorBoundary>
 
       {/* How It Works - Compact horizontal */}
       <section ref={howView.ref} id="how-it-works" className={`py-12 px-6 bg-[var(--surface)] border-t border-[var(--border)] transition-all duration-700 ${howView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>

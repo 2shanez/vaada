@@ -297,7 +297,8 @@ export async function GET(request: NextRequest) {
 
       // Calculate total steps
       const steps = calculateFitbitSteps(stepsData)
-      // Store steps in the same milesWei format (scaled by 1e18) for contract compatibility
+      // WARNING: stepsWei is scaled by 1e18 for legacy Chainlink compat.
+      // When calling verifyParticipant(), pass raw `steps` count, NOT stepsWei.
       const stepsWei = (BigInt(steps) * BigInt(1e18)).toString()
 
       return NextResponse.json({
