@@ -117,6 +117,44 @@ const NEW_USER_ABI = [
 
 type Tab = 'dashboard' | 'create'
 
+function StatCard({ label, value, sub, accent }: { label: string; value: string; sub?: string; accent?: boolean }) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1a1a2e] to-[#16162a] border border-white/[0.06] p-5">
+      <div className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2">{label}</div>
+      <div className={`text-2xl font-bold ${accent ? 'text-[#2EE59D]' : 'text-white'}`}>{value}</div>
+      {sub && <div className="text-xs text-white/30 mt-1">{sub}</div>}
+    </div>
+  )
+}
+
+function SectionHeader({ icon, title, action }: { icon: string; title: string; action?: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between mb-4">
+      <h2 className="flex items-center gap-2 text-base font-semibold text-white/90">
+        <span>{icon}</span>
+        {title}
+      </h2>
+      {action}
+    </div>
+  )
+}
+
+function ContractRow({ label, address }: { label: string; address: string }) {
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-white/[0.04] last:border-0">
+      <span className="text-sm text-white/50">{label}</span>
+      <a
+        href={`https://basescan.org/address/${address}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-sm font-mono text-[#2EE59D]/70 hover:text-[#2EE59D] transition-colors"
+      >
+        {address.slice(0, 6)}...{address.slice(-4)}
+      </a>
+    </div>
+  )
+}
+
 export default function AdminPage() {
   const [mounted, setMounted] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
@@ -124,6 +162,10 @@ export default function AdminPage() {
   const [error, setError] = useState('')
   const [showPreview, setShowPreview] = useState(false)
   const [activeTab, setActiveTab] = useState<Tab>('dashboard')
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    contracts: false,
+    roles: false,
+  })
   const contracts = CONTRACTS[base.id]
 
   // === Create Goal State ===
@@ -137,6 +179,10 @@ export default function AdminPage() {
   const [goalMaxStake, setGoalMaxStake] = useState('')
   const [goalEntryMin, setGoalEntryMin] = useState('60')
   const [goalDeadlineMin, setGoalDeadlineMin] = useState('120')
+
+  const toggleSection = (key: string) => {
+    setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }))
+  }
 
   // VaadaV3 hooks
   const { data: totalActiveStakes } = useReadContract({
@@ -270,7 +316,6 @@ export default function AdminPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       setCreateResult(data)
-      // Reset form
       setGoalName('')
       setGoalTarget('')
       setGoalStake('')
@@ -287,20 +332,23 @@ export default function AdminPage() {
   // Password gate
   if (!authenticated) {
     return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
-        <div className="bg-[var(--surface)] rounded-2xl p-8 border border-[var(--border)] max-w-sm w-full">
-          <h1 className="text-2xl font-bold mb-2">🔐 Admin Access</h1>
-          <p className="text-[var(--text-secondary)] text-sm mb-6">Enter admin password to continue</p>
+      <div className="min-h-screen bg-[#0B0B14] flex items-center justify-center p-4">
+        <div className="bg-[#13131D] rounded-2xl p-8 border border-white/[0.06] max-w-sm w-full shadow-2xl">
+          <div className="text-center mb-6">
+            <div className="text-4xl mb-3">🔐</div>
+            <h1 className="text-xl font-bold text-white">Admin Access</h1>
+            <p className="text-white/40 text-sm mt-1">Enter password to continue</p>
+          </div>
           <form onSubmit={handleLogin}>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full px-4 py-3 rounded-xl bg-[var(--background)] border border-[var(--border)] mb-4 focus:outline-none focus:border-[#2EE59D]"
+              className="w-full px-4 py-3 rounded-xl bg-[#0B0B14] border border-white/[0.08] text-white mb-4 focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
               autoFocus
             />
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
             <button
               type="submit"
               className="w-full py-3 bg-[#2EE59D] text-black font-semibold rounded-xl hover:bg-[#2EE59D]/90 transition"
@@ -313,13 +361,12 @@ export default function AdminPage() {
     )
   }
 
-  // Calculate VaadaV3 stats
+  // Calculate stats
   const totalStakedUSDC = totalActiveStakes ? Number(formatUnits(totalActiveStakes, 6)) : 0
   const vaultValueUSDC = maxWithdraw ? Number(formatUnits(maxWithdraw, 6)) : 0
   const yieldEarned = vaultValueUSDC - totalStakedUSDC
   const yieldPercent = totalStakedUSDC > 0 ? ((yieldEarned / totalStakedUSDC) * 100).toFixed(4) : '0'
 
-  // Calculate NewUserChallenge stats
   const nucStakedUSDC = nucActiveStakes ? Number(formatUnits(nucActiveStakes, 6)) : 0
   const nucVaultUSDC = nucMaxWithdraw ? Number(formatUnits(nucMaxWithdraw, 6)) : 0
   const nucYield = nucVaultUSDC - nucStakedUSDC
@@ -327,149 +374,127 @@ export default function AdminPage() {
                      (nucTotalWon ? Number(nucTotalWon) : 0) - 
                      (nucTotalForfeited ? Number(nucTotalForfeited) : 0)
 
-  // Treasury wallet balance
   const treasuryBalanceUSDC = treasuryWalletBalance ? Number(formatUnits(treasuryWalletBalance, 6)) : 0
+  const totalTVL = vaultValueUSDC + nucVaultUSDC
+  const totalYield = yieldEarned + nucYield
 
   return (
-    <div className="min-h-screen bg-[var(--background)] p-6 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold">🔐 Admin</h1>
-            <p className="text-[var(--text-secondary)] text-sm">Vaada Platform Management</p>
+    <div className="min-h-screen bg-[#0B0B14]">
+      {/* Header */}
+      <div className="border-b border-white/[0.06] bg-[#0B0B14]/80 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-lg font-bold text-white flex items-center gap-2">
+                <span className="text-xl">⚡</span> Vaada Admin
+              </h1>
+            </div>
+            {/* Tab Navigation */}
+            <div className="flex gap-1 ml-6 bg-white/[0.04] rounded-xl p-1">
+              {(['dashboard', 'create'] as Tab[]).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                    activeTab === tab
+                      ? 'bg-[#2EE59D]/10 text-[#2EE59D]'
+                      : 'text-white/40 hover:text-white/70'
+                  }`}
+                >
+                  {tab === 'dashboard' ? 'Dashboard' : 'Create'}
+                </button>
+              ))}
+            </div>
           </div>
-          <a href="/" className="text-sm text-[var(--text-secondary)] hover:text-[var(--foreground)] transition-colors">
-            ← Back to site
-          </a>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex gap-2 mb-8 border-b border-[var(--border)] pb-px">
-          {(['dashboard', 'create'] as Tab[]).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 text-sm font-medium transition-colors relative ${
-                activeTab === tab
-                  ? 'text-[#2EE59D]'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--foreground)]'
-              }`}
+          <div className="flex items-center gap-3">
+            <a href="/" className="text-sm text-white/40 hover:text-white/70 transition-colors">
+              ← Site
+            </a>
+            <button 
+              onClick={() => {
+                sessionStorage.removeItem('vaada_admin_auth')
+                setAuthenticated(false)
+              }}
+              className="text-sm text-white/40 hover:text-red-400 transition-colors"
             >
-              {tab === 'dashboard' ? '📊 Dashboard' : '➕ Create Promise'}
-              {activeTab === tab && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2EE59D] rounded-full" />
-              )}
+              Logout
             </button>
-          ))}
+          </div>
         </div>
+      </div>
 
+      <div className="max-w-6xl mx-auto px-6 py-8">
         {/* ==================== DASHBOARD TAB ==================== */}
         {activeTab === 'dashboard' && (
-          <div className="space-y-6">
-            {/* Contract Addresses */}
-            <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-              <h2 className="text-lg font-semibold mb-4">📍 Contract Addresses</h2>
-              <div className="space-y-2 font-mono text-sm">
-                {[
-                  ['VaadaV3', contracts.goalStake],
-                  ['AutomationV3', contracts.automation],
-                  ['NewUserChallenge', contracts.newUserChallenge],
-                  ['VaadaReceipts', contracts.vaadaReceipts],
-                  ['Morpho Vault', contracts.morphoVault],
-                  ['USDC', contracts.usdc],
-                ].map(([label, addr]) => (
-                  <div key={label} className="flex justify-between flex-wrap gap-2">
-                    <span className="text-[var(--text-secondary)]">{label}:</span>
-                    <a href={`https://basescan.org/address/${addr}`} target="_blank" rel="noopener noreferrer" className="text-[#2EE59D] hover:underline truncate">
-                      {addr}
-                    </a>
-                  </div>
-                ))}
-              </div>
+          <div className="space-y-8">
+            {/* Top-level KPIs */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatCard label="Total TVL" value={`$${totalTVL.toFixed(2)}`} />
+              <StatCard label="Total Yield" value={`$${totalYield.toFixed(6)}`} accent />
+              <StatCard label="Morpho APY" value="~4.9%" accent />
+              <StatCard label="Treasury" value={`$${treasuryBalanceUSDC.toFixed(2)}`} sub={`${TREASURY_WALLET.slice(0, 6)}...${TREASURY_WALLET.slice(-4)}`} />
             </div>
 
-            {/* Treasury Stats */}
+            {/* VaadaV3 + NewUserChallenge side by side */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-                <h2 className="text-lg font-semibold mb-4">💰 VaadaV3 Treasury</h2>
-                <div className="space-y-4">
+              {/* VaadaV3 */}
+              <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+                <SectionHeader icon="💰" title="VaadaV3" />
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Total Active Stakes</div>
-                    <div className="text-2xl font-bold">${totalStakedUSDC.toFixed(6)}</div>
+                    <div className="text-xs text-white/30 mb-1">Active Stakes</div>
+                    <div className="text-xl font-bold">${totalStakedUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Vault Value</div>
-                    <div className="text-2xl font-bold">${vaultValueUSDC.toFixed(6)}</div>
+                    <div className="text-xs text-white/30 mb-1">Vault Value</div>
+                    <div className="text-xl font-bold">${vaultValueUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Yield Earned</div>
-                    <div className="text-2xl font-bold text-[#2EE59D]">
-                      ${yieldEarned.toFixed(6)} ({yieldPercent}%)
-                    </div>
+                    <div className="text-xs text-white/30 mb-1">Yield Earned</div>
+                    <div className="text-xl font-bold text-[#2EE59D]">${yieldEarned.toFixed(6)}</div>
+                    <div className="text-[10px] text-white/20">{yieldPercent}%</div>
                   </div>
                   <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Total Goals</div>
+                    <div className="text-xs text-white/30 mb-1">Total Goals</div>
                     <div className="text-xl font-bold">{goalCount?.toString() || '0'}</div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-                <h2 className="text-lg font-semibold mb-4">🚀 NewUserChallenge</h2>
-                <div className="space-y-4">
+              {/* NewUserChallenge */}
+              <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+                <SectionHeader icon="🚀" title="NewUserChallenge" />
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Active Stakes</div>
-                    <div className="text-2xl font-bold">${nucStakedUSDC.toFixed(2)}</div>
-                  </div>
-                  <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Vault Value</div>
-                    <div className="text-2xl font-bold">${nucVaultUSDC.toFixed(6)}</div>
+                    <div className="text-xs text-white/30 mb-1">Active Stakes</div>
+                    <div className="text-xl font-bold">${nucStakedUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Yield Earned</div>
-                    <div className="text-2xl font-bold text-[#2EE59D]">${nucYield.toFixed(6)}</div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 pt-2">
-                    <div>
-                      <div className="text-[var(--text-secondary)] text-xs">Total</div>
-                      <div className="font-bold">{nucTotalChallenges?.toString() || '0'}</div>
-                    </div>
-                    <div>
-                      <div className="text-[var(--text-secondary)] text-xs">Won</div>
-                      <div className="font-bold text-green-500">{nucTotalWon?.toString() || '0'}</div>
-                    </div>
-                    <div>
-                      <div className="text-[var(--text-secondary)] text-xs">Forfeited</div>
-                      <div className="font-bold text-red-500">{nucTotalForfeited?.toString() || '0'}</div>
-                    </div>
+                    <div className="text-xs text-white/30 mb-1">Vault Value</div>
+                    <div className="text-xl font-bold">${nucVaultUSDC.toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-[var(--text-secondary)] text-sm">Pending</div>
-                    <div className="text-xl font-bold text-yellow-500">{nucPending}</div>
+                    <div className="text-xs text-white/30 mb-1">Yield Earned</div>
+                    <div className="text-xl font-bold text-[#2EE59D]">${nucYield.toFixed(6)}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-white/30 mb-1">Pending</div>
+                    <div className="text-xl font-bold text-yellow-400">{nucPending}</div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Platform Stats */}
-            <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-              <h2 className="text-lg font-semibold mb-4">📊 Platform Totals</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Total TVL</div>
-                  <div className="text-2xl font-bold">${(vaultValueUSDC + nucVaultUSDC).toFixed(2)}</div>
-                </div>
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Total Yield</div>
-                  <div className="text-2xl font-bold text-[#2EE59D]">${(yieldEarned + nucYield).toFixed(6)}</div>
-                </div>
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Morpho APY</div>
-                  <div className="text-2xl font-bold text-[#2EE59D]">~4.9%</div>
-                </div>
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Vault Shares</div>
-                  <div className="text-sm font-mono truncate">{vaultShares?.toString() || '0'}</div>
+                <div className="flex gap-4 mt-4 pt-4 border-t border-white/[0.04]">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-white/20" />
+                    <span className="text-xs text-white/40">Total {nucTotalChallenges?.toString() || '0'}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[#2EE59D]" />
+                    <span className="text-xs text-white/40">Won {nucTotalWon?.toString() || '0'}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-400" />
+                    <span className="text-xs text-white/40">Forfeited {nucTotalForfeited?.toString() || '0'}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -477,86 +502,92 @@ export default function AdminPage() {
             {/* Created Promises */}
             <AdminGoals />
 
-            {/* Treasury Wallet */}
-            <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-              <h2 className="text-lg font-semibold mb-4">💳 Treasury Wallet</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">USDC Balance</div>
-                  <div className="text-2xl font-bold">${treasuryBalanceUSDC.toFixed(2)}</div>
-                </div>
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Address</div>
-                  <a 
-                    href={`https://basescan.org/address/${TREASURY_WALLET}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-[#2EE59D] hover:underline font-mono text-sm truncate block"
-                  >
-                    {TREASURY_WALLET.slice(0, 10)}...{TREASURY_WALLET.slice(-8)}
-                  </a>
-                </div>
-              </div>
-            </div>
-
             {/* Gas Sponsorship */}
-            <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-              <h2 className="text-lg font-semibold mb-4">⛽ Gas Sponsorship (Privy)</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Status</div>
-                  <div className="text-lg font-bold text-[#2EE59D]">✅ Enabled</div>
+            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+              <SectionHeader icon="⛽" title="Gas Sponsorship" />
+              <div className="flex flex-wrap gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-[#2EE59D]" />
+                  <span className="text-sm text-white/60">Enabled</span>
                 </div>
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Network</div>
-                  <div className="text-lg font-bold">Base</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-white/40">Network:</span>
+                  <span className="text-sm font-medium text-white/80">Base</span>
                 </div>
-                <div>
-                  <div className="text-[var(--text-secondary)] text-sm">Client Txns</div>
-                  <div className="text-lg font-bold text-[#2EE59D]">✅ Allowed</div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-[#2EE59D]" />
+                  <span className="text-sm text-white/60">Client Txns Allowed</span>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-[var(--border)]">
-                <p className="text-xs text-[var(--text-secondary)] mb-2">
-                  Gas credits balance is only available in the Privy dashboard. At ~$0.001/tx on Base, $20 covers ~6,000+ transactions.
+              <div className="mt-4 pt-4 border-t border-white/[0.04] flex items-center justify-between">
+                <p className="text-xs text-white/30">
+                  ~$0.001/tx on Base · $20 covers ~6,000+ transactions
                 </p>
                 <a
                   href="https://dashboard.privy.io/billing?tab=gas-sponsorship"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#2EE59D] bg-[#2EE59D]/10 border border-[#2EE59D]/30 rounded-lg hover:bg-[#2EE59D]/20 transition-colors"
+                  className="text-xs text-[#2EE59D]/70 hover:text-[#2EE59D] transition-colors"
                 >
-                  Check Balance → Privy Dashboard
+                  Privy Dashboard →
                 </a>
               </div>
             </div>
 
-            {/* Roles */}
-            <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-              <h2 className="text-lg font-semibold mb-4">👤 Roles</h2>
-              <div className="space-y-2 font-mono text-sm">
-                <div className="flex justify-between flex-wrap gap-2">
-                  <span className="text-[var(--text-secondary)]">Owner:</span>
-                  <span className="truncate">{owner || 'Loading...'}</span>
+            {/* Collapsible: Contract Addresses */}
+            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06]">
+              <button
+                onClick={() => toggleSection('contracts')}
+                className="w-full flex items-center justify-between p-6 text-left"
+              >
+                <h2 className="flex items-center gap-2 text-base font-semibold text-white/90">
+                  <span>📍</span> Contract Addresses
+                </h2>
+                <span className={`text-white/30 transition-transform ${expandedSections.contracts ? 'rotate-180' : ''}`}>
+                  ▾
+                </span>
+              </button>
+              {expandedSections.contracts && (
+                <div className="px-6 pb-6 -mt-2">
+                  <ContractRow label="VaadaV3" address={contracts.goalStake} />
+                  <ContractRow label="AutomationV3" address={contracts.automation} />
+                  <ContractRow label="NewUserChallenge" address={contracts.newUserChallenge} />
+                  <ContractRow label="VaadaReceipts" address={contracts.vaadaReceipts} />
+                  <ContractRow label="Morpho Vault" address={contracts.morphoVault} />
+                  <ContractRow label="USDC" address={contracts.usdc} />
                 </div>
-                <div className="flex justify-between flex-wrap gap-2">
-                  <span className="text-[var(--text-secondary)]">Treasury:</span>
-                  <span className="truncate">{treasury || 'Loading...'}</span>
+              )}
+            </div>
+
+            {/* Collapsible: Roles */}
+            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06]">
+              <button
+                onClick={() => toggleSection('roles')}
+                className="w-full flex items-center justify-between p-6 text-left"
+              >
+                <h2 className="flex items-center gap-2 text-base font-semibold text-white/90">
+                  <span>👤</span> Roles
+                </h2>
+                <span className={`text-white/30 transition-transform ${expandedSections.roles ? 'rotate-180' : ''}`}>
+                  ▾
+                </span>
+              </button>
+              {expandedSections.roles && (
+                <div className="px-6 pb-6 -mt-2">
+                  <ContractRow label="Owner" address={owner || '...'} />
+                  <ContractRow label="Treasury" address={treasury || '...'} />
+                  <ContractRow label="Oracle" address={oracleAddr || '...'} />
                 </div>
-                <div className="flex justify-between flex-wrap gap-2">
-                  <span className="text-[var(--text-secondary)]">Oracle:</span>
-                  <span className="truncate">{oracleAddr || 'Loading...'}</span>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Dev Tools */}
-            <div className="bg-[var(--surface)] rounded-2xl p-6 border border-[var(--border)]">
-              <h2 className="text-lg font-semibold mb-4">🛠️ Dev Tools</h2>
+            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-6">
+              <SectionHeader icon="🛠️" title="Dev Tools" />
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowPreview(true)}
-                  className="px-4 py-2 bg-[#2EE59D]/10 text-[#2EE59D] border border-[#2EE59D]/30 rounded-xl text-sm font-medium hover:bg-[#2EE59D]/20 transition-colors"
+                  className="px-4 py-2 bg-[#2EE59D]/10 text-[#2EE59D] border border-[#2EE59D]/20 rounded-xl text-sm font-medium hover:bg-[#2EE59D]/20 transition-colors"
                 >
                   👋 Preview Onboarding
                 </button>
@@ -566,10 +597,27 @@ export default function AdminPage() {
                     sessionStorage.clear()
                     alert('All local data cleared! Refresh to see changes.')
                   }}
-                  className="px-4 py-2 bg-red-500/10 text-red-500 border border-red-500/30 rounded-xl text-sm font-medium hover:bg-red-500/20 transition-colors"
+                  className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl text-sm font-medium hover:bg-red-500/20 transition-colors"
                 >
                   🗑️ Clear All Data
                 </button>
+              </div>
+              <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/[0.04]">
+                {[
+                  { label: 'Chainlink Functions', url: 'https://functions.chain.link/base/132' },
+                  { label: 'Morpho Vault', url: 'https://app.morpho.org/vault?vault=0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61&network=base' },
+                  { label: 'BaseScan', url: 'https://basescan.org/address/0xAc67E863221B703CEE9B440a7beFe71EA8725434' },
+                ].map(({ label, url }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-white/30 hover:text-[#2EE59D] transition-colors"
+                  >
+                    {label} →
+                  </a>
+                ))}
               </div>
             </div>
           </div>
@@ -577,172 +625,152 @@ export default function AdminPage() {
 
         {/* ==================== CREATE PROMISE TAB ==================== */}
         {activeTab === 'create' && (
-          <div className="max-w-lg mx-auto space-y-4">
-            {/* Name */}
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Name</label>
-              <input
-                value={goalName}
-                onChange={(e) => setGoalName(e.target.value)}
-                placeholder="e.g. 10K Steps Daily"
-                className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] focus:outline-none focus:border-[#2EE59D]"
-              />
-            </div>
+          <div className="max-w-lg mx-auto">
+            <div className="rounded-2xl bg-[#13131D] border border-white/[0.06] p-8">
+              <SectionHeader icon="➕" title="Create Promise" />
+              
+              <div className="space-y-5 mt-6">
+                {/* Name */}
+                <div>
+                  <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Name</label>
+                  <input
+                    value={goalName}
+                    onChange={(e) => setGoalName(e.target.value)}
+                    placeholder="e.g. 10K Steps Daily"
+                    className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                  />
+                </div>
 
-            {/* Goal Type */}
-            <div>
-              <label className="block text-sm font-medium mb-1.5">Type</label>
-              <div className="flex gap-2">
+                {/* Goal Type */}
+                <div>
+                  <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Type</label>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setGoalType(1)}
+                      className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${
+                        goalType === 1
+                          ? 'border-[#2EE59D]/40 bg-[#2EE59D]/10 text-[#2EE59D]'
+                          : 'border-white/[0.08] text-white/40 hover:text-white/60'
+                      }`}
+                    >
+                      👟 Fitbit Steps
+                    </button>
+                    <button
+                      onClick={() => setGoalType(0)}
+                      className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${
+                        goalType === 0
+                          ? 'border-[#2EE59D]/40 bg-[#2EE59D]/10 text-[#2EE59D]'
+                          : 'border-white/[0.08] text-white/40 hover:text-white/60'
+                      }`}
+                    >
+                      🏃 Strava Miles
+                    </button>
+                  </div>
+                </div>
+
+                {/* Target */}
+                <div>
+                  <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">
+                    Target ({goalType === 1 ? 'steps' : 'miles'})
+                  </label>
+                  <input
+                    type="number"
+                    value={goalTarget}
+                    onChange={(e) => setGoalTarget(e.target.value)}
+                    placeholder={goalType === 1 ? 'e.g. 10000' : 'e.g. 3'}
+                    className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                  />
+                </div>
+
+                {/* Stake */}
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Min Stake ($)</label>
+                    <input
+                      type="number"
+                      value={goalStake}
+                      onChange={(e) => setGoalStake(e.target.value)}
+                      placeholder="5"
+                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Max Stake ($)</label>
+                    <input
+                      type="number"
+                      value={goalMaxStake}
+                      onChange={(e) => setGoalMaxStake(e.target.value)}
+                      placeholder="Same as min"
+                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Timing */}
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Entry window (min)</label>
+                    <input
+                      type="number"
+                      value={goalEntryMin}
+                      onChange={(e) => setGoalEntryMin(e.target.value)}
+                      placeholder="60"
+                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-2">Duration (min)</label>
+                    <input
+                      type="number"
+                      value={goalDeadlineMin}
+                      onChange={(e) => setGoalDeadlineMin(e.target.value)}
+                      placeholder="120"
+                      className="w-full px-4 py-3 rounded-xl border border-white/[0.08] bg-[#0B0B14] text-white focus:outline-none focus:border-[#2EE59D]/50 transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Preview */}
+                <div className="p-4 rounded-xl bg-[#0B0B14] border border-white/[0.04] text-sm space-y-1">
+                  <p className="text-xs font-medium text-white/30 uppercase tracking-wider">Preview</p>
+                  <p className="text-white/70 mt-2">
+                    {goalName || '(unnamed)'} · {goalTarget || '?'} {goalType === 1 ? 'steps' : 'miles'} · ${goalStake || '?'}{goalMaxStake && goalMaxStake !== goalStake ? `-$${goalMaxStake}` : ''}
+                  </p>
+                  <p className="text-white/40 text-xs">
+                    Entry: {goalEntryMin}min · Duration: {goalDeadlineMin}min
+                  </p>
+                </div>
+
+                {/* Submit */}
                 <button
-                  onClick={() => setGoalType(1)}
-                  className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
-                    goalType === 1
-                      ? 'border-[#2EE59D] bg-[#2EE59D]/10 text-[#2EE59D]'
-                      : 'border-[var(--border)] text-[var(--text-secondary)]'
-                  }`}
+                  onClick={handleCreateGoal}
+                  disabled={createLoading || !goalName || !goalTarget || !goalStake}
+                  className="w-full py-3.5 bg-[#2EE59D] text-black font-bold rounded-xl hover:bg-[#26c987] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                  👟 Fitbit Steps
+                  {createLoading ? 'Creating...' : 'Create Promise'}
                 </button>
-                <button
-                  onClick={() => setGoalType(0)}
-                  className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
-                    goalType === 0
-                      ? 'border-[#2EE59D] bg-[#2EE59D]/10 text-[#2EE59D]'
-                      : 'border-[var(--border)] text-[var(--text-secondary)]'
-                  }`}
-                >
-                  🏃 Strava Miles
-                </button>
+
+                {/* Result */}
+                {createResult && (
+                  <div className="p-4 rounded-xl bg-[#2EE59D]/10 border border-[#2EE59D]/20 text-sm">
+                    <p className="font-semibold text-[#2EE59D] mb-1">✅ Created!</p>
+                    <p className="text-white/40 break-all font-mono text-xs">TX: {createResult.txHash}</p>
+                    <p className="text-white/40 text-xs">Block: {createResult.blockNumber}</p>
+                  </div>
+                )}
+
+                {createError && (
+                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-sm text-red-400">
+                    {createError}
+                  </div>
+                )}
               </div>
             </div>
-
-            {/* Target */}
-            <div>
-              <label className="block text-sm font-medium mb-1.5">
-                Target ({goalType === 1 ? 'steps' : 'miles'})
-              </label>
-              <input
-                type="number"
-                value={goalTarget}
-                onChange={(e) => setGoalTarget(e.target.value)}
-                placeholder={goalType === 1 ? 'e.g. 10000' : 'e.g. 3'}
-                className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] focus:outline-none focus:border-[#2EE59D]"
-              />
-            </div>
-
-            {/* Stake */}
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1.5">Min Stake ($)</label>
-                <input
-                  type="number"
-                  value={goalStake}
-                  onChange={(e) => setGoalStake(e.target.value)}
-                  placeholder="5"
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] focus:outline-none focus:border-[#2EE59D]"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1.5">Max Stake ($)</label>
-                <input
-                  type="number"
-                  value={goalMaxStake}
-                  onChange={(e) => setGoalMaxStake(e.target.value)}
-                  placeholder="Same as min"
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] focus:outline-none focus:border-[#2EE59D]"
-                />
-              </div>
-            </div>
-
-            {/* Timing */}
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1.5">Entry window (min)</label>
-                <input
-                  type="number"
-                  value={goalEntryMin}
-                  onChange={(e) => setGoalEntryMin(e.target.value)}
-                  placeholder="60"
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] focus:outline-none focus:border-[#2EE59D]"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-medium mb-1.5">Total duration (min)</label>
-                <input
-                  type="number"
-                  value={goalDeadlineMin}
-                  onChange={(e) => setGoalDeadlineMin(e.target.value)}
-                  placeholder="120"
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] focus:outline-none focus:border-[#2EE59D]"
-                />
-              </div>
-            </div>
-
-            {/* Preview */}
-            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)] text-sm space-y-1">
-              <p className="font-medium">Preview</p>
-              <p className="text-[var(--text-secondary)]">
-                {goalName || '(unnamed)'} · {goalTarget || '?'} {goalType === 1 ? 'steps' : 'miles'} · ${goalStake || '?'}{goalMaxStake && goalMaxStake !== goalStake ? `-$${goalMaxStake}` : ''} stake
-              </p>
-              <p className="text-[var(--text-secondary)]">
-                Entry: {goalEntryMin}min · Deadline: {goalDeadlineMin}min from now
-              </p>
-            </div>
-
-            {/* Submit */}
-            <button
-              onClick={handleCreateGoal}
-              disabled={createLoading || !goalName || !goalTarget || !goalStake}
-              className="w-full py-3 bg-[#2EE59D] text-white font-bold rounded-xl hover:bg-[#26c987] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {createLoading ? 'Creating...' : 'Create Promise'}
-            </button>
-
-            {/* Result */}
-            {createResult && (
-              <div className="p-4 rounded-xl bg-[#2EE59D]/10 border border-[#2EE59D]/30 text-sm">
-                <p className="font-semibold text-[#2EE59D] mb-1">✅ Created!</p>
-                <p className="text-[var(--text-secondary)] break-all">TX: {createResult.txHash}</p>
-                <p className="text-[var(--text-secondary)]">Block: {createResult.blockNumber}</p>
-                <p className="text-xs text-[var(--text-secondary)] mt-2">Goal will appear in Browse Promises automatically.</p>
-              </div>
-            )}
-
-            {createError && (
-              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-sm text-red-500">
-                {createError}
-              </div>
-            )}
           </div>
         )}
 
         {/* Onboarding Preview Modal */}
         {showPreview && <OnboardingPreview onClose={() => setShowPreview(false)} />}
-
-        {/* Footer Links */}
-        <div className="mt-8 text-center text-[var(--text-secondary)] text-sm">
-          <a href="https://functions.chain.link/base/132" target="_blank" rel="noopener noreferrer" className="hover:text-[#2EE59D]">
-            Chainlink Functions →
-          </a>
-          {' · '}
-          <a href="https://app.morpho.org/vault?vault=0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61&network=base" target="_blank" rel="noopener noreferrer" className="hover:text-[#2EE59D]">
-            Morpho Vault →
-          </a>
-          {' · '}
-          <a href="https://basescan.org/address/0xAc67E863221B703CEE9B440a7beFe71EA8725434" target="_blank" rel="noopener noreferrer" className="hover:text-[#2EE59D]">
-            BaseScan →
-          </a>
-          {' · '}
-          <button 
-            onClick={() => {
-              sessionStorage.removeItem('vaada_admin_auth')
-              setAuthenticated(false)
-            }}
-            className="hover:text-red-500"
-          >
-            Logout
-          </button>
-        </div>
       </div>
     </div>
   )
