@@ -167,8 +167,8 @@ export function Leaderboard() {
           <h2 className="text-xl sm:text-2xl font-bold mt-1">Top Promisers</h2>
         </div>
 
-        {/* Tabs */}
-        <div className="flex justify-center gap-2 mb-4">
+        {/* Tabs - hidden for now, only showing All */}
+        {false && <div className="flex justify-center gap-2 mb-4">
           {tabs.map(tab => (
             <button
               key={tab.key}
@@ -182,7 +182,7 @@ export function Leaderboard() {
               {tab.emoji} {tab.label}
             </button>
           ))}
-        </div>
+        </div>}
 
         {loading ? (
           <div className="flex justify-center py-8">
