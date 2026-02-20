@@ -102,7 +102,7 @@ export function Leaderboard() {
         })
 
         // Sort by completed desc, then win rate, then streak
-        valid.sort((a, b) => b.completed - a.completed || b.winRate - a.winRate || b.streak - a.streak)
+        valid.sort((a, b) => b.winRate - a.winRate || b.completed - a.completed || b.streak - a.streak)
 
         setEntries(valid)
       } catch (err) {
