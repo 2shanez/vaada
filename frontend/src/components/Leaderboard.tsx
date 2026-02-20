@@ -150,6 +150,7 @@ export function Leaderboard() {
 
   // Sort: win rate > completed > streak
   entries.sort((a, b) => b.winRate - a.winRate || b.completed - a.completed || b.streak - a.streak)
+  const topEntries = entries.slice(0, 100)
 
   const rankEmoji = (i: number) => (i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`)
 
@@ -187,7 +188,7 @@ export function Leaderboard() {
           <div className="flex justify-center py-8">
             <div className="w-6 h-6 border-2 border-[#2EE59D] border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : entries.length === 0 ? (
+        ) : topEntries.length === 0 ? (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center">
             <p className="text-sm text-[var(--text-secondary)]">
               {activeTab === "all" ? "No promises settled yet. Be the first!" : `No ${GOAL_TYPE_LABELS[activeTab]?.label} promises settled yet.`}
@@ -206,12 +207,12 @@ export function Leaderboard() {
             </div>
 
             {/* Rows */}
-            {entries.map((entry, i) => (
+            {topEntries.map((entry, i) => (
               <div
                 key={entry.address}
                 className={`grid grid-cols-[40px_1fr_60px_60px_60px_80px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-2 px-4 py-3 items-center ${
                   i === 0 ? "bg-[#2EE59D]/5" : ""
-                } ${i < entries.length - 1 ? "border-b border-[var(--border)]/50" : ""}`}
+                } ${i < topEntries.length - 1 ? "border-b border-[var(--border)]/50" : ""}`}
               >
                 <span className={`text-sm font-bold ${i < 3 ? "text-[#2EE59D]" : "text-[var(--text-secondary)]"}`}>
                   {rankEmoji(i)}
