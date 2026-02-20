@@ -6,7 +6,7 @@ import { createPublicClient, http, formatUnits } from 'viem'
 import { base } from 'viem/chains'
 import { GoalCard, Goal } from './GoalCard'
 import { GOALSTAKE_ABI } from '@/lib/abis'
-import { useContracts } from '@/lib/hooks'
+import { useContracts, useHiddenGoals } from '@/lib/hooks'
 
 // Fallback client for when wagmi isn't connected yet
 const fallbackClient = createPublicClient({
@@ -24,15 +24,8 @@ export function BrowseGoals() {
   const [goals, setGoals] = useState<Goal[]>([])
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
-  const [hiddenIds, setHiddenIds] = useState<number[]>([])
-
-  // Fetch hidden goal IDs
-  useEffect(() => {
-    fetch('/api/admin/hidden-goals')
-      .then(r => r.json())
-      .then(d => setHiddenIds(d.hiddenIds || []))
-      .catch(() => {})
-  }, [])
+  const hiddenIdsSet = useHiddenGoals()
+  const hiddenIds = Array.from(hiddenIdsSet)
 
   const FILTERS = ['Live', 'All'] as const
   type Filter = typeof FILTERS[number]

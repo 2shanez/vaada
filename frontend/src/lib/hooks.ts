@@ -7,6 +7,20 @@ import { base } from 'wagmi/chains'
 import { CONTRACTS } from '@/lib/wagmi'
 import { USDC_ABI, GOALSTAKE_ABI, AUTOMATION_ABI, type Participant } from '@/lib/abis'
 
+// Shared hook: fetch hidden goal IDs from Supabase via API
+export function useHiddenGoals() {
+  const [hiddenIds, setHiddenIds] = useState<Set<number>>(new Set())
+
+  useEffect(() => {
+    fetch('/api/admin/hidden-goals')
+      .then(r => r.json())
+      .then(data => setHiddenIds(new Set(data.hiddenIds || [])))
+      .catch(() => {})
+  }, [])
+
+  return hiddenIds
+}
+
 // Get current contracts based on chain
 export function useContracts() {
   const chainId = useChainId()
@@ -156,6 +170,7 @@ export function useGoalDetails(goalId?: number) {
 // Platform-wide stats — reads goalCount from contract, fetches all goals
 export function usePlatformStats() {
   const contracts = useContracts()
+  const hiddenIds = useHiddenGoals()
   const [stats, setStats] = useState({ totalStaked: 0, totalParticipants: 0, activeGoals: 0, totalGoals: 0 })
 
   const { data: goalCount } = useReadContract({
@@ -187,8 +202,10 @@ export function usePlatformStats() {
     let activeGoals = 0
     let validGoals = 0
 
-    for (const result of goalsData) {
+    for (let i = 0; i < goalsData.length; i++) {
+      const result = goalsData[i]
       if (result.status !== 'success' || !result.result) continue
+      if (hiddenIds.has(i)) continue
       const goal = result.result as any
       const target = Number(goal.targetMiles || 0)
       // Skip wei-scaled old goals
@@ -205,7 +222,7 @@ export function usePlatformStats() {
       activeGoals,
       totalGoals: validGoals,
     })
-  }, [goalsData])
+  }, [goalsData, hiddenIds])
 
   return stats
 }
