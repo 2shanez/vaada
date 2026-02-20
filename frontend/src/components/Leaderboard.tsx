@@ -51,11 +51,12 @@ export function Leaderboard() {
 
         // Iterate ownerOf for each token (avoids getLogs range limits on Alchemy free tier)
         const totalSupply = Number(supply)
+        // Token IDs are 1-indexed
         const ownerCalls = Array.from({ length: Math.min(totalSupply, 100) }, (_, i) => ({
           address: contracts.vaadaReceipts as `0x${string}`,
           abi: VAADA_RECEIPTS_ABI,
           functionName: 'ownerOf' as const,
-          args: [BigInt(i)],
+          args: [BigInt(i + 1)],
         }))
 
         const ownerResults = await client.multicall({ contracts: ownerCalls })
