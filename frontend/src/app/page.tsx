@@ -180,39 +180,12 @@ function IntegrationsDropdown() {
             </div>
             
             {/* Strava Section */}
-            <div className="px-4 py-3">
-              {stravaConnected ? (
-                <div className="flex items-center gap-3">
-                  <svg className="w-4 h-4 text-[#FC4C02]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z" /></svg>
-                  <span className="text-sm font-medium">Strava</span>
-                  <span className="text-xs text-[#FC4C02] bg-[#FC4C02]/10 px-2 py-0.5 rounded-full whitespace-nowrap">Connected</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      document.cookie = 'strava_athlete_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-                      setStravaConnected(false)
-                      setOpen(false)
-                    }}
-                    className="text-xs text-[var(--text-secondary)] hover:text-red-500 transition-colors whitespace-nowrap ml-auto"
-                  >
-                    Disconnect
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2 mb-2">
-                    <svg className="w-4 h-4 text-[#FC4C02]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z" /></svg>
-                    <span className="text-sm font-medium">Strava</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => { window.location.href = stravaUrl; }}
-                    className="block w-full text-center px-3 py-1.5 text-xs font-medium bg-[#FC4C02] text-white rounded-lg hover:bg-[#E34402] transition-colors cursor-pointer"
-                  >
-                    Connect Strava
-                  </button>
-                </>
-              )}
+            <div className="px-4 py-3 opacity-60">
+              <div className="flex items-center gap-3">
+                <svg className="w-4 h-4 text-[#FC4C02]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z" /></svg>
+                <span className="text-sm font-medium">Strava</span>
+                <span className="text-xs text-[var(--text-secondary)] bg-[var(--surface)] px-2 py-0.5 rounded-full whitespace-nowrap ml-auto">Coming Soon</span>
+              </div>
             </div>
           </div>
         </>
