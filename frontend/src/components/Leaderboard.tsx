@@ -141,7 +141,7 @@ export function Leaderboard() {
               <span className="text-center">Kept</span>
               <span className="text-center">Rate</span>
               <span className="text-center">Streak</span>
-              <span className="text-right">Staked</span>
+              <span className="text-center">Staked</span>
             </div>
 
             {/* Rows */}
@@ -170,7 +170,7 @@ export function Leaderboard() {
                 <span className="text-xs sm:text-sm font-semibold text-center">
                   {entry.streak > 0 ? `${entry.streak}🔥` : '0'}
                 </span>
-                <span className="text-xs sm:text-sm font-semibold text-right">
+                <span className="text-xs sm:text-sm font-semibold text-center">
                   ${entry.totalStaked.toFixed(0)}
                 </span>
               </div>
