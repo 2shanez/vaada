@@ -686,6 +686,10 @@ export default function Home() {
               <span className="text-sm text-[var(--text-secondary)] leading-none">· Keep Your Promise</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)]">© 2026 Vaada. All rights reserved.</p>
+            <div className="flex items-center gap-2 mt-3">
+              <span className="text-xs text-[var(--text-secondary)]">Built by:</span>
+              <img src="/founder.jpg" alt="Founder" className="w-8 h-8 rounded-full" />
+            </div>
         </div>
       </footer>
     </main>
