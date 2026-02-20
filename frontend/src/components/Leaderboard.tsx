@@ -119,9 +119,9 @@ export function Leaderboard() {
   return (
     <section ref={leaderboardView.ref} className={`border-t border-[var(--border)] py-8 sm:py-12 px-4 sm:px-6 transition-all duration-700 ${leaderboardView.isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
       <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-6">
+        <div className="text-center mb-4">
           <span className="text-xs font-semibold text-[#2EE59D] uppercase tracking-wider">Leaderboard</span>
-          <h2 className="text-2xl font-bold mt-2">Top Promisers</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mt-1">Top Promisers</h2>
         </div>
 
         {loading ? (
@@ -135,7 +135,7 @@ export function Leaderboard() {
         ) : (
           <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-[28px_1fr_44px_44px_44px_52px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-3 sm:px-4 py-3 border-b border-[var(--border)] text-[10px] sm:text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
+            <div className="grid grid-cols-[24px_minmax(0,1fr)_40px_40px_40px_44px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 border-b border-[var(--border)] text-[9px] sm:text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">
               <span></span>
               <span>User</span>
               <span className="text-center">Kept</span>
@@ -148,29 +148,29 @@ export function Leaderboard() {
             {entries.map((entry, i) => (
               <div
                 key={entry.address}
-                className={`grid grid-cols-[28px_1fr_44px_44px_44px_52px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-3 sm:px-4 py-3 items-center ${
+                className={`grid grid-cols-[24px_minmax(0,1fr)_40px_40px_40px_44px] sm:grid-cols-[50px_1fr_80px_80px_80px_100px] gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 items-center ${
                   i === 0 ? 'bg-[#2EE59D]/5' : ''
                 } ${i < entries.length - 1 ? 'border-b border-[var(--border)]/50' : ''}`}
               >
-                <span className={`text-sm font-bold ${i < 3 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
+                <span className={`text-xs sm:text-sm font-bold ${i < 3 ? 'text-[#2EE59D]' : 'text-[var(--text-secondary)]'}`}>
                   {rankEmoji(i)}
                 </span>
                 <a
                   href={`/profile/${entry.address}`}
-                  className="text-sm font-medium truncate hover:text-[#2EE59D] transition-colors"
+                  className="text-xs sm:text-sm font-medium truncate hover:text-[#2EE59D] transition-colors"
                 >
                   {entry.name || `${entry.address.slice(0, 6)}...${entry.address.slice(-4)}`}
                 </a>
-                <span className="text-sm font-semibold text-center text-[#2EE59D]">
+                <span className="text-xs sm:text-sm font-semibold text-center text-[#2EE59D]">
                   {entry.completed}/{entry.attempted}
                 </span>
-                <span className="text-sm font-semibold text-center">
+                <span className="text-xs sm:text-sm font-semibold text-center">
                   {entry.attempted > 0 ? `${entry.winRate}%` : '—'}
                 </span>
-                <span className="text-sm font-semibold text-center">
-                  {entry.streak > 0 ? `${entry.streak} 🔥` : '0'}
+                <span className="text-xs sm:text-sm font-semibold text-center">
+                  {entry.streak > 0 ? `${entry.streak}🔥` : '0'}
                 </span>
-                <span className="text-sm font-semibold text-right">
+                <span className="text-xs sm:text-sm font-semibold text-right">
                   ${entry.totalStaked.toFixed(0)}
                 </span>
               </div>
