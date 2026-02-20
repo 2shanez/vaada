@@ -62,7 +62,7 @@ export function Leaderboard() {
         const uniqueAddresses = [...new Set(
           ownerResults
             .filter(r => r.status === 'success')
-            .map(r => r.result as string)
+            .map(r => r.result as unknown as string)
         )]
 
         // Fetch reputation for each via multicall
