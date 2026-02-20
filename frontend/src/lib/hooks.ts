@@ -153,60 +153,59 @@ export function useGoalDetails(goalId?: number) {
   }
 }
 
-// Platform-wide stats (total staked, participants, active goals)
-// relevantIds: only count on-chain goals with these IDs (filters out old test goals)
-// totalDisplayed: total number of promises shown in the UI
-export function usePlatformStats(relevantIds?: number[], totalDisplayed?: number) {
+// Platform-wide stats — reads goalCount from contract, fetches all goals
+export function usePlatformStats() {
   const contracts = useContracts()
   const [stats, setStats] = useState({ totalStaked: 0, totalParticipants: 0, activeGoals: 0, totalGoals: 0 })
 
-  // Only fetch the specific goals we care about
-  const idsToFetch = relevantIds ?? []
+  const { data: goalCount } = useReadContract({
+    address: contracts.goalStake,
+    abi: GOALSTAKE_ABI,
+    functionName: 'goalCount',
+    query: { refetchInterval: 60000 },
+  })
 
-  const goalCalls = idsToFetch.map(id => ({
+  const count = goalCount ? Number(goalCount as bigint) : 0
+
+  const goalCalls = Array.from({ length: count }, (_, i) => ({
     address: contracts.goalStake as `0x${string}`,
     abi: GOALSTAKE_ABI as any,
     functionName: 'getGoal',
-    args: [BigInt(id)],
+    args: [BigInt(i)],
   }))
 
   const { data: goalsData } = useReadContracts({
     contracts: goalCalls as any,
-    query: { enabled: idsToFetch.length > 0, refetchInterval: 100000 },
+    query: { enabled: count > 0, refetchInterval: 60000 },
   })
 
   useEffect(() => {
-    if (!goalsData) {
-      setStats({
-        totalStaked: 0,
-        totalParticipants: 0,
-        activeGoals: 0,
-        totalGoals: totalDisplayed ?? 0,
-      })
-      return
-    }
+    if (!goalsData) return
 
     let totalStaked = BigInt(0)
     let totalParticipants = 0
     let activeGoals = 0
+    let validGoals = 0
 
     for (const result of goalsData) {
       if (result.status !== 'success' || !result.result) continue
       const goal = result.result as any
-      if (goal.active) {
-        activeGoals++
-        totalStaked += goal.totalStaked
-        totalParticipants += Number(goal.participantCount)
-      }
+      const target = Number(goal.targetMiles || 0)
+      // Skip wei-scaled old goals
+      if (target > 1000000) continue
+      validGoals++
+      totalStaked += goal.totalStaked
+      totalParticipants += Number(goal.participantCount)
+      if (goal.active && !goal.settled) activeGoals++
     }
 
     setStats({
       totalStaked: Number(formatUnits(totalStaked, 6)),
       totalParticipants,
       activeGoals,
-      totalGoals: totalDisplayed ?? idsToFetch.length,
+      totalGoals: validGoals,
     })
-  }, [goalsData, totalDisplayed, idsToFetch.length])
+  }, [goalsData])
 
   return stats
 }

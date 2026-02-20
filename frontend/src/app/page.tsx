@@ -293,8 +293,7 @@ function AuthErrorToast() {
 export default function Home() {
   const { isConnected, address } = useAccount()
   const contracts = useContracts()
-  const onChainIds = FEATURED_GOALS.filter(g => g.onChainId !== undefined).map(g => g.onChainId!)
-  const platformStats = usePlatformStats(onChainIds, FEATURED_GOALS.length)
+  const platformStats = usePlatformStats()
   const { login, authenticated } = usePrivy()
   const [mounted, setMounted] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
